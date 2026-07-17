@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/index.dc.html", "destination": "/", "permanent": true },
+    { "source": "/advisory.dc.html", "destination": "/advisory", "permanent": true },
+    { "source": "/ai-lab.dc.html", "destination": "/ai-lab", "permanent": true },
+    { "source": "/contact.dc.html", "destination": "/contact", "permanent": true },
+    { "source": "/insights.dc.html", "destination": "/insights", "permanent": true },
+    { "source": "/markets.dc.html", "destination": "/markets", "permanent": true },
+    { "source": "/markets-qatar.dc.html", "destination": "/markets/qatar", "permanent": true },
+    { "source": "/markets-oman.dc.html", "destination": "/markets/oman", "permanent": true },
+    { "source": "/markets-ksa.dc.html", "destination": "/markets/saudi-arabia", "permanent": true },
+    { "source": "/markets-uae.dc.html", "destination": "/markets/uae", "permanent": true },
+    { "source": "/ventures.dc.html", "destination": "/ventures-eir", "permanent": true },
+    { "source": "/ai-commerce.dc.html", "destination": "/ai-commerce", "permanent": true },
+    { "source": "/career-runway.dc.html", "destination": "/career-runway", "permanent": true },
+    { "source": "/insight-agentic-commerce.dc.html", "destination": "/insights", "permanent": true },
+    { "source": "/insight-delivery-layer.dc.html", "destination": "/insights", "permanent": true },
+    { "source": "/insight-digital-commerce-strategy.dc.html", "destination": "/insights", "permanent": true },
+    { "source": "/insight-ecommerce-profitability.dc.html", "destination": "/insights", "permanent": true },
+    { "source": "/ventures", "destination": "/ventures-eir", "permanent": true },
+    { "source": "/markets/ksa", "destination": "/markets/saudi-arabia", "permanent": true }
+  ],
+  "headers": [
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
+    { "source": "/(.*)", "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }, { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }, { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }] }
+  ]
+}
