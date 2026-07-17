@@ -80,7 +80,7 @@ function render404() {
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
-  const names = { about:"About", advisory:"Advisory", "retail-turnaround":"Retail turnaround", "marketplace-strategy":"Marketplace strategy", "ecommerce-transformation":"E-commerce transformation", "ventures-eir":"Ventures & AI", "ai-lab":"AI Lab", markets:"Markets", qatar:"Qatar", oman:"Oman", "saudi-arabia":"Saudi Arabia", uae:"UAE", insights:"Insights", contact:"Contact" };
+  const names = { about:"About", advisory:"Advisory", "retail-turnaround":"Retail turnaround", "marketplace-strategy":"Marketplace strategy", "ecommerce-transformation":"E-commerce transformation", "ventures-eir":"Ventures & AI", "ai-lab":"AI Lab", "ai-commerce":"AI Commerce Command Center", "career-runway":"Career Runway AI", markets:"Markets", qatar:"Qatar", oman:"Oman", "saudi-arabia":"Saudi Arabia", uae:"UAE", insights:"Insights", contact:"Contact" };
   const parts = path.split("/").filter(Boolean); let acc = "";
   return [["Home","/"], ...parts.map(p => { acc += `/${p}`; return [names[p] || p, acc]; })];
 }
@@ -93,7 +93,13 @@ function schemaGraph(page, url, crumbs) {
   const webpage = { "@type":page.type, "@id":`${url}#webpage`, url, name:page.title, description:page.description, isPartOf:{"@id":website["@id"]}, about:{"@id":person["@id"]}, inLanguage:"en", breadcrumb:{"@id":`${url}#breadcrumb`} };
   if (page.type === "ProfilePage") webpage.mainEntity = {"@id":person["@id"]};
   const breadcrumb = { "@type":"BreadcrumbList", "@id":`${url}#breadcrumb`, itemListElement:crumbs.map(([name, href], index) => ({"@type":"ListItem",position:index+1,name,item:`${site.origin}${href === "/" ? "/" : href}`})) };
-  return { "@context":"https://schema.org", "@graph":[person, website, webpage, breadcrumb] };
+  const graph = [person, website, webpage, breadcrumb];
+  if (page.project) {
+    const software = { "@type":"SoftwareApplication", "@id":`${url}#software`, name:page.project.name, description:page.project.description, url, creativeWorkStatus:page.project.status, creator:{"@id":person["@id"]} };
+    webpage.mainEntity = {"@id":software["@id"]};
+    graph.push(software);
+  }
+  return { "@context":"https://schema.org", "@graph":graph };
 }
 function sitemap() {
   const date = new Date().toISOString().slice(0,10);

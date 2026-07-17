@@ -75,6 +75,17 @@ const aiLab = await readFile(join(root,"ai-lab","index.html"),"utf8");
 for (const required of ["AI Commerce Command Center", "Career Runway AI", "In development", "Live", "Business problem"]) {
   if (!aiLab.includes(required)) errors.push(`AI Lab: missing restored project content (${required})`);
 }
+const projectPages = [
+  { route:"ai-commerce", href:"/ai-commerce", name:"AI Commerce Command Center", status:"In development", category:"Agentic · Commerce", description:"A full commerce operation — catalog, orders, care, sellers, inventory, pricing and finance — run on lean resources by coordinated AI agents under human approval." },
+  { route:"career-runway", href:"/career-runway", name:"Career Runway AI", status:"Live", category:"Career · Fintech", description:"Helps professionals stuck in corporate life read their Career DNA and their real financial runway — grounded in their own numbers — before they leap." }
+];
+for (const project of projectPages) {
+  const html = await readFile(join(root,project.route,"index.html"),"utf8");
+  if (!aiLab.includes(`class="case project project-link" href="${project.href}"`)) errors.push(`AI Lab: project card is not linked to ${project.href}`);
+  for (const required of [project.name, project.status, project.category, project.description, "Business problem", '"@type":"SoftwareApplication"']) {
+    if (!html.includes(required)) errors.push(`${project.href}: missing verified project content (${required})`);
+  }
+}
 if (!robots.includes("Sitemap: https://www.mharisaslam.com/sitemap.xml")) errors.push("robots.txt: sitemap missing");
 for (const route of [...routeMap].filter(r => r !== "/404")) if (!sitemap.includes(`https://www.mharisaslam.com${route === "/" ? "/" : route}`)) errors.push(`sitemap: missing ${route}`);
 for (const redirect of vercel.redirects || []) {

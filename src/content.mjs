@@ -201,9 +201,9 @@ export const pages = [
     intro: "The lab applies AI to real commerce and executive workflows rather than treating it as a presentation layer.",
     body: `
       ${section("Current projects", "Applied AI projects built around real operating problems.", `
-        <div class="case-grid">
-          <article class="case"><p class="eyebrow">In development</p><h3>AI Commerce Command Center</h3><p>An operating concept for bringing commercial, seller, catalogue and executive signals into a more responsive commerce cadence under human approval.</p><p><strong>Business problem:</strong> Commerce teams often coordinate fragmented operational signals manually, slowing decisions and obscuring accountability.</p></article>
-          <article class="case"><p class="eyebrow">Live</p><h3>Career Runway AI</h3><p>A career-decision product grounded in an individual's financial runway and the practical trade-offs behind a major professional move.</p><p><strong>Business problem:</strong> Major career decisions are often made without a clear view of personal financial runway, risk and real-world trade-offs.</p></article>
+        <div class="case-grid project-grid">
+          ${aiProject("/ai-commerce", "In development", "AI Commerce Command Center", "A full commerce operation — catalog, orders, care, sellers, inventory, pricing and finance — run on lean resources by coordinated AI agents under human approval.", "Commerce teams need to coordinate fragmented commercial and operating signals without adding layers of manual reporting or losing human control.", "Agentic · Commerce")}
+          ${aiProject("/career-runway", "Live", "Career Runway AI", "Helps professionals stuck in corporate life read their Career DNA and their real financial runway — grounded in their own numbers — before they leap.", "Major career decisions are often made without a clear view of personal financial runway, practical trade-offs or the evidence behind the decision.", "Career · Fintech")}
         </div>`)}
       ${section("Where AI can earn its place", "", cards([
         { title: "Catalogue operations", text: "Reduce repetitive enrichment and quality work while preserving commercial standards." },
@@ -214,6 +214,26 @@ export const pages = [
       ${cta("Building an AI-enabled commerce model?", "The useful starting point is the operating constraint, not the technology.", "/contact", "Compare notes")}
     `
   },
+  projectPage(
+    "/ai-commerce",
+    "AI Commerce Command Center",
+    "AI Commerce Command Center | Muhammad Haris Aslam",
+    "AI Commerce Command Center is an in-development agentic-commerce project coordinating catalog, orders, care, sellers, inventory, pricing and finance.",
+    "In development",
+    "Agentic · Commerce",
+    "A full commerce operation — catalog, orders, care, sellers, inventory, pricing and finance — run on lean resources by coordinated AI agents under human approval.",
+    "Commerce teams need to coordinate fragmented commercial and operating signals without adding layers of manual reporting or losing human control."
+  ),
+  projectPage(
+    "/career-runway",
+    "Career Runway AI",
+    "Career Runway AI | Muhammad Haris Aslam",
+    "Career Runway AI is a live career and fintech project grounded in professionals' Career DNA, personal financial runway and practical trade-offs.",
+    "Live",
+    "Career · Fintech",
+    "Helps professionals stuck in corporate life read their Career DNA and their real financial runway — grounded in their own numbers — before they leap.",
+    "Major career decisions are often made without a clear view of personal financial runway, practical trade-offs or the evidence behind the decision."
+  ),
   {
     path: "/markets",
     type: "CollectionPage",
@@ -292,6 +312,24 @@ export const pages = [
   }
 ];
 
+function projectPage(path, projectName, title, description, status, category, projectDescription, problem) {
+  return {
+    path,
+    type: "WebPage",
+    title,
+    description,
+    eyebrow: "AI Lab · project",
+    h1: projectName,
+    intro: projectDescription,
+    heroAside: `<div class="monogram" aria-hidden="true">AI</div><div class="project-meta"><span class="status">${status}</span><span>${category}</span></div><p>Applied AI built around a real operating problem.</p>`,
+    project: { name: projectName, status, description: projectDescription },
+    body: `
+      ${splitSection("Business problem", `<p>${problem}</p>`)}
+      ${cta("Explore the wider AI Lab.", "See both verified projects and the operating themes behind the lab.", "/ai-lab", "Back to AI Lab")}
+    `
+  };
+}
+
 function marketPage(path, market, city, title, description, h1, points, experience) {
   return {
     path, type: "WebPage", title, description,
@@ -317,6 +355,9 @@ function cards(items) {
 }
 function caseStudy(title, text, href, label) {
   return `<article class="case"><p class="eyebrow">Case</p><h3>${title}</h3><p>${text}</p><a class="text-link" href="${href}">${label} <span aria-hidden="true">→</span></a></article>`;
+}
+function aiProject(href, status, title, description, problem, category) {
+  return `<a class="case project project-link" href="${href}" aria-label="View ${title}"><div class="project-meta"><span class="status">${status}</span><span>${category}</span></div><h3>${title}</h3><p>${description}</p><h4>Business problem</h4><p>${problem}</p><span class="text-link">View project <span aria-hidden="true">→</span></span></a>`;
 }
 function numbered(items) {
   return `<ol class="numbered">${items.map(([title, text]) => `<li><div><h3>${title}</h3><p>${text}</p></div></li>`).join("")}</ol>`;
