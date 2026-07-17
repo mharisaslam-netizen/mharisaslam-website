@@ -29,7 +29,7 @@ export const pages = [
     eyebrow: "GCC commerce operator Â· builder Â· advisor",
     h1: "Build the market. Fix the economics. Scale what works.",
     intro: "Muhammad Haris Aslam is a digital-commerce builder and operator with 17+ years across the Gulfâ€”founding marketplaces, launching country operations, leading turnarounds and backing what comes next.",
-    heroAside: `<figure class="portrait"><img src="/assets/haris-aslam.webp" width="717" height="960" alt="Muhammad Haris Aslam" fetchpriority="high" decoding="async"><figcaption>Qatar Â· Oman Â· Saudi Arabia Â· UAE</figcaption></figure><p>Available for selected CEO, board, advisory and Entrepreneur-in-Residence conversations across the GCC.</p>`,
+    heroAside: `<figure class="portrait"><img src="/assets/haris-aslam.webp" width="717" height="960" alt="Muhammad Haris Aslam" fetchpriority="high" decoding="async"><figcaption>Qatar Â· Oman Â· Saudi Arabia Â· UAE</figcaption></figure><p>Building and scaling digital-commerce businesses through commercial transformation, venture building and applied AI.</p>`,
     body: `
       <section class="section proof-strip" aria-label="Selected experience">
         <div><strong>17+ years</strong><span>building GCC commerce</span></div>
@@ -43,7 +43,7 @@ export const pages = [
           ${caseStudy("Roumaan.com", "Founded Oman's first multi-category online marketplace, building the proposition, seller base and operating model from a blank sheet.", "/marketplace-strategy", "Marketplace strategy")}
           ${caseStudy("Floward Oman", "Launched the Oman operation and built the local commercial and fulfilment engine to more than 75% category share.", "/markets/oman", "Oman experience")}
           ${caseStudy("Salman Corporation â†’ Miraq Lifestyle", "Led a board-mandated group turnaround, secured a regional distribution mandate and shaped a new Saudi-focused venture.", "/retail-turnaround", "Turnaround approach")}
-          ${caseStudy("UpApp Factory", "Co-founded a B2B SaaS platform, expanded it across six markets and later exited the venture.", "/ventures-eir", "Ventures and EIR")}
+          ${caseStudy("UpApp Factory", "Co-founded a B2B SaaS platform, expanded it across six markets and later exited the venture.", "/ventures-ai", "Ventures and AI")}
         </div>`) }
       ${section("GCC market experience", "Local context changes the operating model. The site separates the four markets rather than treating the Gulf as one.", cards(marketLinks))}
       ${cta("A difficult commercial brief?", "If the mandate involves a launch, a turnaround, marketplace economics or family-business transformation, start with the operating problem.", "/contact", "Start a conversation")}
@@ -58,7 +58,7 @@ export const pages = [
     h1: "An operator shaped by launches, turnarounds and the Gulf.",
     intro: "The through-line is practical: take an ambiguous commercial problem, build the operating model around it and stay close enough to the numbers to know what is working.",
     body: `
-      ${splitSection("The operating path", `<p>The work began on the commercial side of enterprise technology in Oman as the region's digital economy was taking shape. It moved into e-commerce while the category was still being defined in the Gulf.</p><p>Since then, the roles have ranged from founder and country launcher to turnaround CEO, venture builder and angel investor. The settings changed; the core question did not: how do you move from a blank sheet to a category-leading business, then preserve the economics as it scales?</p><p>Today, Haris is based in Doha and focused on strategic digital-commerce initiatives at Vodafone Qatar, while remaining open to selected leadership, advisory and venture-building conversations.</p>`)}
+      ${splitSection("The operating path", `<p>The work began on the commercial side of enterprise technology in Oman as the region's digital economy was taking shape. It moved into e-commerce while the category was still being defined in the Gulf.</p><p>Since then, the roles have ranged from founder and country launcher to turnaround CEO, venture builder and angel investor. The settings changed; the core question did not: how do you move from a blank sheet to a category-leading business, then preserve the economics as it scales?</p><p>Today, Haris is based in Doha and focused on strategic digital-commerce initiatives at Vodafone Qatar. He continues to build, operate, invest and share practical lessons from commerce transformation across the GCC.</p>`)}
       ${section("Principles from the work", "Four ideas that consistently survive contact with the market.", cards([
         { title: "Unit economics before growth", text: "GMV, contribution margin, CAC/LTV and the EBITDA path need to work together." },
         { title: "Localisation is operational", text: "A GCC expansion is won in assortment, fulfilment, payments, talent and trading cadenceâ€”not in a translated deck." },
@@ -66,9 +66,9 @@ export const pages = [
         { title: "AI should change the model", text: "The value is in leaner catalog, seller, care and reporting operationsâ€”not in adding another presentation layer." }
       ]))}
       ${section("Where the experience is most useful", "", pillLinks([
-        ["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["Strategic advisory", "/advisory"], ["Ventures and EIR", "/ventures-eir"]
+        ["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["Strategic advisory", "/advisory"], ["Ventures and AI", "/ventures-ai"]
       ]))}
-      ${cta("Looking for operator-grade judgement?", "Review the advisory focus or share the brief directly.", "/advisory", "Explore advisory work")}
+      ${cta("Operator-grade judgement for complex decisions.", "Review the advisory focus and the operating experience behind it.", "/advisory", "Explore advisory work")}
     `
   },
   {
@@ -86,7 +86,7 @@ export const pages = [
         { title: "Turnaround", text: "Find where margin, cost, inventory or execution brokeâ€”and sequence the reset around cash and contribution." },
         { title: "Venture building", text: "Shape a 0-to-1 thesis, operating model and launch plan for marketplaces, D2C and AI-enabled commerce." }
       ]))}
-      ${splitSection("A useful engagement starts with the brief", `<p>The strongest mandates have a real decision attached: enter a market, repair a business, redesign an operating model, validate a venture or strengthen executive governance.</p><p>Haris brings the perspective of someone who has founded, launched, scaled and turned around commerce businessesâ€”not a framework detached from implementation.</p><p>Engagements are considered selectively across Qatar, Oman, Saudi Arabia, the UAE and the wider GCC.</p>`)}
+      ${splitSection("A useful engagement starts with the brief", `<p>The strongest mandates have a real decision attached: enter a market, repair a business, redesign an operating model, validate a venture or strengthen executive governance.</p><p>Haris brings the perspective of someone who has founded, launched, scaled and turned around commerce businessesâ€”not a framework detached from implementation.</p><p>The work is grounded in operating experience across Qatar, Oman, Saudi Arabia, the UAE and the wider GCC.</p>`)}
       ${section("Related expertise", "", pillLinks([["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["GCC markets", "/markets"]]))}
       ${cta("Share the decision in front of you.", "A short note on the business, the constraint and the decision is enough to begin.", "/contact", "Contact Haris")}
     `
@@ -106,7 +106,7 @@ export const pages = [
         ["Reset the operating cadence", "Create visible measures, clear owners and a decision rhythm that connects the boardroom to weekly trading."],
         ["Build the next engine", "Translate the repaired core into a credible growth, distribution or digital-commerce model."]
       ]))}
-      ${splitSection("Experience behind the approach", `<p>At Salman Corporation, Haris led a board-mandated group turnaround spanning retail economics, cost and inventory discipline. The work developed into Miraq Lifestyle, a new venture shaped around a regional distribution mandate and Saudi Arabia's growth opportunity.</p><p>That experience informs work with owner-led and family businesses where transformation must respect the existing enterprise while changing how it creates value.</p>`)}
+      ${splitSection("Experience behind the approach", `<p>At Salman Corporation, Haris led a board-mandated group turnaround spanning retail economics, cost and inventory discipline. The work developed into Miraq Lifestyle, a new venture shaped around a regional distribution mandate and Saudi Arabia's growth potential.</p><p>That experience informs work with owner-led and family businesses where transformation must respect the existing enterprise while changing how it creates value.</p>`)}
       ${section("Common situations", "", cards([
         { title: "Growth without profit", text: "Revenue is moving, but contribution, working capital or overhead makes the trajectory unsustainable." },
         { title: "Family-business transition", text: "Owners need stronger governance, a modern commercial model or a clear boundary between ownership and execution." },
@@ -150,179 +150,7 @@ export const pages = [
     description: "E-commerce and digital-commerce transformation for GCC retailers: proposition, omnichannel operations, unit economics, AI and accountable execution.",
     eyebrow: "E-commerce transformation",
     h1: "Digital commerce works when the whole business changes with it.",
-    intro: "A website redesign is not a transformation. The commercial proposition, operating model, technology, fulfilment, organisation and economics must move together.",
-    body: `
-      ${section("Transformation priorities", "From strategy to an operating model that can trade every week.", cards([
-        { title: "Commercial proposition", text: "Choose the customer, category and service promise the business can win profitably." },
-        { title: "Omnichannel design", text: "Connect stores, inventory, fulfilment, service and customer data around one experience." },
-        { title: "Economics and measurement", text: "Make contribution, CAC/LTV, inventory and fulfilment costs visible in the trading rhythm." },
-        { title: "Organisation", text: "Set decision rights and accountable owners across commercial, digital, operations and technology." },
-        { title: "AI-enabled operations", text: "Use automation where it can materially improve catalogue, seller, care and executive-reporting work." },
-        { title: "Market localisation", text: "Adapt payments, assortment, fulfilment and acquisition to the realities of each GCC market." }
-      ]))}
-      ${splitSection("Experience across the model", `<p>The perspective combines marketplace founding, D2C country launch, B2B SaaS, retail turnaround, regional distribution and strategic digital-commerce work.</p><p>That breadth matters because transformation failures rarely belong to one function. The visible digital channel is often where deeper commercial or operating weaknesses surface.</p>`)}
-      ${section("Related work", "", pillLinks([["Marketplace strategy", "/marketplace-strategy"], ["Retail turnaround", "/retail-turnaround"], ["AI Lab", "/ai-lab"], ["GCC markets", "/markets"]]))}
-      ${cta("Moving from channel to operating model?", "Share the current business model and the outcome the transformation must produce.", "/contact", "Discuss the transformation")}
-    `
-  },
-  {
-    path: "/ventures-eir",
-    type: "CollectionPage",
-    title: "Ventures & Entrepreneur-in-Residence | Haris Aslam",
-    description: "Selected ventures from Muhammad Haris Aslam and his focus for Entrepreneur-in-Residence, venture-building and co-founding opportunities in the GCC.",
-    eyebrow: "Ventures Â· Entrepreneur-in-Residence",
-    h1: "Build from zeroâ€”with the operating model in view.",
-    intro: "The venture record spans marketplaces, D2C, B2B SaaS and regional distribution. Selected EIR and co-founding conversations are welcome where commerce expertise can materially change the outcome.",
-    body: `
-      ${section("Selected ventures", "Verified operating experience behind the venture-building approach.", `
-        <div class="case-grid">
-          ${caseStudy("Roumaan.com", "Founded Oman's first multi-category online marketplace and built the proposition, seller ecosystem and operating model.", "/markets/oman", "Oman market experience")}
-          ${caseStudy("Floward Oman", "Launched the country operation and built a locally relevant D2C model to more than 75% category share.", "/ecommerce-transformation", "E-commerce transformation")}
-          ${caseStudy("UpApp Factory", "Co-founded a B2B SaaS platform, grew it across six markets and exited the venture.", "/about", "Executive profile")}
-          ${caseStudy("Miraq Lifestyle", "Shaped a new venture after a group turnaround, regional distribution mandate and capital raise, with Saudi Arabia central to the opportunity.", "/markets/saudi-arabia", "Saudi Arabia")}
-        </div>`) }
-      ${section("A strong EIR brief", "The fit is strongest when an organisation has an advantage to unlockâ€”not only an idea to discuss.", cards([
-        { title: "Corporate venture", text: "A retailer, family business or enterprise has assets, access or distribution that can support a new commerce model." },
-        { title: "Market-entry thesis", text: "A proven business needs a locally executable route into one or more GCC markets." },
-        { title: "Marketplace or platform", text: "The opportunity depends on supply, demand and operational orchestrationâ€”not software alone." },
-        { title: "AI-enabled commerce", text: "The venture can use AI to create a structurally leaner operating model or stronger customer proposition." }
-      ]))}
-      ${splitSection("How the role is approached", `<p>An Entrepreneur-in-Residence mandate should have a defined strategic sponsor, access to the relevant assets and a clear stage-gate from validation to launch.</p><p>The work may cover thesis development, unit economics, proposition, operating model, market entry, initial team and the governance required to decide whether to scale.</p><p>No office or legal presence is implied by market coverage; opportunities are assessed on the actual mandate and operating context.</p>`)}
-      ${cta("Exploring a venture or EIR mandate?", "Share the strategic advantage, market and decision horizon.", "/contact", "Discuss the opportunity")}
-    `
-  },
-  {
-    path: "/ai-lab",
-    type: "CollectionPage",
-    title: "AI Commerce Lab | Muhammad Haris Aslam",
-    description: "AI commerce products and operating workflows explored by Muhammad Haris Aslam, grounded in practical retail, marketplace and executive use cases.",
-    eyebrow: "AI Lab",
-    h1: "AI is useful when it changes the operating model.",
-    intro: "The lab applies AI to real commerce and executive workflows rather than treating it as a presentation layer.",
-    body: `
-      ${section("Current product directions", "The original linked product demos were not present in the repository, so these are described without broken links.", cards([
-        { title: "AI Commerce Command Center", text: "An operating concept for bringing commercial, seller, catalogue and executive signals into a more responsive commerce cadence." },
-        { title: "Career Runway AI", text: "A career-decision concept grounded in an individual's financial runway and the trade-offs behind a major professional move." }
-      ]))}
-      ${section("Where AI can earn its place", "", cards([
-        { title: "Catalogue operations", text: "Reduce repetitive enrichment and quality work while preserving commercial standards." },
-        { title: "Seller onboarding", text: "Shorten the path from recruitment to a trade-ready assortment." },
-        { title: "Customer care", text: "Resolve routine needs quickly and route exceptions with better context." },
-        { title: "Executive reporting", text: "Turn fragmented operating signals into a clearer decision cadence." }
-      ]))}
-      ${cta("Building an AI-enabled commerce model?", "The useful starting point is the operating constraint, not the technology.", "/contact", "Compare notes")}
-    `
-  },
-  {
-    path: "/markets",
-    type: "CollectionPage",
-    title: "GCC Digital Commerce Markets | Muhammad Haris Aslam",
-    description: "Explore Muhammad Haris Aslam's digital-commerce experience and market perspective across Qatar, Oman, Saudi Arabia and the UAE.",
-    eyebrow: "GCC markets",
-    h1: "Four markets. Different operating realities.",
-    intro: "The Gulf shares capital, ambition and consumer momentum, but each market has a different route to relevance, scale and profitable execution.",
-    body: `
-      ${section("Market perspective", "On-the-ground experience and differentiated context across the GCC.", cards(marketLinks))}
-      ${splitSection("A regional model must still be local", `<p>Assortment, price architecture, payments, fulfilment, customer expectations, talent and the pace of decision-making vary across the GCC.</p><p>Haris's experience includes marketplace founding and group turnaround in Oman, current strategic digital-commerce work in Qatar, regional operations and distribution relevant to the UAE, and venture building focused on Saudi Arabia.</p><p>The site does not claim physical offices or legal entities in these markets. It describes operating experience and the markets where selected mandates may be considered.</p>`)}
-      ${section("Capabilities across the region", "", pillLinks([["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["Strategic advisory", "/advisory"]]))}
-      ${cta("A GCC growth decision?", "Share the market, operating model and commercial objective.", "/contact", "Discuss the market")}
-    `
-  },
-  marketPage("/markets/qatar", "Qatar", "Doha", "Qatar Digital Commerce Strategy | Muhammad Haris Aslam", "A Doha-based perspective on Qatar digital commerce, marketplace growth, retail transformation and the operating choices behind sustainable scale.", "A compact market where relevance matters more than noise.", [
-    ["High-value demand", "A concentrated, digitally connected customer base raises expectations for proposition, service and convenience."],
-    ["Omnichannel advantage", "Retail presence, inventory and customer relationships can become meaningful digital advantages when connected well."],
-    ["Selective marketplace plays", "The strongest opportunities solve a specific supply, service or discovery problem rather than copying a regional model."],
-    ["Operating discipline", "In a compact market, unit economics and repeat behaviour become visible quickly; weak assumptions have fewer places to hide."]
-  ], `<p>Haris is based in Doha and focused on strategic digital-commerce initiatives at Vodafone Qatar. His broader GCC experience spans marketplace founding, D2C launch, turnaround and venture building.</p><p>That combination supports leadership and advisory conversations where Qatar is the primary market or part of a wider GCC model.</p>`),
-  marketPage("/markets/oman", "Oman", "Muscat", "Oman Digital Commerce & Retail Leadership | Haris Aslam", "Marketplace, D2C and retail-turnaround experience in Oman, including Roumaan.com, Floward Oman and the Salman Corporation transformation.", "The market where the operating record runs deepest.", [
-    ["Marketplace building", "Founded Roumaan.com, Oman's first multi-category online marketplace, from proposition through seller ecosystem and operations."],
-    ["D2C country launch", "Built Floward's Oman operation and local commercial engine to more than 75% category share."],
-    ["Retail turnaround", "Led a board-mandated transformation of Salman Corporation, addressing economics, cost, inventory and the future model."],
-    ["Venture formation", "Converted turnaround work and a regional distribution mandate into the foundations of Miraq Lifestyle."]
-  ], `<p>Oman is where Haris moved from enterprise technology into e-commerce and built several chapters of his operating career.</p><p>The experience is relevant to marketplace strategy, country launch, family-business transformation, executive leadership and advisory mandates in Muscat and across the Sultanate.</p>`),
-  marketPage("/markets/saudi-arabia", "Saudi Arabia", "Riyadh", "Saudi Digital Commerce & Venture Growth | Haris Aslam", "Digital-commerce, marketplace and venture-building perspective for Saudi Arabia, grounded in GCC operations, distribution and turnaround experience.", "Build for the Kingdom's scaleâ€”with the economics intact.", [
-    ["Scale with focus", "Saudi Arabia can support significant category depth, but the operating model must be designed for the specific customer and channel."],
-    ["Venture building", "Miraq Lifestyle was shaped around a regional distribution mandate, capital discipline and a Saudi-focused growth opportunity."],
-    ["Marketplace economics", "Seller, fulfilment, service and acquisition choices must hold together as the business moves beyond early demand."],
-    ["Leadership and governance", "A clear sponsor, decision model and accountable local execution are essential when ambition and complexity rise together."]
-  ], `<p>Haris raised capital and secured a regional distribution mandate while shaping Miraq Lifestyle, with Saudi Arabia central to the venture thesis.</p><p>Selected Saudi conversations may include venture building, marketplace strategy, e-commerce transformation, executive leadership and strategic advisory. No local office or legal entity is claimed.</p>`),
-  marketPage("/markets/uae", "United Arab Emirates", "Dubai", "UAE Digital Commerce & Marketplace Advisory | Haris Aslam", "GCC digital-commerce operating experience applied to UAE marketplace strategy, e-commerce transformation, regional growth and advisory mandates.", "Compete through the operating model, not market noise.", [
-    ["Competitive proposition", "The customer has abundant choice; the reason to switch or stay must be explicit and consistently delivered."],
-    ["Regional platform", "The UAE can support regional teams and partnerships, but market-level economics still need to remain visible."],
-    ["Marketplace quality", "Assortment, seller standards, fulfilment and service are more defensible than catalogue volume alone."],
-    ["Capital discipline", "A sophisticated market rewards growth, but exposes weak contribution and acquisition assumptions quickly."]
-  ], `<p>Haris brings regional operations and distribution experience, marketplace founding, D2C launch and turnaround leadership to UAE-focused conversations.</p><p>The fit is strongest for businesses seeking operator-level support on marketplace strategy, digital transformation, GCC growth or a consequential commercial reset. No UAE office or legal entity is claimed.</p>`),
-  {
-    path: "/insights",
-    type: "CollectionPage",
-    title: "GCC Digital Commerce Insights | Muhammad Haris Aslam",
-    description: "Field notes from Muhammad Haris Aslam on e-commerce profitability, marketplace operations, AI-enabled commerce and GCC growth strategy.",
-    eyebrow: "Insights",
-    h1: "Field notes from building GCC commerce.",
-    intro: "The repository contained four article concepts but not the article bodies. They are preserved here as a transparent research agenda rather than published as thin or fabricated articles.",
-    body: `
-      ${section("Research agenda", "Long-form notes will be published only when the operating evidence and complete argument are ready.", cards([
-        { title: "E-commerce profitability", text: "Why digital-commerce strategies fail when growth, fulfilment, acquisition and contribution are measured in separate rooms." },
-        { title: "Agentic commerce", text: "What a lean, AI-enabled commerce operating model could change across catalogue, sellers, care and reporting." },
-        { title: "The delivery layer", text: "Why fulfilment can be a proposition and growth asset rather than only a cost to contain." },
-        { title: "From zero to scale in the GCC", text: "How proposition, localisation, operating cadence and economics combine in a regional launch." }
-      ]))}
-      ${section("Explore the operating themes now", "", pillLinks([["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["GCC markets", "/markets"]]))}
-      ${cta("A topic worth comparing notes on?", "Share the operating question or market context.", "/contact", "Contact Haris")}
-    `
-  },
-  {
-    path: "/contact",
-    type: "ContactPage",
-    title: "Contact Muhammad Haris Aslam | GCC Commerce",
-    description: "Contact Muhammad Haris Aslam about CEO, board, advisory, consulting, turnaround, venture-building or Entrepreneur-in-Residence opportunities.",
-    eyebrow: "Contact",
-    h1: "Bring the brief that matters.",
-    intro: "For CEO, board, advisory, turnaround, consulting, venture-building and Entrepreneur-in-Residence conversations across the GCC.",
-    body: `
-      <section class="section contact-grid">
-        <div class="contact-card"><span>Email</span><a href="mailto:${site.email}">${site.email}</a><p>Best for an initial brief or introduction.</p></div>
-        <div class="contact-card"><span>LinkedIn</span><a href="${site.linkedin}" rel="me noopener">Muhammad Haris Aslam</a><p>Professional background and direct messages.</p></div>
-        <div class="contact-card"><span>Phone</span><a href="tel:${site.phone}">+968 9811 0669</a><p>For established conversations and time-sensitive matters.</p></div>
-      </section>
-      ${splitSection("A useful first note", `<p>Include the business or opportunity, the market, the decision in front of you and the timeframe.</p><p>No confidential data is needed at the first step. A clear description of the constraint is more useful than a long deck.</p><p>Haris is based in Doha and considers selected opportunities across Qatar, Oman, Saudi Arabia, the UAE and the wider GCC.</p>`)}
-      ${section("Relevant conversations", "", pillLinks([["CEO and executive leadership", "/about"], ["Strategic advisory", "/advisory"], ["Retail turnaround", "/retail-turnaround"], ["Entrepreneur-in-Residence", "/ventures-eir"]]))}
-    `
-  }
-];
-
-function marketPage(path, market, city, title, description, h1, points, experience) {
-  return {
-    path, type: "WebPage", title, description,
-    eyebrow: `${market} Â· GCC markets`, h1,
-    intro: `A market-specific view of digital commerce, retail transformation and growthâ€”grounded in verified operating experience, without claiming a local office or legal entity.`,
-    body: `
-      ${section(`What matters in ${market}`, `${city} is a useful reference point, but the opportunity is national and operating-model specific.`, cards(points.map(([title, text]) => ({ title, text }))))}
-      ${splitSection(`Experience relevant to ${market}`, experience)}
-      ${section("Capabilities", "", pillLinks([["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["Strategic advisory", "/advisory"]]))}
-      ${cta(`Building, scaling or transforming in ${market}?`, "Share the commercial objective, operating constraint and decision horizon.", "/contact", "Start a conversation")}
-    `
-  };
-}
-
-function section(label, heading, content) {
-  return `<section class="section"><div class="section-head"><p class="eyebrow">${label}</p>${heading ? `<h2>${heading}</h2>` : ""}</div>${content}</section>`;
-}
-function splitSection(title, content) {
-  return `<section class="section split"><div><p class="eyebrow">Perspective</p><h2>${title}</h2></div><div class="prose">${content}</div></section>`;
-}
-function cards(items) {
-  return `<div class="card-grid">${items.map(({ href, title, text }) => `<article class="card"><h3>${href ? `<a href="${href}">${title}</a>` : title}</h3><p>${text}</p>${href ? `<a class="text-link" href="${href}">Explore ${title.toLowerCase()} <span aria-hidden="true">â†’</span></a>` : ""}</article>`).join("")}</div>`;
-}
-function caseStudy(title, text, href, label) {
-  return `<article class="case"><p class="eyebrow">Case</p><h3>${title}</h3><p>${text}</p><a class="text-link" href="${href}">${label} <span aria-hidden="true">â†’</span></a></article>`;
-}
-function numbered(items) {
-  return `<ol class="numbered">${items.map(([title, text]) => `<li><div><h3>${title}</h3><p>${text}</p></div></li>`).join("")}</ol>`;
-}
-function pillLinks(items) {
-  return `<div class="pill-links">${items.map(([label, href]) => `<a href="${href}">${label}<span aria-hidden="true">â†’</span></a>`).join("")}</div>`;
-}
-function cta(title, text, href, label) {
-  return `<section class="section cta"><div><p class="eyebrow">Next conversation</p><h2>${title}</h2><p>${text}</p></div><a class="button button-light" href="${href}">${label}<span aria-hidden="true">â†’</span></a></section>`;
-}
+    intro: "A website redesign is not a transformation. The commercial proposition, operating model, technology, f×Şz¶‰ËkºwµçM”ˆ°Ñ•áĞè€‰AÉ½‘ÕÑÌ‰Õ¥±Ğ…É½Õ¹É•…°@™0‘•¥Í¥½¹Ì°•á•ÁÑ¥½¹Ì…¹ÑÉ…‘”µ½™™Ì¸ˆô(€€€€€t¤¥ô(€€€€€€‘íÍ•Ñ¥½¸ ‰$ÁÉ½©•ÑÌˆ°€‰Qİ¼ÁÉ…Ñ¥…°ÁÉ½‘ÕÑÌ‰Õ¥±Ğ…É½Õ¹½¹Í•ÅÕ•¹Ñ¥…°½Á•É…Ñ¥¹œ…¹…É••È‘•¥Í¥½¹Ì¸ˆ°€(€€€€€€€€ñ‘¥Ø±…ÍÌô‰…Í”µÉ¥ÁÉ½©•ĞµÉ¥ˆø(€€€€€€€€€€‘í…¥AÉ½©•Ğ ‰…¤µ½µµ•É”µ½µµ…¹µ•¹Ñ•Èˆ°€‰%¸‘•Ù•±½Áµ•¹Ğˆ°€‰$½µµ•É”½µµ…¹•¹Ñ•Èˆ°€‰™Õ±°½µµ•É”½Á•É…Ñ¥½»ŠQ…Ñ…±½œ°½É‘•ÉÌ°…É”°Í•±±•ÉÌ°¥¹Ù•¹Ñ½Éä°ÁÉ¥¥¹œ…¹™¥¹…¹—ŠQÉÕ¸½¸±•…¸É•Í½ÕÉ•Ì‰ä½½É‘¥¹…Ñ•$…•¹ÑÌÕ¹‘•È¡Õµ…¸…ÁÁÉ½Ù…°¸ˆ°€‰½µµ•É”Ñ•…µÌ¹••Ñ¼½½É‘¥¹…Ñ”™É…µ•¹Ñ•½µµ•É¥…°…¹½Á•É…Ñ¥¹œÍ¥¹…±Ìİ¥Ñ¡½ÕĞ…‘‘¥¹œ±…å•ÉÌ½˜µ…¹Õ…°É•Á½ÉÑ¥¹œ½È±½Í¥¹œ¡Õµ…¸½¹ÑÉ½°¸ˆ°€‰•¹Ñ¥Œƒ
+Ü½µµ•É”ˆ¥ô(€€€€€€€€€€‘í…¥AÉ½©•Ğ ‰…É••ÈµÉÕ¹İ…äµ…¤ˆ°€‰1¥Ù”ˆ°€‰…É••ÈIÕ¹İ…ä$ˆ°€‰!•±ÁÌÁÉ½™•ÍÍ¥½¹…±ÌÍÑÕ¬¥¸½ÉÁ½É…Ñ”±¥™”É•…Ñ¡•¥È…É••È9…¹Ñ¡•¥ÈÉ•…°™¥¹…¹¥…°ÉÕ¹İ…çŠQÉ½Õ¹‘•¥¸Ñ¡•¥È½İ¸¹Õµ‰•ÉÏŠQ‰•™½É”Ñ¡•ä±•…À¸ˆ°€‰5…©½È…É••È‘•¥Í¥½¹Ì…É”½™Ñ•¸µ…‘”İ¥Ñ¡½ÕĞ„±•…ÈÙ¥•Ü½˜Á•ÉÍ½¹…°™¥¹…¹¥…°ÉÕ¹İ…ä°ÁÉ…Ñ¥…°ÑÉ…‘”µ½™™Ì½ÈÑ¡”•Ù¥‘•¹”‰•¡¥¹Ñ¡”‘•¥Í¥½¸¸ˆ°€‰…É••Èƒ
+Ü¥¹Ñ• ˆ¥ô(€€€€€€€€ğ½‘¥Øù€¤ô(€€€€€€‘íÍ•Ñ¥½¸ ‰]¡•É”$…¸•…É¸¥ÑÌÁ±…”ˆ°€ˆˆ°…É‘Ì¡l(€€€€€€€ìÑ¥Ñ±”è€‰…Ñ…±½Õ”½Á•É…Ñ¥½¹Ìˆ°Ñ•áĞè€‰I•‘Õ”É•Á•Ñ¥Ñ¥Ù”•¹É¥¡µ•¹Ğ…¹ÅÕ…±¥Ñäİ½É¬İ¡¥±”ÁÉ•Í•ÉÙ¥¹œ½µµ•É¥…°ÍÑ…¹‘…É‘Ì¸ˆô°(€€€€€€€ìÑ¥Ñ±”è€‰M•±±•È½¹‰½…É‘¥¹œˆ°Ñ•áĞè€‰M¡½ÉÑ•¸Ñ¡”Á…Ñ ™É½´É•ÉÕ¥Ñµ•¹ĞÑ¼„ÑÉ…‘”µÉ•…‘ä…ÍÍ½ÉÑµ•¹Ğ¸ˆô°(€€€€€€€ìÑ¥Ñ±”è€‰ÕÍÑ½µ•È…É”ˆ°Ñ•áĞè€‰I•Í½±Ù”É½ÕÑ¥¹”¹••‘ÌÅÕ¥­±ä…¹É½ÕÑ”•á•ÁÑ¥½¹Ìİ¥Ñ ‰•ÑÑ•È½¹Ñ•áĞ¸ˆô°(€€€€€€€ìÑ¥Ñ±”è€‰á•ÕÑ¥Ù”É•Á½ÉÑ¥¹œˆ°Ñ•áĞè€‰QÕÉ¸™É…µ•¹Ñ•½Á•É…Ñ¥¹œÍ¥¹…±Ì¥¹Ñ¼„±•…É•È‘•¥Í¥½¸…‘•¹”¸ˆô(€€€€€t¤¥ô(€€€€€€‘íÑ„ ‰ÁÁ±¥•$ÍÑ…ÉÑÌİ¥Ñ Ñ¡”½Á•É…Ñ¥¹œÁÉ½‰±•´¸ˆ°€‰Q¡”ÕÍ•™Õ°ÅÕ•ÍÑ¥½¸¥Ìİ¡…Ğ‘•¥Í¥½¸°İ½É­™±½Ü½È•á•ÁÑ¥½¸Ñ¡”ÍåÍÑ•´Í¡½Õ±¥µÁÉ½Ù”¸ˆ°€ˆ½½¹Ñ…Ğˆ°€‰½µÁ…É”¹½Ñ•Ìˆ¥ô(€€€€(€ô°(€ì(€€€Á…Ñ è€ˆ½µ…É­•ÑÌˆ°(€€€ÑåÁ”è€‰½±±•Ñ¥½¹A…”ˆ°(€€€Ñ¥Ñ±”è€‰¥¥Ñ…°½µµ•É”5…É­•ÑÌğ5Õ¡…µµ…!…É¥ÌÍ±…´ˆ°(€€€‘•ÍÉ¥ÁÑ¥½¸è€‰áÁ±½É”5Õ¡…µµ…!…É¥ÌÍ±…´Ì‘¥¥Ñ…°µ½µµ•É”•áÁ•É¥•¹”…¹µ…É­•ĞÁ•ÉÍÁ•Ñ¥Ù”…É½ÍÌE…Ñ…È°=µ…¸°M…Õ‘¤É…‰¥„…¹Ñ¡”U¸ˆ°(€€€•å•‰É½Üè€‰µ…É­•ÑÌˆ°(€€€ Äè€‰½ÕÈµ…É­•ÑÌ¸¥™™•É•¹Ğ½Á•É…Ñ¥¹œÉ•…±¥Ñ¥•Ì¸ˆ°(€€€¥¹ÑÉ¼è€‰Q¡”Õ±˜Í¡…É•Ì…Á¥Ñ…°°…µ‰¥Ñ¥½¸…¹½¹ÍÕµ•Èµ½µ•¹ÑÕ´°‰ÕĞ•… µ…É­•Ğ¡…Ì„‘¥™™•É•¹ĞÉ½ÕÑ”Ñ¼É•±•Ù…¹”°Í…±”…¹ÁÉ½™¥Ñ…‰±”•á•ÕÑ¥½¸¸ˆ°(€€€‰½‘äè€(€€€€€€‘íÍ•Ñ¥½¸ ‰5…É­•ĞÁ•ÉÍÁ•Ñ¥Ù”ˆ°€‰=¸µÑ¡”µÉ½Õ¹•áÁ•É¥•¹”…¹‘¥™™•É•¹Ñ¥…Ñ•½¹Ñ•áĞ…É½ÍÌÑ¡”¸ˆ°…É‘Ì¡µ…É­•Ñ1¥¹­Ì¤¥ô(€€€€€€‘íÍÁ±¥ÑM•Ñ¥½¸ ‰É•¥½¹…°µ½‘•°µÕÍĞÍÑ¥±°‰”±½…°ˆ°€ñÀùÍÍ½ÉÑµ•¹Ğ°ÁÉ¥”…É¡¥Ñ•ÑÕÉ”°Á…åµ•¹ÑÌ°™Õ±™¥±µ•¹Ğ°ÕÍÑ½µ•È•áÁ•Ñ…Ñ¥½¹Ì°Ñ…±•¹Ğ…¹Ñ¡”Á…”½˜‘•¥Í¥½¸µµ…­¥¹œÙ…Éä…É½ÍÌÑ¡”¸ğ½ÀøñÀù!…É¥ÌÌ•áÁ•É¥•¹”¥¹±Õ‘•Ìµ…É­•ÑÁ±…”™½Õ¹‘¥¹œ…¹É½ÕÀÑÕÉ¹…É½Õ¹¥¸=µ…¸°ÕÉÉ•¹ĞÍÑÉ…Ñ•¥Œ‘¥¥Ñ…°µ½µµ•É”İ½É¬¥¸E…Ñ…È°É•¥½¹…°½Á•É…Ñ¥½¹Ì…¹‘¥ÍÑÉ¥‰ÕÑ¥½¸É•±•Ù…¹ĞÑ¼Ñ¡”U°…¹Ù•¹ÑÕÉ”‰Õ¥±‘¥¹œ™½ÕÍ•½¸M…Õ‘¤É…‰¥„¸ğ½ÀøñÀùQ¡”Í¥Ñ”‘½•Ì¹½Ğ±…¥´Á¡åÍ¥…°½™™¥•Ì½È±•…°•¹Ñ¥Ñ¥•Ì¥¸Ñ¡•Í”µ…É­•ÑÌ¸%Ğ‘•ÍÉ¥‰•Ì½Á•É…Ñ¥¹œ•áÁ•É¥•¹”…¹ÁÉ…Ñ¥…°µ…É­•ĞÁ•ÉÍÁ•Ñ¥Ù”¸ğ½Àù€¥ô(€€€€€€‘íÍ•Ñ¥½¸ ‰…Á…‰¥±¥Ñ¥•Ì…É½ÍÌÑ¡”É•¥½¸ˆ°€ˆˆ°Á¥±±1¥¹­Ì¡ml‰I•Ñ…¥°ÑÕÉ¹…É½Õ¹ˆ°€ˆ½É•Ñ…¥°µÑÕÉ¹…É½Õ¹‰t°l‰5…É­•ÑÁ±…”ÍÑÉ…Ñ•äˆ°€ˆ½µ…É­•ÑÁ±…”µÍÑÉ…Ñ•ä‰t°l‰µ½µµ•É”ÑÉ…¹Í™½Éµ…Ñ¥½¸ˆ°€ˆ½•½µµ•É”µÑÉ…¹Í™½Éµ…Ñ¥½¸‰t°l‰MÑÉ…Ñ•¥Œ…‘Ù¥Í½Éäˆ°€ˆ½…‘Ù¥Í½Éä‰ut¤¥ô(€€€€€€‘íÑ„ ‰É½İÑ ‘•¥Í¥½¸üˆ°€‰M¡…É”Ñ¡”µ…É­•Ğ°½Á•É…Ñ¥¹œµ½‘•°…¹½µµ•É¥…°½‰©•Ñ¥Ù”¸ˆ°€ˆ½½¹Ñ…Ğˆ°€‰¥ÍÕÍÌÑ¡”µ…É­•Ğˆ¥ô(€€€€(€ô°(€µ…É­•ÑA…” ˆ½µ…É­•ÑÌ½Å…Ñ…Èˆ°€‰E…Ñ…Èˆ°€‰½¡„ˆ°€‰E…Ñ…È¥¥Ñ…°½µµ•É”MÑÉ…Ñ•äğ5Õ¡…µµ…!…É¥ÌÍ±…´ˆ°€‰½¡„µ‰…Í•Á•ÉÍÁ•Ñ¥Ù”½¸E…Ñ…È‘¥¥Ñ…°½µµ•É”°µ…É­•ÑÁ±…”É½İÑ °É•Ñ…¥°ÑÉ…¹Í™½Éµ…Ñ¥½¸…¹Ñ¡”½Á•É…Ñ¥¹œ¡½¥•Ì‰•¡¥¹ÍÕÍÑ…¥¹…‰±”Í…±”¸ˆ°€‰½µÁ…Ğµ…É­•Ğİ¡•É”É•±•Ù…¹”µ…ÑÑ•ÉÌµ½É”Ñ¡…¸¹½¥Í”¸ˆ°l(€€€l‰!¥ µÙ…±Õ”‘•µ…¹ˆ°€‰½¹•¹ÑÉ…Ñ•°‘¥¥Ñ…±±ä½¹¹•Ñ•ÕÍÑ½µ•È‰…Í”É…¥Í•Ì•áÁ•Ñ…Ñ¥½¹Ì™½ÈÁÉ½Á½Í¥Ñ¥½¸°Í•ÉÙ¥”…¹½¹Ù•¹¥•¹”¸‰t°(€€€l‰=µ¹¥¡…¹¹•°…‘Ù…¹Ñ…”ˆ°€‰I•Ñ…¥°ÁÉ•Í•¹”°¥¹Ù•¹Ñ½Éä…¹ÕÍÑ½µ•ÈÉ•±…Ñ¥½¹Í¡¥ÁÌ…¸‰•½µ”µ•…¹¥¹™Õ°‘¥¥Ñ…°…‘Ù…¹Ñ…•Ìİ¡•¸½¹¹•Ñ•İ•±°¸‰t°(€€€l‰M•±•Ñ¥Ù”µ…É­•ÑÁ±…”Á±…åÌˆ°€‰Q¡”ÍÑÉ½¹•ÍĞµ½‘•±ÌÍ½±Ù”„ÍÁ•¥™¥ŒÍÕÁÁ±ä°Í•ÉÙ¥”½È‘¥Í½Ù•ÉäÁÉ½‰±•´É…Ñ¡•ÈÑ¡…¸½Áå¥¹œ„É•¥½¹…°Á…ÑÑ•É¸¸‰t°(€€€l‰=Á•É…Ñ¥¹œ‘¥Í¥Á±¥¹”ˆ°€‰%¸„½µÁ…Ğµ…É­•Ğ°Õ¹¥Ğ•½¹½µ¥Ì…¹É•Á•…Ğ‰•¡…Ù¥½ÕÈ‰•½µ”Ù¥Í¥‰±”ÅÕ¥­±äìİ•…¬…ÍÍÕµÁÑ¥½¹Ì¡…Ù”™•İ•ÈÁ±…•ÌÑ¼¡¥‘”¸‰t(€t°€ñÀù!…É¥Ì¥Ì‰…Í•¥¸½¡„…¹™½ÕÍ•½¸ÍÑÉ…Ñ•¥Œ‘¥¥Ñ…°µ½µµ•É”¥¹¥Ñ¥…Ñ¥Ù•Ì…ĞY½‘…™½¹”E…Ñ…È¸!¥Ì‰É½…‘•È•áÁ•É¥•¹”ÍÁ…¹Ìµ…É­•ÑÁ±…”™½Õ¹‘¥¹œ°É±…Õ¹ °ÑÕÉ¹…É½Õ¹…¹Ù•¹ÑÕÉ”‰Õ¥±‘¥¹œ¸ğ½ÀøñÀùQ¡…Ğ½µ‰¥¹…Ñ¥½¸¥¹™½ÉµÌ¡¥Ì…ÁÁÉ½… Ñ¼±•…‘•ÉÍ¡¥À°½µµ•É¥…°ÑÉ…¹Í™½Éµ…Ñ¥½¸…¹½Á•É…Ñ¥¹œµ½‘•±Ìİ¡•É”E…Ñ…È¥ÌÑ¡”ÁÉ¥µ…Éäµ…É­•Ğ½ÈÁ…ÉĞ½˜„İ¥‘•ÈÉ•¥½¹…°ÍÑÉ…Ñ•ä¸ğ½Àù€¤°(€µ…É­•ÑA…” ˆ½µ…É­•ÑÌ½½µ…¸ˆ°€‰=µ…¸ˆ°€‰5ÕÍ…Ğˆ°€‰=µ…¸¥¥Ñ…°½µµ•É”€˜I•Ñ…¥°1•…‘•ÉÍ¡¥Àğ!…É¥ÌÍ±…´ˆ°€‰5…É­•ÑÁ±…”°É…¹É•Ñ…¥°µÑÕÉ¹…É½Õ¹•áÁ•É¥•¹”¥¸=µ…¸°¥¹±Õ‘¥¹œI½Õµ……¸¹½´°±½İ…É=µ…¸…¹Ñ¡”M…±µ…¸½ÉÁ½É…Ñ¥½¸ÑÉ…¹Í™½Éµ…Ñ¥½¸¸ˆ°€‰Q¡”µ…É­•Ğİ¡•É”Ñ¡”½Á•É…Ñ¥¹œÉ•½ÉÉÕ¹Ì‘••Á•ÍĞ¸ˆ°l(€€€l‰5…É­•ÑÁ±…”‰Õ¥±‘¥¹œˆ°€‰½Õ¹‘•I½Õµ……¸¹½´°=µ…¸Ì™¥ÉÍĞµÕ±Ñ¤µ…Ñ•½Éä½¹±¥¹”µ…É­•ÑÁ±…”°™É½´ÁÉ½Á½Í¥Ñ¥½¸Ñ¡É½Õ Í•±±•È•½ÍåÍÑ•´…¹½Á•É…Ñ¥½¹Ì¸‰t°(€€€l‰É½Õ¹ÑÉä±…Õ¹ ˆ°€‰	Õ¥±Ğ±½İ…ÉÌ=µ…¸½Á•É…Ñ¥½¸…¹±½…°½µµ•É¥…°•¹¥¹”Ñ¼µ½É”Ñ¡…¸€ÜÔ”…Ñ•½ÉäÍ¡…É”¸‰t°(€€€l‰I•Ñ…¥°ÑÕÉ¹…É½Õ¹ˆ°€‰1•„‰½…Éµµ…¹‘…Ñ•ÑÉ…¹Í™½Éµ…Ñ¥½¸½˜M…±µ…¸½ÉÁ½É…Ñ¥½¸°…‘‘É•ÍÍ¥¹œ•½¹½µ¥Ì°½ÍĞ°¥¹Ù•¹Ñ½Éä…¹Ñ¡”™ÕÑÕÉ”µ½‘•°¸‰t°(€€€l‰Y•¹ÑÕÉ”™½Éµ…Ñ¥½¸ˆ°€‰½¹Ù•ÉÑ•ÑÕÉ¹…É½Õ¹İ½É¬…¹„É•¥½¹…°‘¥ÍÑÉ¥‰ÕÑ¥½¸µ…¹‘…Ñ”¥¹Ñ¼Ñ¡”™½Õ¹‘…Ñ¥½¹Ì½˜5¥É…Ä1¥™•ÍÑå±”¸‰t(€t°€ñÀù=µ…¸¥Ìİ¡•É”!…É¥Ìµ½Ù•™É½´•¹Ñ•ÉÁÉ¥Í”Ñ•¡¹½±½ä¥¹Ñ¼”µ½µµ•É”…¹‰Õ¥±ĞÍ•Ù•É…°¡…ÁÑ•ÉÌ½˜¡¥Ì½Á•É…Ñ¥¹œ…É••È¸ğ½ÀøñÀùQ¡”É•½ÉÍÁ…¹Ìµ…É­•ÑÁ±…”ÍÑÉ…Ñ•ä°½Õ¹ÑÉä±…Õ¹ °™…µ¥±äµ‰ÕÍ¥¹•ÍÌÑÉ…¹Í™½Éµ…Ñ¥½¸°•á•ÕÑ¥Ù”±•…‘•ÉÍ¡¥À…¹Ù•¹ÑÕÉ”‰Õ¥±‘¥¹œ¥¸5ÕÍ…Ğ…¹…É½ÍÌÑ¡”MÕ±Ñ…¹…Ñ”¸ğ½Àù€¤°(€µ…É­•ÑA…” ˆ½µ…É­•ÑÌ½Í…Õ‘¤µ…É…‰¥„ˆ°€‰M…Õ‘¤É…‰¥„ˆ°€‰I¥å…‘ ˆ°€‰M…Õ‘¤¥¥Ñ…°½µµ•É”€˜Y•¹ÑÕÉ”É½İÑ ğ!…É¥ÌÍ±…´ˆ°€‰¥¥Ñ…°µ½µµ•É”°µ…É­•ÑÁ±…”…¹Ù•¹ÑÕÉ”µ‰Õ¥±‘¥¹œÁ•ÉÍÁ•Ñ¥Ù”™½ÈM…Õ‘¤É…‰¥„°É½Õ¹‘•¥¸½Á•É…Ñ¥½¹Ì°‘¥ÍÑÉ¥‰ÕÑ¥½¸…¹ÑÕÉ¹…É½Õ¹•áÁ•É¥•¹”¸ˆ°€‰	Õ¥±™½ÈÑ¡”-¥¹‘½´ÌÍ…±—ŠQİ¥Ñ Ñ¡”•½¹½µ¥Ì¥¹Ñ…Ğ¸ˆ°l(€€€l‰M…±”İ¥Ñ ™½ÕÌˆ°€‰M…Õ‘¤É…‰¥„…¸ÍÕÁÁ½ÉĞÍ¥¹¥™¥…¹Ğ…Ñ•½Éä‘•ÁÑ °‰ÕĞÑ¡”½Á•É…Ñ¥¹œµ½‘•°µÕÍĞ‰”‘•Í¥¹•™½ÈÑ¡”ÍÁ•¥™¥ŒÕÍÑ½µ•È…¹¡…¹¹•°¸‰t°(€€€l‰Y•¹ÑÕÉ”‰Õ¥±‘¥¹œˆ°€‰5¥É…Ä1¥™•ÍÑå±”İ…ÌÍ¡…Á•…É½Õ¹„É•¥½¹…°‘¥ÍÑÉ¥‰ÕÑ¥½¸µ…¹‘…Ñ”°…Á¥Ñ…°‘¥Í¥Á±¥¹”…¹„M…Õ‘¤µ™½ÕÍ•É½İÑ Ñ¡•Í¥Ì¸‰t°(€€€l‰5…É­•ÑÁ±…”•½¹½µ¥Ìˆ°€‰M•±±•È°™Õ±™¥±µ•¹Ğ°Í•ÉÙ¥”…¹…ÅÕ¥Í¥Ñ¥½¸¡½¥•ÌµÕÍĞ¡½±Ñ½•Ñ¡•È…ÌÑ¡”‰ÕÍ¥¹•ÍÌµ½Ù•Ì‰•å½¹•…É±ä‘•µ…¹¸‰t°(€€€l‰1•…‘•ÉÍ¡¥À…¹½Ù•É¹…¹”ˆ°€‰±•…ÈÍÁ½¹Í½È°‘•¥Í¥½¸µ½‘•°…¹…½Õ¹Ñ…‰±”±½…°•á•ÕÑ¥½¸…É”•ÍÍ•¹Ñ¥…°İ¡•¸…µ‰¥Ñ¥½¸…¹½µÁ±•á¥ÑäÉ¥Í”Ñ½•Ñ¡•È¸‰t(€t°€ñÀù!…É¥ÌÉ…¥Í•…Á¥Ñ…°…¹Í•ÕÉ•„É•¥½¹…°‘¥ÍÑÉ¥‰ÕÑ¥½¸µ…¹‘…Ñ”İ¡¥±”Í¡…Á¥¹œ5¥É…Ä1¥™•ÍÑå±”°İ¥Ñ M…Õ‘¤É…‰¥„•¹ÑÉ…°Ñ¼Ñ¡”Ù•¹ÑÕÉ”Ñ¡•Í¥Ì¸ğ½ÀøñÀùQ¡¥Ì•áÁ•É¥•¹”¥¹™½ÉµÌ¡¥ÌÁ•ÉÍÁ•Ñ¥Ù”½¸Ù•¹ÑÕÉ”‰Õ¥±‘¥¹œ°µ…É­•ÑÁ±…”ÍÑÉ…Ñ•ä°”µ½µµ•É”ÑÉ…¹Í™½Éµ…Ñ¥½¸…¹½µµ•É¥…°±•…‘•ÉÍ¡¥À¥¸M…Õ‘¤É…‰¥„¸9¼±½…°½™™¥”½È±•…°•¹Ñ¥Ñä¥Ì±…¥µ•¸ğ½Àù€¤°(€µ…É­•ÑA…” ˆ½µ…É­•ÑÌ½Õ…”ˆ°€‰U¹¥Ñ•É…ˆµ¥É…Ñ•Ìˆ°€‰Õ‰…¤ˆ°€‰U¥¥Ñ…°½µµ•É”€˜5…É­•ÑÁ±…”‘Ù¥Í½Éäğ!…É¥ÌÍ±…´ˆ°€‰‘¥¥Ñ…°µ½µµ•É”½Á•É…Ñ¥¹œ•áÁ•É¥•¹”…ÁÁ±¥•Ñ¼Uµ…É­•ÑÁ±…”ÍÑÉ…Ñ•ä°”µ½µµ•É”ÑÉ…¹Í™½Éµ…Ñ¥½¸°É•¥½¹…°É½İÑ …¹…‘Ù¥Í½Éäµ…¹‘…Ñ•Ì¸ˆ°€‰½µÁ•Ñ”Ñ¡É½Õ Ñ¡”½Á•É…Ñ¥¹œµ½‘•°°¹½Ğµ…É­•Ğ¹½¥Í”¸ˆ°l(€€€l‰½µÁ•Ñ¥Ñ¥Ù”ÁÉ½Á½Í¥Ñ¥½¸ˆ°€‰Q¡”ÕÍÑ½µ•È¡…Ì…‰Õ¹‘…¹Ğ¡½¥”ìÑ¡”É•…Í½¸Ñ¼Íİ¥Ñ ½ÈÍÑ…äµÕÍĞ‰”•áÁ±¥¥Ğ…¹½¹Í¥ÍÑ•¹Ñ±ä‘•±¥Ù•É•¸‰t°(€€€l‰I•¥½¹…°Á±…Ñ™½É´ˆ°€‰Q¡”U…¸ÍÕÁÁ½ÉĞÉ•¥½¹…°Ñ•…µÌ…¹Á…ÉÑ¹•ÉÍ¡¥ÁÌ°‰ÕĞµ…É­•Ğµ±•Ù•°•½¹½µ¥ÌÍÑ¥±°¹••Ñ¼É•µ…¥¸Ù¥Í¥‰±”¸‰t°(€€€l‰5…É­•ÑÁ±…”ÅÕ…±¥Ñäˆ°€‰ÍÍ½ÉÑµ•¹Ğ°Í•±±•ÈÍÑ…¹‘…É‘Ì°™Õ±™¥±µ•¹Ğ…¹Í•ÉÙ¥”…É”µ½É”‘•™•¹Í¥‰±”Ñ¡…¸…Ñ…±½Õ”Ù½±Õµ”…±½¹”¸‰t°(€€€l‰…Á¥Ñ…°‘¥Í¥Á±¥¹”ˆ°€‰Í½Á¡¥ÍÑ¥…Ñ•µ…É­•ĞÉ•İ…É‘ÌÉ½İÑ °‰ÕĞ•áÁ½Í•Ìİ•…¬½¹ÑÉ¥‰ÕÑ¥½¸…¹…ÅÕ¥Í¥Ñ¥½¸…ÍÍÕµÁÑ¥½¹ÌÅÕ¥­±ä¸‰t(€t°€ñÀù!…É¥Ì‰É¥¹ÌÉ•¥½¹…°½Á•É…Ñ¥½¹Ì…¹‘¥ÍÑÉ¥‰ÕÑ¥½¸•áÁ•É¥•¹”°µ…É­•ÑÁ±…”™½Õ¹‘¥¹œ°É±…Õ¹ …¹ÑÕÉ¹…É½Õ¹±•…‘•ÉÍ¡¥ÀÑ¼¡¥ÌUµ…É­•ĞÁ•ÉÍÁ•Ñ¥Ù”¸ğ½ÀøñÀùQ¡”½Á•É…Ñ¥¹œÉ•½É½Ù•ÉÌµ…É­•ÑÁ±…”ÍÑÉ…Ñ•ä°‘¥¥Ñ…°ÑÉ…¹Í™½Éµ…Ñ¥½¸°É½İÑ …¹½¹Í•ÅÕ•¹Ñ¥…°½µµ•É¥…°É•Í•ÑÌ¸9¼U½™™¥”½È±•…°•¹Ñ¥Ñä¥Ì±…¥µ•¸ğ½Àù€¤°(€ì(€€€Á…Ñ è€ˆ½¥¹Í¥¡ÑÌˆ°(€€€ÑåÁ”è€‰½±±•Ñ¥½¹A…”ˆ°(€€€Ñ¥Ñ±”è€‰¥¥Ñ…°½µµ•É”%¹Í¥¡ÑÌğ5Õ¡…µµ…!…É¥ÌÍ±…´ˆ°(€€€‘•ÍÉ¥ÁÑ¥½¸è€‰¥•±¹½Ñ•Ì™É½´5Õ¡…µµ…!…É¥ÌÍ±…´½¸”µ½µµ•É”ÁÉ½™¥Ñ…‰¥±¥Ñä°µ…É­•ÑÁ±…”½Á•É…Ñ¥½¹Ì°$µ•¹…‰±•½µµ•É”…¹É½İÑ ÍÑÉ…Ñ•ä¸ˆ°(€€€•å•‰É½Üè€‰%¹Í¥¡ÑÌˆ°(€€€ Äè€‰¥•±¹½Ñ•Ì™É½´‰Õ¥±‘¥¹œ½µµ•É”¸ˆ°(€€€¥¹ÑÉ¼è€‰Q¡”É•Á½Í¥Ñ½Éä½¹Ñ…¥¹•™½ÕÈ…ÉÑ¥±”½¹•ÁÑÌ‰ÕĞ¹½ĞÑ¡”…ÉÑ¥±”‰½‘¥•Ì¸Q¡•ä…É”ÁÉ•Í•ÉÙ•¡•É”…Ì„ÑÉ…¹ÍÁ…É•¹ĞÉ•Í•…É …•¹‘„É…Ñ¡•ÈÑ¡…¸ÁÕ‰±¥Í¡•…ÌÑ¡¥¸½È™…‰É¥…Ñ•…ÉÑ¥±•Ì¸ˆ°(€€€‰½‘äè€(€€€€€€‘íÍ•Ñ¥½¸ ‰I•Í•…É …•¹‘„ˆ°€‰1½¹œµ™½É´¹½Ñ•Ìİ¥±°‰”ÁÕ‰±¥Í¡•½¹±äİ¡•¸Ñ¡”½Á•É…Ñ¥¹œ•Ù¥‘•¹”…¹½µÁ±•Ñ”…ÉÕµ•¹Ğ…É”É•…‘ä¸ˆ°…É‘Ì¡l(€€€€€€€ìÑ¥Ñ±”è€‰µ½µµ•É”ÁÉ½™¥Ñ…‰¥±¥Ñäˆ°Ñ•áĞè€‰]¡ä‘¥¥Ñ…°µ½µµ•É”ÍÑÉ…Ñ•¥•Ì™…¥°İ¡•¸É½İÑ °™Õ±™¥±µ•¹Ğ°…ÅÕ¥Í¥Ñ¥½¸…¹½¹ÑÉ¥‰ÕÑ¥½¸…É”µ•…ÍÕÉ•¥¸Í•Á…É…Ñ”É½½µÌ¸ˆô°(€€€€€€€ìÑ¥Ñ±”è€‰•¹Ñ¥Œ½µµ•É”ˆ°Ñ•áĞè€‰]¡…Ğ„±•…¸°$µ•¹…‰±•½µµ•É”½Á•É…Ñ¥¹œµ½‘•°½Õ±¡…¹”…É½ÍÌ…Ñ…±½Õ”°Í•±±•ÉÌ°…É”…¹É•Á½ÉÑ¥¹œ¸ˆô°(€€€€€€€ìÑ¥Ñ±”è€‰Q¡”‘•±¥Ù•Éä±…å•Èˆ°Ñ•áĞè€‰]¡ä™Õ±™¥±µ•¹Ğ…¸‰”„ÁÉ½Á½Í¥Ñ¥½¸…¹É½İÑ …ÍÍ•ĞÉ…Ñ¡•ÈÑ¡…¸½¹±ä„½ÍĞÑ¼½¹Ñ…¥¸¸ˆô°(€€€€€€€ìÑ¥Ñ±”è€‰É½´é•É¼Ñ¼Í…±”¥¸Ñ¡”ˆ°Ñ•áĞè€‰!½ÜÁÉ½Á½Í¥Ñ¥½¸°±½…±¥Í…Ñ¥½¸°½Á•É…Ñ¥¹œ…‘•¹”…¹•½¹½µ¥Ì½µ‰¥¹”¥¸„É•¥½¹…°±…Õ¹ ¸ˆô(€€€€€t¤¥ô(€€€€€€‘íÍ•Ñ¥½¸ ‰áÁ±½É”Ñ¡”½Á•É…Ñ¥¹œÑ¡•µ•Ì¹½Üˆ°€ˆˆ°Á¥±±1¥¹­Ì¡ml‰I•Ñ…¥°ÑÕÉ¹…É½Õ¹ˆ°€ˆ½É•Ñ…¥°µÑÕÉ¹…É½Õ¹‰t°l‰5…É­•ÑÁ±…”ÍÑÉ…Ñ•äˆ°€ˆ½µ…É­•ÑÁ±…”µÍÑÉ…Ñ•ä‰t°l‰µ½µµ•É”ÑÉ…¹Í™½Éµ…Ñ¥½¸ˆ°€ˆ½•½µµ•É”µÑÉ…¹Í™½Éµ…Ñ¥½¸‰t°l‰µ…É­•ÑÌˆ°€ˆ½µ…É­•ÑÌ‰ut¤¥ô(€€€€€€‘íÑ„ ‰Ñ½Á¥Œİ½ÉÑ ½µÁ…É¥¹œ¹½Ñ•Ì½¸üˆ°€‰M¡…É”Ñ¡”½Á•É…Ñ¥¹œÅÕ•ÍÑ¥½¸½Èµ…É­•Ğ½¹Ñ•áĞ¸ˆ°€ˆ½½¹Ñ…Ğˆ°€‰½¹Ñ…Ğ!…É¥Ìˆ¥ô(€€€€(€ô°(€ì(€€€Á…Ñ è€ˆ½½¹Ñ…Ğˆ°(€€€ÑåÁ”è€‰½¹Ñ…ÑA…”ˆ°(€€€Ñ¥Ñ±”è€‰½¹Ñ…Ğ5Õ¡…µµ…!…É¥ÌÍ±…´ğ½µµ•É”ˆ°(€€€‘•ÍÉ¥ÁÑ¥½¸è€‰½¹Ñ…Ğ5Õ¡…µµ…!…É¥ÌÍ±…´Ñ¼½µÁ…É”¹½Ñ•Ì½¸‘¥¥Ñ…°½µµ•É”°É•Ñ…¥°ÑÕÉ¹…É½Õ¹°µ…É­•ÑÁ±…”ÍÑÉ…Ñ•ä°É½İÑ °Ù•¹ÑÕÉ”‰Õ¥±‘¥¹œ…¹…ÁÁ±¥•$¸ˆ°(€€€•å•‰É½Üè€‰½¹Ñ…Ğˆ°(€€€ Äè€‰	É¥¹œÑ¡”‰É¥•˜Ñ¡…Ğµ…ÑÑ•ÉÌ¸ˆ°(€€€¥¹ÑÉ¼è€‰M¡…É”…¸½Á•É…Ñ¥¹œÅÕ•ÍÑ¥½¸½¸‘¥¥Ñ…°½µµ•É”°É•Ñ…¥°ÑÉ…¹Í™½Éµ…Ñ¥½¸°µ…É­•ÑÁ±…”ÍÑÉ…Ñ•ä°É½İÑ °Ù•¹ÑÕÉ”‰Õ¥±‘¥¹œ½È…ÁÁ±¥•$¸ˆ°(€€€‰½‘äè€(€€€€€€ñÍ•Ñ¥½¸±…ÍÌô‰Í•Ñ¥½¸½¹Ñ…ĞµÉ¥ˆø(€€€€€€€€ñ‘¥Ø±…ÍÌô‰½¹Ñ…Ğµ…ÉˆøñÍÁ…¸ùµ…¥°ğ½ÍÁ…¸øñ„¡É•˜ô‰µ…¥±Ñ¼è‘íÍ¥Ñ”¹•µ…¥±ôˆø‘íÍ¥Ñ”¹•µ…¥±ôğ½„øñÀù	•ÍĞ™½È…¸¥¹¥Ñ¥…°‰É¥•˜½È¥¹ÑÉ½‘ÕÑ¥½¸¸ğ½Àøğ½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÌô‰½¹Ñ…Ğµ…ÉˆøñÍÁ…¸ù1¥¹­•‘%¸ğ½ÍÁ…¸øñ„¡É•˜ôˆ‘íÍ¥Ñ”¹±¥¹­•‘¥¹ôˆÉ•°ô‰µ”¹½½Á•¹•Èˆù5Õ¡…µµ…!…É¥ÌÍ±…´ğ½„øñÀùAÉ½™•ÍÍ¥½¹…°‰…­É½Õ¹…¹‘¥É•Ğµ•ÍÍ…•Ì¸ğ½Àøğ½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÌô‰½¹Ñ…Ğµ…ÉˆøñÍÁ…¸ùA¡½¹”ğ½ÍÁ…¸øñ„¡É•˜ô‰Ñ•°è‘íÍ¥Ñ”¹Á¡½¹•ôˆø¬äØà€äàÄÄ€ÀØØäğ½„øñÀù½È•ÍÑ…‰±¥Í¡•½¹Ù•ÉÍ…Ñ¥½¹Ì…¹Ñ¥µ”µÍ•¹Í¥Ñ¥Ù”µ…ÑÑ•ÉÌ¸ğ½Àøğ½‘¥Øø(€€€€€€ğ½Í•Ñ¥½¸ø(€€€€€€‘íÍÁ±¥ÑM•Ñ¥½¸ ‰ÕÍ•™Õ°™¥ÉÍĞ¹½Ñ”ˆ°€ñÀù%¹±Õ‘”Ñ¡”‰ÕÍ¥¹•ÍÌ½¹Ñ•áĞ°Ñ¡”µ…É­•Ğ°Ñ¡”‘•¥Í¥½¸¥¸™É½¹Ğ½˜å½Ô…¹Ñ¡”Ñ¥µ•™É…µ”¸ğ½ÀøñÀù9¼½¹™¥‘•¹Ñ¥…°‘…Ñ„¥Ì¹••‘•…ĞÑ¡”™¥ÉÍĞÍÑ•À¸±•…È‘•ÍÉ¥ÁÑ¥½¸½˜Ñ¡”½¹ÍÑÉ…¥¹Ğ¥Ìµ½É”ÕÍ•™Õ°Ñ¡…¸„±½¹œ‘•¬¸ğ½ÀøñÀù!…É¥Ì¥Ì‰…Í•¥¸½¡„°İ¥Ñ ½Á•É…Ñ¥¹œ•áÁ•É¥•¹”…É½ÍÌE…Ñ…È°=µ…¸°M…Õ‘¤É…‰¥„°Ñ¡”U…¹Ñ¡”İ¥‘•È¸ğ½Àù€¥ô(€€€€€€‘íÍ•Ñ¥½¸ ‰Q½Á¥Ìˆ°€ˆˆ°Á¥±±1¥¹­Ì¡ml‰=Á•É…Ñ¥¹œ•áÁ•É¥•¹”ˆ°€ˆ½…‰½ÕĞ‰t°l‰MÑÉ…Ñ•¥Œ…‘Ù¥Í½Éäˆ°€ˆ½…‘Ù¥Í½Éä‰t°l‰I•Ñ…¥°ÑÕÉ¹…É½Õ¹ˆ°€ˆ½É•Ñ…¥°µÑÕÉ¹…É½Õ¹‰t°l‰Y•¹ÑÕÉ•Ì…¹$ˆ°€ˆ½Ù•¹ÑÕÉ•Ìµ…¤‰t°l‰$1…ˆˆ°€ˆ½…¤µ±…ˆ‰ut¤¥ô(€€€€(€ô)tì()™Õ¹Ñ¥½¸µ…É­•ÑA…”¡Á…Ñ °µ…É­•Ğ°¥Ñä°Ñ¥Ñ±”°‘•ÍÉ¥ÁÑ¥½¸° Ä°Á½¥¹ÑÌ°•áÁ•É¥•¹”¤ì(€É•ÑÕÉ¸ì(€€€Á…Ñ °ÑåÁ”è€‰]•‰A…”ˆ°Ñ¥Ñ±”°‘•ÍÉ¥ÁÑ¥½¸°(€€€•å•‰É½Üè€‘íµ…É­•Ñôƒ
+Üµ…É­•ÑÍ€° Ä°(€€€¥¹ÑÉ¼èµ…É­•ĞµÍÁ•¥™¥ŒÙ¥•Ü½˜‘¥¥Ñ…°½µµ•É”°É•Ñ…¥°ÑÉ…¹Í™½Éµ…Ñ¥½¸…¹É½İÑ£ŠQÉ½Õ¹‘•¥¸Ù•É¥™¥•½Á•É…Ñ¥¹œ•áÁ•É¥•¹”°İ¥Ñ¡½ÕĞ±…¥µ¥¹œ„±½…°½™™¥”½È±•…°•¹Ñ¥Ñä¹€°(€€€‰½‘äè€(€€€€€€‘íÍ•Ñ¥½¸¡]¡…Ğµ…ÑÑ•ÉÌ¥¸€‘íµ…É­•Ñõ€°€‘í¥Ñåô¥Ì„ÕÍ•™Õ°É•™•É•¹”Á½¥¹Ğ°‰ÕĞÑ¡”µ…É­•Ğ¥Ì¹…Ñ¥½¹…°…¹½Á•É…Ñ¥¹œµµ½‘•°ÍÁ•¥™¥Œ¹€°…É‘Ì¡Á½¥¹ÑÌ¹µ…À ¡mÑ¥Ñ±”°Ñ•áÑt¤€ôø€¡ìÑ¥Ñ±”°Ñ•áĞô¤¤¤¥ô(€€€€€€‘íÍÁ±¥ÑM•Ñ¥½¸¡áÁ•É¥•¹”É•±•Ù…¹ĞÑ¼€‘íµ…É­•Ñõ€°•áÁ•É¥•¹”¥ô(€€€€€€‘íÍ•Ñ¥½¸ ‰…Á…‰¥±¥Ñ¥•Ìˆ°€ˆˆ°Á¥±±1¥¹­Ì¡ml‰I•Ñ…¥°ÑÕÉ¹…É½Õ¹ˆ°€ˆ½É•Ñ…¥°µÑÕÉ¹…É½Õ¹‰t°l‰5…É­•ÑÁ±…”ÍÑÉ…Ñ•äˆ°€ˆ½µ…É­•ÑÁ±…”µÍÑÉ…Ñ•ä‰t°l‰µ½µµ•É”ÑÉ…¹Í™½Éµ…Ñ¥½¸ˆ°€ˆ½•½µµ•É”µÑÉ…¹Í™½Éµ…Ñ¥½¸‰t°l‰MÑÉ…Ñ•¥Œ…‘Ù¥Í½Éäˆ°€ˆ½…‘Ù¥Í½Éä‰ut¤¥ô(€€€€€€‘íÑ„¡	Õ¥±‘¥¹œ°Í…±¥¹œ½ÈÑÉ…¹Í™½Éµ¥¹œ¥¸€‘íµ…É­•Ñôı€°€‰M¡…É”Ñ¡”½µµ•É¥…°½‰©•Ñ¥Ù”°½Á•É…Ñ¥¹œ½¹ÍÑÉ…¥¹Ğ…¹‘•¥Í¥½¸¡½É¥é½¸¸ˆ°€ˆ½½¹Ñ…Ğˆ°€‰MÑ…ÉĞ„½¹Ù•ÉÍ…Ñ¥½¸ˆ¥ô(€€€€(€ôì)ô()™Õ¹Ñ¥½¸Í•Ñ¥½¸¡±…‰•°°¡•…‘¥¹œ°½¹Ñ•¹Ğ¤ì(€É•ÑÕÉ¸€ñÍ•Ñ¥½¸±…ÍÌô‰Í•Ñ¥½¸ˆøñ‘¥Ø±…ÍÌô‰Í•Ñ¥½¸µ¡•…ˆøñÀ±…ÍÌô‰•å•‰É½Üˆø‘í±…‰•±ôğ½Àø‘í¡•…‘¥¹œ€ü€ñ Èø‘í¡•…‘¥¹ôğ½ Èù€€è€ˆ‰ôğ½‘¥Øø‘í½¹Ñ•¹Ñôğ½Í•Ñ¥½¸ù€ì)ô)™Õ¹Ñ¥½¸ÍÁ±¥ÑM•Ñ¥½¸¡Ñ¥Ñ±”°½¹Ñ•¹Ğ¤ì(€É•ÑÕÉ¸€ñÍ•Ñ¥½¸±…ÍÌô‰Í•Ñ¥½¸ÍÁ±¥Ğˆøñ‘¥ØøñÀ±…ÍÌô‰•å•‰É½ÜˆùA•ÉÍÁ•Ñ¥Ù”ğ½Àøñ Èø‘íÑ¥Ñ±•ôğ½ Èøğ½‘¥Øøñ‘¥Ø±…ÍÌô‰ÁÉ½Í”ˆø‘í½¹Ñ•¹Ñôğ½‘¥Øøğ½Í•Ñ¥½¸ù€ì)ô)™Õ¹Ñ¥½¸…É‘Ì¡¥Ñ•µÌ¤ì(€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÌô‰…ÉµÉ¥ˆø‘í¥Ñ•µÌ¹µ…À ¡ì¡É•˜°Ñ¥Ñ±”°Ñ•áĞô¤€ôø€ñ…ÉÑ¥±”±…ÍÌô‰…Éˆøñ Ìø‘í¡É•˜€ü€ñ„¡É•˜ôˆ‘í¡É•™ôˆø‘íÑ¥Ñ±•ôğ½„ù€€èÑ¥Ñ±•ôğ½ ÌøñÀø‘íÑ•áÑôğ½Àø‘í¡É•˜€ü€ñ„±…ÍÌô‰Ñ•áĞµ±¥¹¬ˆ¡É•˜ôˆ‘í¡É•™ôˆùáÁ±½É”€‘íÑ¥Ñ±”¹Ñ½1½İ•É…Í” ¥ô€ñÍÁ…¸…É¥„µ¡¥‘‘•¸ô‰ÑÉÕ”ˆûŠHğ½ÍÁ…¸øğ½„ù€€è€ˆ‰ôğ½…ÉÑ¥±”ù€¤¹©½¥¸ ˆˆ¥ôğ½‘¥Øù€ì)ô)™Õ¹Ñ¥½¸…Í•MÑÕ‘ä¡Ñ¥Ñ±”°Ñ•áĞ°¡É•˜°±…‰•°¤ì(€É•ÑÕÉ¸€ñ…ÉÑ¥±”±…ÍÌô‰…Í”ˆøñÀ±…ÍÌô‰•å•‰É½Üˆù…Í”ğ½Àøñ Ìø‘íÑ¥Ñ±•ôğ½ ÌøñÀø‘íÑ•áÑôğ½Àøñ„±…ÍÌô‰Ñ•áĞµ±¥¹¬ˆ¡É•˜ôˆ‘í¡É•™ôˆø‘í±…‰•±ô€ñÍÁ…¸…É¥„µ¡¥‘‘•¸ô‰ÑÉÕ”ˆûŠHğ½ÍÁ…¸øğ½„øğ½…ÉÑ¥±”ù€ì)ô)™Õ¹Ñ¥½¸…¥AÉ½©•Ğ¡¥°ÍÑ…ÑÕÌ°Ñ¥Ñ±”°‘•ÍÉ¥ÁÑ¥½¸°ÁÉ½‰±•´°…Ñ•½Éä¤ì(€É•ÑÕÉ¸€ñ…ÉÑ¥±”±…ÍÌô‰…Í”ÁÉ½©•Ğˆ¥ôˆ‘í¥‘ôˆøñ‘¥Ø±…ÍÌô‰ÁÉ½©•Ğµµ•Ñ„ˆøñÍÁ…¸±…ÍÌô‰ÍÑ…ÑÕÌˆø‘íÍÑ…ÑÕÍôğ½ÍÁ…¸øñÍÁ…¸ø‘í…Ñ•½Éåôğ½ÍÁ…¸øğ½‘¥Øøñ Ìø‘íÑ¥Ñ±•ôğ½ ÌøñÀø‘í‘•ÍÉ¥ÁÑ¥½¹ôğ½Àøñ Ğù	ÕÍ¥¹•ÍÌÁÉ½‰±•´ğ½ ĞøñÀø‘íÁÉ½‰±•µôğ½Àøğ½…ÉÑ¥±”ù€ì)ô)™Õ¹Ñ¥½¸¹Õµ‰•É•¡¥Ñ•µÌ¤ì(€É•ÑÕÉ¸€ñ½°±…ÍÌô‰¹Õµ‰•É•ˆø‘í¥Ñ•µÌ¹µ…À ¡mÑ¥Ñ±”°Ñ•áÑt¤€ôø€ñ±¤øñ‘¥Øøñ Ìø‘íÑ¥Ñ±•ôğ½ ÌøñÀø‘íÑ•áÑôğ½Àøğ½‘¥Øøğ½±¤ù€¤¹©½¥¸ ˆˆ¥ôğ½½°ù€ì)ô)™Õ¹Ñ¥½¸Á¥±±1¥¹­Ì¡¥Ñ•µÌ¤ì(€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÌô‰Á¥±°µ±¥¹­Ìˆø‘í¥Ñ•µÌ¹µ…À ¡m±…‰•°°¡É•™t¤€ôø€ñ„¡É•˜ôˆ‘í¡É•™ôˆø‘í±…‰•±ôñÍÁ…¸…É¥„µ¡¥‘‘•¸ô‰ÑÉÕ”ˆûŠHğ½ÍÁ…¸øğ½„ù€¤¹©½¥¸ ˆˆ¥ôğ½‘¥Øù€ì)ô)™Õ¹Ñ¥½¸Ñ„¡Ñ¥Ñ±”°Ñ•áĞ°¡É•˜°±…‰•°¤ì(€É•ÑÕÉ¸€ñÍ•Ñ¥½¸±…ÍÌô‰Í•Ñ¥½¸Ñ„ˆøñ‘¥ØøñÀ±…ÍÌô‰•å•‰É½Üˆù9•áĞ½¹Ù•ÉÍ…Ñ¥½¸ğ½Àøñ Èø‘íÑ¥Ñ±•ôğ½ ÈøñÀø‘íÑ•áÑôğ½Àøğ½‘¥Øøñ„±…ÍÌô‰‰ÕÑÑ½¸‰ÕÑÑ½¸µ±¥¡Ğˆ¡É•˜ôˆ‘í¡É•™ôˆø‘í±…‰•±ôñÍÁ…¸…É¥„µ¡¥‘‘•¸ô‰ÑÉÕ”ˆûŠHğ½ÍÁ…¸øğ½„øğ½Í•Ñ¥½¸ù€ì)ô(

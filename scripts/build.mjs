@@ -68,7 +68,7 @@ function render(page) {
 }
 
 function header(path) {
-  const nav = [["About","/about"],["Expertise","/advisory"],["Ventures & EIR","/ventures-eir"],["Markets","/markets"],["Insights","/insights"]];
+  const nav = [["About","/about"],["Expertise","/advisory"],["Ventures & AI","/ventures-ai"],["AI Lab","/ai-lab"],["Markets","/markets"],["Insights","/insights"]];
   const links = nav.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
   return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span>Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}<a class="nav-cta" href="/contact"${path === "/contact" ? ` aria-current="page"` : ""}>Contact</a></nav><details class="mobile-nav"><summary>Menu</summary><nav class="mobile-panel" aria-label="Mobile">${links}<a href="/contact"${path === "/contact" ? ` aria-current="page"` : ""}>Contact</a></nav></details></div></header>`;
 }
@@ -80,7 +80,7 @@ function render404() {
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
-  const names = { about:"About", advisory:"Advisory", "retail-turnaround":"Retail turnaround", "marketplace-strategy":"Marketplace strategy", "ecommerce-transformation":"E-commerce transformation", "ventures-eir":"Ventures & EIR", "ai-lab":"AI Lab", markets:"Markets", qatar:"Qatar", oman:"Oman", "saudi-arabia":"Saudi Arabia", uae:"UAE", insights:"Insights", contact:"Contact" };
+  const names = { about:"About", advisory:"Advisory", "retail-turnaround":"Retail turnaround", "marketplace-strategy":"Marketplace strategy", "ecommerce-transformation":"E-commerce transformation", "ventures-ai":"Ventures & AI", "ai-lab":"AI Lab", markets:"Markets", qatar:"Qatar", oman:"Oman", "saudi-arabia":"Saudi Arabia", uae:"UAE", insights:"Insights", contact:"Contact" };
   const parts = path.split("/").filter(Boolean); let acc = "";
   return [["Home","/"], ...parts.map(p => { acc += `/${p}`; return [names[p] || p, acc]; })];
 }

@@ -12,6 +12,18 @@ const routeMap = new Set(htmlFiles.map(f => {
 const errors = [];
 const seenTitles = new Map();
 const seenDescriptions = new Map();
+const jobSeekingSignals = [
+  /available for/i,
+  /open to/i,
+  /looking for (?:an?|the|my|selected)?\s*(?:ceo|executive|leadership|board|role|position|opportunit)/i,
+  /seeking (?:an?|the|my|selected)?\s*(?:ceo|executive|leadership|board|role|position|opportunit)/i,
+  /ceo roles?/i,
+  /board roles?/i,
+  /entrepreneur-in-residence/i,
+  /\bEIR\b/,
+  /selected opportunities/i,
+  /selected leadership[^.]{0,80}conversations/i
+];
 
 for (const file of htmlFiles) {
   const html = await readFile(file, "utf8");
@@ -45,13 +57,24 @@ for (const file of htmlFiles) {
       if (!/\balt="[^"]*"/.test(image)) errors.push(`${route}: image missing alt text`);
       if (!/\bwidth="\d+"/.test(image) || !/\bheight="\d+"/.test(image)) errors.push(`${route}: image missing dimensions`);
     }
+    const desktopNav = capture(html, /<nav class="desktop-nav"[^>]*>(.*?)<\/nav>/s);
+    const mobileNav = capture(html, /<nav class="mobile-panel"[^>]*>(.*?)<\/nav>/s);
+    for (const [label, nav] of [["desktop", desktopNav], ["mobile", mobileNav]]) {
+      if (!nav.includes('href="/ai-lab"')) errors.push(`${route}: ${label} navigation is missing AI Lab`);
+      if (!nav.includes('href="/ventures-ai"')) errors.push(`${route}: ${label} navigation is missing Ventures & AI`);
+    }
   }
   if (html.includes("__bundler") || html.includes("Unpacking...")) errors.push(`${route}: legacy unpacking shell detected`);
+  for (const signal of jobSeekingSignals) if (signal.test(html)) errors.push(`${route}: job-seeking signal detected (${signal})`);
 }
 
 const robots = await readFile(join(root,"robots.txt"),"utf8");
 const sitemap = await readFile(join(root,"sitemap.xml"),"utf8");
 const vercel = JSON.parse(await readFile(join(root,"..","vercel.json"),"utf8"));
+const aiLab = await readFile(join(root,"ai-lab","index.html"),"utf8");
+for (const required of ["AI Commerce Command Center", "Career Runway AI", "In development", "Live", "Business problem"]) {
+  if (!aiLab.includes(required)) errors.push(`AI Lab: missing restored project content (${required})`);
+}
 if (!robots.includes("Sitemap: https://www.mharisaslam.com/sitemap.xml")) errors.push("robots.txt: sitemap missing");
 for (const route of [...routeMap].filter(r => r !== "/404")) if (!sitemap.includes(`https://www.mharisaslam.com${route === "/" ? "/" : route}`)) errors.push(`sitemap: missing ${route}`);
 for (const redirect of vercel.redirects || []) {

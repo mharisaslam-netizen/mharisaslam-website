@@ -14,14 +14,15 @@
     { "source": "/markets-oman.dc.html", "destination": "/markets/oman", "permanent": true },
     { "source": "/markets-ksa.dc.html", "destination": "/markets/saudi-arabia", "permanent": true },
     { "source": "/markets-uae.dc.html", "destination": "/markets/uae", "permanent": true },
-    { "source": "/ventures.dc.html", "destination": "/ventures-eir", "permanent": true },
+    { "source": "/ventures.dc.html", "destination": "/ventures-ai", "permanent": true },
     { "source": "/ai-commerce.dc.html", "destination": "/ai-lab", "permanent": true },
     { "source": "/career-runway.dc.html", "destination": "/ai-lab", "permanent": true },
     { "source": "/insight-agentic-commerce.dc.html", "destination": "/insights", "permanent": true },
     { "source": "/insight-delivery-layer.dc.html", "destination": "/insights", "permanent": true },
     { "source": "/insight-digital-commerce-strategy.dc.html", "destination": "/insights", "permanent": true },
     { "source": "/insight-ecommerce-profitability.dc.html", "destination": "/insights", "permanent": true },
-    { "source": "/ventures", "destination": "/ventures-eir", "permanent": true },
+    { "source": "/ventures", "destination": "/ventures-ai", "permanent": true },
+    { "source": "/ventures-eir", "destination": "/ventures-ai", "permanent": true },
     { "source": "/markets/ksa", "destination": "/markets/saudi-arabia", "permanent": true }
   ],
   "headers": [
