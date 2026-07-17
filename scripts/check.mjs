@@ -61,7 +61,7 @@ for (const file of htmlFiles) {
     const mobileNav = capture(html, /<nav class="mobile-panel"[^>]*>(.*?)<\/nav>/s);
     for (const [label, nav] of [["desktop", desktopNav], ["mobile", mobileNav]]) {
       if (!nav.includes('href="/ai-lab"')) errors.push(`${route}: ${label} navigation is missing AI Lab`);
-      if (!nav.includes('href="/ventures-ai"')) errors.push(`${route}: ${label} navigation is missing Ventures & AI`);
+      if (!nav.includes('href="/ventures-eir"')) errors.push(`${route}: ${label} navigation is missing Ventures & AI`);
     }
   }
   if (html.includes("__bundler") || html.includes("Unpacking...")) errors.push(`${route}: legacy unpacking shell detected`);
