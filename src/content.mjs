@@ -200,7 +200,7 @@ export const pages = [
     h1: "AI is useful when it changes the operating model.",
     intro: "The lab applies AI to real commerce and executive workflows rather than treating it as a presentation layer.",
     body: `
-      ${section("Current projects", "Existing projects are preserved here as complete portfolio items, without links to missing external pages.", `
+      ${section("Current projects", "Applied AI projects built around real operating problems.", `
         <div class="case-grid">
           <article class="case"><p class="eyebrow">In development</p><h3>AI Commerce Command Center</h3><p>An operating concept for bringing commercial, seller, catalogue and executive signals into a more responsive commerce cadence under human approval.</p><p><strong>Business problem:</strong> Commerce teams often coordinate fragmented operational signals manually, slowing decisions and obscuring accountability.</p></article>
           <article class="case"><p class="eyebrow">Live</p><h3>Career Runway AI</h3><p>A career-decision product grounded in an individual's financial runway and the practical trade-offs behind a major professional move.</p><p><strong>Business problem:</strong> Major career decisions are often made without a clear view of personal financial runway, risk and real-world trade-offs.</p></article>
@@ -260,7 +260,7 @@ export const pages = [
     description: "Field notes from Muhammad Haris Aslam on e-commerce profitability, marketplace operations, AI-enabled commerce and GCC growth strategy.",
     eyebrow: "Insights",
     h1: "Field notes from building GCC commerce.",
-    intro: "The repository contained four article concepts but not the article bodies. They are preserved here as a transparent research agenda rather than published as thin or fabricated articles.",
+    intro: "A practical research agenda on the commercial and operating questions shaping digital commerce across the GCC.",
     body: `
       ${section("Research agenda", "Long-form notes will be published only when the operating evidence and complete argument are ready.", cards([
         { title: "E-commerce profitability", text: "Why digital-commerce strategies fail when growth, fulfilment, acquisition and contribution are measured in separate rooms." },
