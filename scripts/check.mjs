@@ -1,6 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { site } from "../src/content.mjs";
 
 const root = fileURLToPath(new URL("../dist", import.meta.url));
 const files = await walk(root);
@@ -85,6 +86,12 @@ for (const project of projectPages) {
   for (const required of [project.name, project.status, project.category, project.description, "Business problem", '"@type":"SoftwareApplication"']) {
     if (!html.includes(required)) errors.push(`${project.href}: missing verified project content (${required})`);
   }
+}
+const llmsTxt = await readFile(join(root,"llms.txt"),"utf8").catch(() => "");
+if (!llmsTxt.trim()) errors.push("llms.txt: missing or empty");
+else {
+  if (!llmsTxt.startsWith(`# ${site.name}`)) errors.push(`llms.txt: does not start with "# ${site.name}"`);
+  if (!llmsTxt.includes(`(${site.origin}/):`)) errors.push("llms.txt: missing homepage link");
 }
 if (!robots.includes("Sitemap: https://www.mharisaslam.com/sitemap.xml")) errors.push("robots.txt: sitemap missing");
 for (const route of [...routeMap].filter(r => r !== "/404")) if (!sitemap.includes(`https://www.mharisaslam.com${route === "/" ? "/" : route}`)) errors.push(`sitemap: missing ${route}`);

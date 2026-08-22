@@ -19,6 +19,7 @@ for (const page of pages) {
 await writeFile(join(out, "404.html"), render404(), "utf8");
 await writeFile(join(out, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`, "utf8");
 await writeFile(join(out, "sitemap.xml"), sitemap(), "utf8");
+await writeFile(join(out, "llms.txt"), llmsTxt(), "utf8");
 
 function render(page) {
   const url = `${site.origin}${page.path === "/" ? "/" : page.path}`;
@@ -105,6 +106,11 @@ function sitemap() {
   const date = new Date().toISOString().slice(0,10);
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc><lastmod>${date}</lastmod></url>`).join("\n")}\n</urlset>\n`;
 }
+function llmsTxt() {
+  const links = pages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
+  return `# ${site.name}\n\n> GCC digital-commerce operator, marketplace founder and retail-turnaround leader, building, scaling and turning around marketplaces, retail and e-commerce businesses across Qatar, Oman, Saudi Arabia and the UAE.\n\n## Pages\n\n${links}\n`;
+}
+function pageLabel(page) { return page.path === "/" ? "Home" : page.title.split("|")[0].trim(); }
 function current(path, href) { return path === href || (href === "/markets" && path.startsWith("/markets/")) || (href === "/advisory" && ["/advisory","/retail-turnaround","/marketplace-strategy","/ecommerce-transformation"].includes(path)); }
 function safeJson(value) { return JSON.stringify(value).replaceAll("<", "\\u003c"); }
 function escapeHtml(value) { return value.replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
