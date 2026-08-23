@@ -81,7 +81,7 @@ function render404() {
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
-  const names = { about:"About", advisory:"Advisory", "retail-turnaround":"Retail turnaround", "marketplace-strategy":"Marketplace strategy", "ecommerce-transformation":"E-commerce transformation", "ventures-eir":"Ventures & AI", "ai-lab":"AI Lab", "ai-commerce":"AI Commerce Command Center", "career-runway":"Career Runway AI", markets:"Markets", qatar:"Qatar", oman:"Oman", "saudi-arabia":"Saudi Arabia", uae:"UAE", insights:"Insights", contact:"Contact" };
+  const names = { about:"About", advisory:"Advisory", "retail-turnaround":"Retail turnaround", "marketplace-strategy":"Marketplace strategy", "ecommerce-transformation":"E-commerce transformation", "ventures-eir":"Ventures & AI", "ai-lab":"AI Lab", "ai-commerce":"AI Commerce Command Center", "career-runway":"Career Runway AI", markets:"Markets", qatar:"Qatar", oman:"Oman", "saudi-arabia":"Saudi Arabia", uae:"UAE", insights:"Insights", contact:"Contact", "australia-ecommerce-growth":"Australia's e-commerce growth" };
   const parts = path.split("/").filter(Boolean); let acc = "";
   return [["Home","/"], ...parts.map(p => { acc += `/${p}`; return [names[p] || p, acc]; })];
 }
@@ -91,7 +91,7 @@ function breadcrumbs(items) {
 function schemaGraph(page, url, crumbs) {
   const person = { "@type":"Person", "@id":`${site.origin}/#person`, name:site.name, url:`${site.origin}/about`, image:`${site.origin}/assets/haris-aslam.webp`, sameAs:[site.linkedin], jobTitle:"Digital-commerce builder and operator", description:"GCC digital-commerce operator, marketplace founder, turnaround leader, venture builder and angel investor.", knowsAbout:["Retail turnaround","Marketplace strategy","E-commerce transformation","Digital commerce","GCC business growth","Family-business transformation","Venture building","AI-enabled commerce"], homeLocation:{"@type":"Place",name:"Doha, Qatar"} };
   const website = { "@type":"WebSite", "@id":`${site.origin}/#website`, url:`${site.origin}/`, name:site.name, publisher:{"@id":person["@id"]}, inLanguage:"en" };
-  const webpage = { "@type":page.type, "@id":`${url}#webpage`, url, name:page.title, description:page.description, isPartOf:{"@id":website["@id"]}, about:{"@id":person["@id"]}, inLanguage:"en", breadcrumb:{"@id":`${url}#breadcrumb`} };
+  const webpage = { "@type":page.type === "Article" ? "WebPage" : page.type, "@id":`${url}#webpage`, url, name:page.title, description:page.description, isPartOf:{"@id":website["@id"]}, about:{"@id":person["@id"]}, inLanguage:"en", breadcrumb:{"@id":`${url}#breadcrumb`} };
   if (page.type === "ProfilePage") webpage.mainEntity = {"@id":person["@id"]};
   const breadcrumb = { "@type":"BreadcrumbList", "@id":`${url}#breadcrumb`, itemListElement:crumbs.map(([name, href], index) => ({"@type":"ListItem",position:index+1,name,item:`${site.origin}${href === "/" ? "/" : href}`})) };
   const graph = [person, website, webpage, breadcrumb];
@@ -99,6 +99,10 @@ function schemaGraph(page, url, crumbs) {
     const software = { "@type":"SoftwareApplication", "@id":`${url}#software`, name:page.project.name, description:page.project.description, url, creativeWorkStatus:page.project.status, creator:{"@id":person["@id"]} };
     webpage.mainEntity = {"@id":software["@id"]};
     graph.push(software);
+  }
+  if (page.type === "Article") {
+    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, description:page.description, author:{"@id":person["@id"]} };
+    graph.push(article);
   }
   return { "@context":"https://schema.org", "@graph":graph };
 }

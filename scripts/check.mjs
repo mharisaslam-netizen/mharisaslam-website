@@ -52,7 +52,15 @@ for (const file of htmlFiles) {
       } else if (!routeMap.has(href) && href !== "/404") errors.push(`${route}: broken internal link ${href}`);
     }
     for (const script of [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]) {
-      try { JSON.parse(script[1]); } catch (e) { errors.push(`${route}: invalid JSON-LD ${e.message}`); }
+      let parsed;
+      try { parsed = JSON.parse(script[1]); } catch (e) { errors.push(`${route}: invalid JSON-LD ${e.message}`); continue; }
+      const article = (parsed["@graph"] || []).find(n => n["@type"] === "Article");
+      if (article) {
+        if (!article.datePublished || isNaN(Date.parse(article.datePublished))) errors.push(`${route}: Article missing valid datePublished`);
+        const h1Text = capture(html, /<h1[^>]*>(.*?)<\/h1>/s).replace(/<[^>]+>/g, "").trim();
+        if (!article.headline || article.headline !== h1Text) errors.push(`${route}: Article headline "${article.headline}" does not match <h1> "${h1Text}"`);
+        if (!article.author || article.author["@id"] !== `${site.origin}/#person`) errors.push(`${route}: Article author does not reference the Person entity`);
+      }
     }
     for (const image of [...html.matchAll(/<img\b[^>]*>/g)].map(m => m[0])) {
       if (!/\balt="[^"]*"/.test(image)) errors.push(`${route}: image missing alt text`);

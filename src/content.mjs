@@ -20,6 +20,26 @@ const marketLinks = [
   { href: "/markets/uae", title: "UAE", text: "Regional operating experience for the Gulf's most competitive commerce market." }
 ];
 
+const articles = [
+  insightPage(
+    "/insights/australia-ecommerce-growth",
+    "Australia's E-commerce Growth: The Real Drivers | Haris Aslam",
+    "A GCC operator's read on Australia's e-commerce surge — marketplaces, BNPL, retail media and the demographic shift behind AU$66B in online spend.",
+    "2026-08-22",
+    `
+      ${splitSection("A structural shift, not a stimulus echo", `<p>Twelve months of data is a good filter. Anyone can point to a good quarter; a full year that holds up says something about the structure underneath it. Australia's e-commerce numbers for the year to September 2025 hold up.</p><p>NAB puts online spend at roughly AU$66.23 billion for the twelve months to September 2025 — about 14.9% of total retail trade, up from under 10% before the pandemic. That's not a stimulus echo. Five years is long enough for a channel-share gain to either revert or become structural, and this one has become structural. The operators who treated 2021's spike as temporary and scaled their digital operations back down are the ones now playing catch-up.</p><p>The more useful question is where the growth actually came from, because "e-commerce grew" tells you almost nothing about what to build next.</p>`)}
+      ${splitSection("Marketplaces did the heavy lifting", `<p>Of the online spend growth in 2024, 39% — around AU$16 billion — came through marketplaces rather than direct retailer sites. Temu is the clean illustration: nine million Australian users within eight months of launch. That speed isn't a marketing-budget story. It's an assortment, pricing and discovery story — a new entrant with the right operating model can out-move incumbents who are still organised around a single-brand, single-warehouse mental model.</p><p>I've watched the same pattern play out founding a marketplace from zero in Oman: the winning move was never "build a nicer storefront," it was compressing the distance between a customer's intent and a seller who could fulfil it, at a price and a speed the customer trusted. Temu compressed that distance faster than anyone expected. Whether that share is sticky is a separate question — but the growth was real, and it was marketplace-shaped, not retailer-shaped.</p>`)}
+      ${splitSection("BNPL is a basket-size lever, not just a financing product", `<p>Afterpay passed 3.5 million active users by early 2025, and orders paid through BNPL run roughly 30% larger than credit-card orders in fashion and electronics. That gap is too consistent to be a coincidence of who chooses which payment method. It's a friction number: BNPL removes the moment of hesitation at checkout where a customer talks themselves out of the second item, or the higher tier of the same item. Any operator who's run a conversion funnel recognises this pattern — the payment method isn't neutral, it's part of the merchandising.</p>`)}
+      ${splitSection("Retailers are becoming media owners", `<p>Retail media in Australia crossed AU$1 billion in 2024, up 29% year on year, inside a total internet ad market of AU$18 billion that itself grew 12%. Retail media growing more than double the rate of the market it sits inside tells you retailers have worked out something advertisers already knew: first-party purchase data, sitting next to the actual moment of purchase, is a more valuable ad product than almost anything else on offer. This is the same shift I've pushed operators toward in GCC retail turnarounds — stop treating the storefront as a cost centre and start treating the audience on it as an asset with its own P&L.</p>`)}
+      ${splitSection("The demographic story operators get wrong", `<p>Baby Boomer online-shopping adoption rose from 52% to 75% — the fastest-growing segment, ahead of Gen Z. Most digital strategies are still built assuming the growth frontier is younger, mobile-first, app-native customers. That assumption is now measurably out of date in this market. A cohort with more disposable income, higher average order values and lower return rates just became the fastest-adopting group, and a lot of UX and trust-building work aimed exclusively at digital natives is going to under-serve the customers actually driving the next leg of growth.</p>`)}
+      ${splitSection("Where this goes next", `<p>Mordor Intelligence sizes the Australian e-commerce market at USD 51.22 billion in 2026, projecting a 12.07% CAGR to USD 90.57 billion by 2031. Whatever the precision of any five-year forecast, the direction is unambiguous: this is still an expansion phase, not a maturity phase.</p>`)}
+      ${splitSection("The GCC parallel", `<p>None of this is exotic if you've operated in the GCC. Take the marketplace-led share capture happening in Australia and it's a close cousin of the pattern behind Roumaan.com's early growth in Oman, or the broader marketplace dynamics I've watched reshape retail across Qatar, Saudi Arabia and the UAE: an underpenetrated or newly-contestable channel, a customer whose loyalty to the old format was thinner than incumbents assumed, and a marketplace model built to move faster on assortment and fulfilment than a single retailer ever could. The market conditions differ — GCC growth is layered with demographic youth and rapid urban density, Australia's with an unexpected older-customer surge — but the underlying mechanism is the same one I'd look for in any market: the operator who wins isn't the one with the biggest brand, it's the one who builds the tightest loop between demand, assortment and fulfilment. Australia's numbers are just the latest confirmation that the mechanism travels.</p>`)}
+      ${section("Related work", "", pillLinks([["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["GCC markets", "/markets"], ["Ventures & AI", "/ventures-eir"]]))}
+      ${cta("A market worth comparing notes on?", "Share the operating question or the market you're evaluating.", "/contact", "Contact Haris")}
+    `
+  )
+];
+
 export const pages = [
   {
     path: "/",
@@ -282,16 +302,19 @@ export const pages = [
     h1: "Field notes from building GCC commerce.",
     intro: "A practical research agenda on the commercial and operating questions shaping digital commerce across the GCC.",
     body: `
-      ${section("Research agenda", "Long-form notes will be published only when the operating evidence and complete argument are ready.", cards([
-        { title: "E-commerce profitability", text: "Why digital-commerce strategies fail when growth, fulfilment, acquisition and contribution are measured in separate rooms." },
-        { title: "Agentic commerce", text: "What a lean, AI-enabled commerce operating model could change across catalogue, sellers, care and reporting." },
-        { title: "The delivery layer", text: "Why fulfilment can be a proposition and growth asset rather than only a cost to contain." },
-        { title: "From zero to scale in the GCC", text: "How proposition, localisation, operating cadence and economics combine in a regional launch." }
-      ]))}
+      ${articles.length
+        ? section("Field notes", "Published operating analysis from the ground.", articleCards(articles.map(a => ({ href: a.path, title: a.h1, text: a.description, date: formatDate(a.datePublished) }))))
+        : section("Research agenda", "Long-form notes will be published only when the operating evidence and complete argument are ready.", cards([
+            { title: "E-commerce profitability", text: "Why digital-commerce strategies fail when growth, fulfilment, acquisition and contribution are measured in separate rooms." },
+            { title: "Agentic commerce", text: "What a lean, AI-enabled commerce operating model could change across catalogue, sellers, care and reporting." },
+            { title: "The delivery layer", text: "Why fulfilment can be a proposition and growth asset rather than only a cost to contain." },
+            { title: "From zero to scale in the GCC", text: "How proposition, localisation, operating cadence and economics combine in a regional launch." }
+          ]))}
       ${section("Explore the operating themes now", "", pillLinks([["Retail turnaround", "/retail-turnaround"], ["Marketplace strategy", "/marketplace-strategy"], ["E-commerce transformation", "/ecommerce-transformation"], ["GCC markets", "/markets"]]))}
       ${cta("A topic worth comparing notes on?", "Share the operating question or market context.", "/contact", "Contact Haris")}
     `
   },
+  ...articles,
   {
     path: "/contact",
     type: "ContactPage",
@@ -344,6 +367,22 @@ function marketPage(path, market, city, title, description, h1, points, experien
   };
 }
 
+function insightPage(path, title, description, publishDate, body) {
+  return {
+    path, type: "Article", title, description,
+    datePublished: publishDate,
+    eyebrow: "Insights · analysis",
+    h1: title.split("|")[0].trim(),
+    intro: description,
+    heroAside: `<div class="project-meta"><span>${formatDate(publishDate)}</span></div><p>Field notes from operating experience.</p>`,
+    body
+  };
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+}
+
 function section(label, heading, content) {
   return `<section class="section"><div class="section-head"><p class="eyebrow">${label}</p>${heading ? `<h2>${heading}</h2>` : ""}</div>${content}</section>`;
 }
@@ -352,6 +391,9 @@ function splitSection(title, content) {
 }
 function cards(items) {
   return `<div class="card-grid">${items.map(({ href, title, text }) => `<article class="card"><h3>${href ? `<a href="${href}">${title}</a>` : title}</h3><p>${text}</p>${href ? `<a class="text-link" href="${href}">Explore ${title.toLowerCase()} <span aria-hidden="true">→</span></a>` : ""}</article>`).join("")}</div>`;
+}
+function articleCards(items) {
+  return `<div class="card-grid">${items.map(({ href, title, text, date }) => `<article class="card"><p class="eyebrow">${date}</p><h3>${href ? `<a href="${href}">${title}</a>` : title}</h3><p>${text}</p>${href ? `<a class="text-link" href="${href}">Explore ${title.toLowerCase()} <span aria-hidden="true">→</span></a>` : ""}</article>`).join("")}</div>`;
 }
 function caseStudy(title, text, href, label) {
   return `<article class="case"><p class="eyebrow">Case</p><h3>${title}</h3><p>${text}</p><a class="text-link" href="${href}">${label} <span aria-hidden="true">→</span></a></article>`;
