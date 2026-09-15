@@ -1,6 +1,6 @@
 import { writeFile } from "node:fs/promises";
 
-const [url, output, width = "390", height = "844", port = "9222"] = process.argv.slice(2);
+const [url, output, width = "390", height = "844", port = "9222", state = ""] = process.argv.slice(2);
 if (!url || !output) {
   console.error("Usage: node scripts/capture.mjs <url> <output.png> [width] [height] [debug-port]");
   process.exit(1);
@@ -40,6 +40,12 @@ await send("Emulation.setDeviceMetricsOverride", {
 });
 await send("Page.navigate", { url });
 await new Promise(resolve => setTimeout(resolve, 900));
+if (state === "menu") await send("Runtime.evaluate", { expression: "document.querySelector('.mobile-nav').open = true" });
+if (state.startsWith("scroll:")) {
+  const y = Math.max(0, Number(state.slice(7)) || 0);
+  await send("Runtime.evaluate", { expression: `window.scrollTo(0, ${y})` });
+  await new Promise(resolve => setTimeout(resolve, 250));
+}
 const dimensions = await send("Runtime.evaluate", { expression: `JSON.stringify({innerWidth,innerHeight,scrollWidth:document.documentElement.scrollWidth,bodyScrollWidth:document.body.scrollWidth})`, returnByValue: true });
 const timing = await send("Runtime.evaluate", { expression: `JSON.stringify({navigation:performance.getEntriesByType('navigation').map(({domContentLoadedEventEnd,loadEventEnd,transferSize,encodedBodySize})=>({domContentLoadedEventEnd,loadEventEnd,transferSize,encodedBodySize})),resources:performance.getEntriesByType('resource').map(({name,transferSize,encodedBodySize,duration})=>({name,transferSize,encodedBodySize,duration}))})`, returnByValue: true });
 const shot = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: false, fromSurface: true });

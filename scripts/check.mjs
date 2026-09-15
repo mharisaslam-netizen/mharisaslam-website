@@ -1,7 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { site } from "../src/content.mjs";
+import { navigation, pages, site } from "../src/v2-content.mjs";
 
 const root = fileURLToPath(new URL("../dist", import.meta.url));
 const files = await walk(root);
@@ -69,8 +69,8 @@ for (const file of htmlFiles) {
     const desktopNav = capture(html, /<nav class="desktop-nav"[^>]*>(.*?)<\/nav>/s);
     const mobileNav = capture(html, /<nav class="mobile-panel"[^>]*>(.*?)<\/nav>/s);
     for (const [label, nav] of [["desktop", desktopNav], ["mobile", mobileNav]]) {
+      for (const [name, href] of navigation) if (!nav.includes(`href="${href}"`)) errors.push(`${route}: ${label} navigation is missing ${name}`);
       if (!nav.includes('href="/ai-lab"')) errors.push(`${route}: ${label} navigation is missing AI Lab`);
-      if (!nav.includes('href="/ventures-eir"')) errors.push(`${route}: ${label} navigation is missing Ventures & AI`);
     }
   }
   if (html.includes("__bundler") || html.includes("Unpacking...")) errors.push(`${route}: legacy unpacking shell detected`);
@@ -85,16 +85,30 @@ for (const required of ["AI Commerce Command Center", "Career Runway AI", "In de
   if (!aiLab.includes(required)) errors.push(`AI Lab: missing restored project content (${required})`);
 }
 const projectPages = [
-  { route:"ai-commerce", href:"/ai-commerce", name:"AI Commerce Command Center", status:"In development", category:"Agentic · Commerce", description:"A full commerce operation — catalog, orders, care, sellers, inventory, pricing and finance — run on lean resources by coordinated AI agents under human approval." },
-  { route:"career-runway", href:"/career-runway", name:"Career Runway AI", status:"Live", category:"Career · Fintech", description:"Helps professionals stuck in corporate life read their Career DNA and their real financial runway — grounded in their own numbers — before they leap." }
+  { route:"ai-commerce", href:"/ai-commerce", name:"AI Commerce Command Center", status:"In development", description:"A full commerce operation — catalog, orders, care, sellers, inventory, pricing and finance — run on lean resources by coordinated AI agents under human approval." },
+  { route:"career-runway", href:"/career-runway", name:"Career Runway AI", status:"Live", description:"Helps professionals stuck in corporate life read their Career DNA and their real financial runway — grounded in their own numbers — before they leap." }
 ];
 for (const project of projectPages) {
   const html = await readFile(join(root,project.route,"index.html"),"utf8");
-  if (!aiLab.includes(`class="case project project-link" href="${project.href}"`)) errors.push(`AI Lab: project card is not linked to ${project.href}`);
-  for (const required of [project.name, project.status, project.category, project.description, "Business problem", '"@type":"SoftwareApplication"']) {
+  if (!aiLab.includes(`class="editorial-card" href="${project.href}"`)) errors.push(`AI Lab: project card is not linked to ${project.href}`);
+  for (const required of [project.name, project.status, project.description, "Business problem", '"@type":"SoftwareApplication"']) {
     if (!html.includes(required)) errors.push(`${project.href}: missing verified project content (${required})`);
   }
 }
+if (pages.filter(p => p.kind === "case").length !== 10) errors.push("release must include ten deeply written case/project pages");
+if (pages.filter(p => p.kind === "hub").length !== 8) errors.push("release must include eight Work hubs");
+if (pages.filter(p => p.kind === "article").length !== 12) errors.push("release must include twelve original articles");
+for (const p of pages.filter(p => p.kind === "case")) {
+  const html = await readFile(join(root, p.path.slice(1), "index.html"), "utf8");
+  for (const marker of ["01 / Executive summary", "07 / Evidence boundary", "08 / 2026 AI Rebuild", "12 / Decision rights", "15 / Roadmap", "18 / Related articles", "operating-diagram"])
+    if (!html.includes(marker)) errors.push(`${p.path}: missing case module ${marker}`);
+}
+for (const p of pages.filter(p => p.kind === "article")) {
+  const html = await readFile(join(root, p.path.slice(1), "index.html"), "utf8");
+  for (const marker of ["Decision model", "Executive rule", "Related work", "class=\"equation\""])
+    if (!html.includes(marker)) errors.push(`${p.path}: missing original analysis element ${marker}`);
+}
+for (const p of pages) if (/vodafone qatar|current.employer|gcc telco marketplace blueprint|agentic-commerce operating design/i.test(p.title + p.description + p.h1 + p.intro + p.body)) errors.push(`${p.path}: current-employer HOLD signal detected`);
 const llmsTxt = await readFile(join(root,"llms.txt"),"utf8").catch(() => "");
 if (!llmsTxt.trim()) errors.push("llms.txt: missing or empty");
 else {
@@ -103,6 +117,7 @@ else {
 }
 if (!robots.includes("Sitemap: https://www.mharisaslam.com/sitemap.xml")) errors.push("robots.txt: sitemap missing");
 for (const route of [...routeMap].filter(r => r !== "/404")) if (!sitemap.includes(`https://www.mharisaslam.com${route === "/" ? "/" : route}`)) errors.push(`sitemap: missing ${route}`);
+for (const slug of ["gcc-telco-marketplace-blueprint", "agentic-commerce-operating-design"]) if (sitemap.includes(slug)) errors.push(`sitemap: HOLD case ${slug} included`);
 for (const redirect of vercel.redirects || []) {
   if (!redirect.permanent) errors.push(`redirect is not permanent: ${redirect.source}`);
   if (!routeMap.has(redirect.destination)) errors.push(`redirect destination does not exist: ${redirect.source} -> ${redirect.destination}`);
