@@ -47,7 +47,7 @@ function render(page) {
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
   <meta name="twitter:image" content="${site.origin}/assets/og-card.png">
-  <meta name="theme-color" content="#101c21">
+  <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <script type="application/ld+json">${safeJson(schema)}</script>
@@ -57,9 +57,9 @@ function render(page) {
   ${header(page.path)}
   ${crumbs.length > 1 ? breadcrumbs(crumbs) : ""}
   <main id="main">
-    <header class="hero">
+    <header class="hero${page.heroAside ? "" : " hero-single"}">
       <div class="hero-copy"><p class="eyebrow">${page.eyebrow}</p><h1>${page.h1}</h1><p class="hero-intro">${page.intro}</p></div>
-      <aside class="hero-aside">${page.heroAside || `<div class="hero-context"><span>Operator perspective</span><strong>Business problem → economics → operating model</strong><p>Data, technology and AI follow the commercial decision.</p></div>`}</aside>
+      ${page.heroAside ? `<aside class="hero-aside">${page.heroAside}</aside>` : ""}
     </header>
     ${page.body}
   </main>
@@ -70,13 +70,13 @@ function render(page) {
 
 function header(path) {
   const links = navigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
-  return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}<a class="nav-subsection" href="/ai-lab">AI Lab</a></nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}<a href="/ai-lab">AI Lab</a></nav></details></div></header>`;
+  return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
 }
 function footer() {
-  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Build businesses. Fix economics. Redesign the operating model.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/work">Work</a><a href="/ai-transformation">AI & Transformation</a><a href="/ventures">Ventures</a><a href="/insights">Insights</a><a href="/ai-lab">AI Lab</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>Doha-based · GCC operating experience</span></div></div></footer>`;
+  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/work">Work</a><a href="/ai-transformation">AI & Transformation</a><a href="/ai-lab">AI Lab</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
 }
 function render404() {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>This route has moved on.</h1><p>The page may have been replaced as part of the site's clean-URL rebuild.</p><p><a class="button nav-cta" href="/">Return to the homepage</a></p></main>${footer()}</body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage or selected work.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
