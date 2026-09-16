@@ -108,15 +108,21 @@ if (pages.length !== 37) errors.push(`release must have 37 indexable routes, fou
 
 const home = await readFile(join(root, "index.html"), "utf8");
 for (const sentence of [
-  "Build businesses. Fix economics. Scale what works.",
-  "GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI."
+  "Build businesses.<br>Fix economics.<br>Scale what works.",
+  "Operating leadership across commerce, retail, marketplaces, enterprise technology and applied AI."
 ]) if (!home.includes(sentence)) errors.push(`home missing required copy: ${sentence}`);
-for (const heading of ["Selected operating record", "Areas of work", "Selected use cases", "AI & Transformation", "Insights", "About", "Contact"]) {
+for (const heading of ["Selected operating record", "Where I create value", "Selected flagship use cases", "AI & Transformation", "Investment and venture building", "Insights", "About", "Contact"]) {
   if (!home.includes(heading)) errors.push(`home missing section ${heading}`);
 }
-for (const marker of ["hero-portrait", "record-feature-grid", "builder-system", "visual-card-grid", "product-preview-grid", "insight-grid"]) {
+for (const marker of ["p-home-hero", "p-record-rail", "p-value-system", "p-case-mosaic", "p-product-stage", "p-insight-list", "p-contact-band"]) {
   if (!home.includes(marker)) errors.push(`home missing visual module ${marker}`);
 }
+
+const trackIndex = await pageHtml("/track-record");
+for (const marker of ["p-track-hero", "p-record-stories", "p-record-story", "p-capital-band"]) {
+  if (!trackIndex.includes(marker)) errors.push(`/track-record: missing pilot module ${marker}`);
+}
+count(trackIndex, /class="p-record-story/g, 5, "/track-record", "operating stories");
 
 for (const page of pages.filter(page => page.kind === "track")) {
   const html = await pageHtml(page.path);
@@ -131,6 +137,7 @@ for (const page of pages.filter(page => page.kind === "track")) {
 }
 
 for (const page of pages.filter(page => page.kind === "case")) {
+  if (page.path === "/use-cases/leading-saudi-bank-commerce-ecosystem") continue;
   const html = await pageHtml(page.path);
   for (const marker of ["Executive summary", "Business context", "Business problem", "Commercial", "Technology", "Operating model", "Risks and dependencies"]) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing use-case field ${marker}`);
@@ -145,15 +152,29 @@ for (const page of pages.filter(page => page.kind === "case")) {
 }
 
 const saudiFlagship = await pageHtml("/use-cases/leading-saudi-bank-commerce-ecosystem");
+for (const marker of ["p-bank-hero", "p-case-nav", "p-case-section", "p-exhibit", "p-kpi-cockpit"]) {
+  if (!saudiFlagship.includes(marker)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing pilot module ${marker}`);
+}
 for (const heading of [
-  "Executive summary", "Business context", "Business problem", "Commercial opportunity",
-  "Customer and enterprise journey", "Solution design", "Revenue and value pools", "Commercial model",
-  "Unit economics and business case", "Technology architecture", "Data and AI layer", "Operating model",
-  "Governance and decision rights", "Implementation roadmap", "KPI and measurement framework",
-  "Risks and dependencies", "Modeled business impact", "Executive takeaways"
+  "Executive summary", "Business problem", "Solution design", "Commercial model",
+  "Technology, data and AI", "Operating model and governance", "MVP and scale roadmap",
+  "Measurement and modeled impact", "Modeled business impact", "Risks that can invalidate the case"
 ]) if (!saudiFlagship.includes(heading)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing flagship section ${heading}`);
-atLeast(saudiFlagship, /class="report-exhibit/g, 8, "/use-cases/leading-saudi-bank-commerce-ecosystem", "flagship exhibits");
-const saudiWords = reportWordCount(saudiFlagship);
+for (const exhibit of [
+  "The bank enters after the commercial decision",
+  "A commerce-enabled journey begins at declared intent",
+  "Bank, merchant and customer ecosystem",
+  "Commercial value pools and cost deductions",
+  "Technology and data architecture",
+  "AI ranks approved value; it does not create eligibility",
+  "Operating model and decision rights",
+  "Twelve-month implementation roadmap"
+]) if (!saudiFlagship.includes(exhibit)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing flagship exhibit ${exhibit}`);
+for (const term of ["cardholder segmentation", "merchant-funded", "customer consent", "attribution", "merchant settlement", "net incremental contribution", "90-day"]) {
+  if (!saudiFlagship.toLowerCase().includes(term.toLowerCase())) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing commercial depth ${term}`);
+}
+count(saudiFlagship, /<figure class="p-exhibit\b/g, 8, "/use-cases/leading-saudi-bank-commerce-ecosystem", "flagship exhibits");
+const saudiWords = pilotWordCount(saudiFlagship);
 if (saudiWords < 1500 || saudiWords > 3000) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: expected 1500-3000 report words, found ${saudiWords}`);
 
 for (const page of pages.filter(page => page.kind === "article")) {
@@ -165,10 +186,9 @@ for (const page of pages.filter(page => page.kind === "article")) {
 
 for (const [route, markers] of [
   ["/track-record/floward-oman", ["Floward Oman: operating chain", "Local setup", "Assortment", "Fulfilment", "Occasion trading", "Operating rhythm", "Technology and operating architecture"]],
-  ["/track-record/salman-miraq-ksm", ["Salman Corporation, Miraq and KSM: operating chain", "Core diagnosis", "Stock and cash reset", "Portfolio choices", "Capital gates", "GCC options"]],
+  ["/track-record/salman-miraq", ["Salman Corporation / Miraq Lifestyle: operating chain", "Core diagnosis", "Stock and cash reset", "Portfolio choices", "Capital gates", "GCC options"]],
   ["/track-record/roumaan", ["Roumaan: operating chain", "Customer demand", "Curated catalogue", "Digital order", "Fulfilment", "Service learning"]],
-  ["/track-record/upapp-factory", ["UpApp Factory: operating chain", "Qualified requirement", "Product design", "Development", "Deployment", "Support"]],
-  ["/use-cases/leading-saudi-bank-commerce-ecosystem", ["Customer journey from purchase intent to attributed spend", "Declare intent", "Resolve eligibility", "Rank relevant value", "Merchant handoff", "Match transaction", "Commercial value-pool waterfall", "Incremental card spend", "Merchant-funded value", "Loyalty and finance value", "KPI and measurement framework"]]
+  ["/track-record/upapp-factory", ["UpApp Factory: operating chain", "Qualified requirement", "Product design", "Development", "Deployment", "Support"]]
 ]) {
   const html = await pageHtml(route);
   for (const marker of markers) if (!html.includes(marker)) errors.push(`${route}: missing bespoke visual content ${marker}`);
@@ -178,8 +198,9 @@ const ai = await pageHtml("/ai-transformation");
 for (const target of ["/ai-commerce", "/career-runway", "/use-cases/aeofind"]) {
   if (!ai.includes(`href="${target}"`)) errors.push(`AI & Transformation missing ${target}`);
 }
-count(ai, /class="product-preview"/g, 3, "/ai-transformation", "product previews");
-if (!ai.includes("interface-module") || !ai.includes("authority-module")) errors.push("AI & Transformation missing interface or decision-authority visual");
+for (const marker of ["p-commerce-ui", "p-runway-ui", "p-aeo-ui", "p-agent-architecture", "p-authority-ladder", "p-ai-delivery"]) {
+  if (!ai.includes(marker)) errors.push(`AI & Transformation missing pilot module ${marker}`);
+}
 
 const useCasesIndex = await pageHtml("/use-cases");
 count(useCasesIndex, /class="visual-card"/g, 17, "/use-cases", "visual use-case cards");
@@ -241,6 +262,17 @@ function atLeast(value, regexOrMinimum, minimumOrRoute, routeOrLabel, maybeLabel
 function reportWordCount(html) {
   const report = capture(html, /<article class="report-main">(.*?)<\/article>/s);
   return [...report.matchAll(/<p\b[^>]*>(.*?)<\/p>/gis)]
+    .map(match => match[1])
+    .join(" ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z0-9#]+;/gi, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+}
+function pilotWordCount(html) {
+  const main = capture(html, /<main id="main">(.*?)<\/main>/s);
+  return [...main.matchAll(/<p\b[^>]*>(.*?)<\/p>/gis)]
     .map(match => match[1])
     .join(" ")
     .replace(/<[^>]+>/g, " ")

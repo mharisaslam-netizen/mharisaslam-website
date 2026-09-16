@@ -8,6 +8,7 @@ const out = join(root, "dist");
 await rm(out, { recursive: true, force: true });
 await mkdir(join(out, "assets"), { recursive: true });
 await cp(join(root, "src", "v2.css"), join(out, "assets", "site.css"));
+await cp(join(root, "src", "pilot.css"), join(out, "assets", "pilot.css"));
 try { await cp(join(root, "public", "assets"), join(out, "assets"), { recursive: true }); } catch {}
 
 for (const page of pages) {
@@ -47,21 +48,22 @@ function render(page) {
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
   <meta name="twitter:image" content="${site.origin}/assets/og-card.png">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="${page.pilot ? "#071821" : "#ffffff"}">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/pilot.css">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <script type="application/ld+json">${safeJson(schema)}</script>
 </head>
-<body>
+<body${page.pilot ? ` class="pilot-page pilot-${page.kind}"` : ""}>
   <a class="skip-link" href="#main">Skip to content</a>
   ${header(page.path)}
-  ${crumbs.length > 1 ? breadcrumbs(crumbs) : ""}
+  ${crumbs.length > 1 && !page.pilot ? breadcrumbs(crumbs) : ""}
   <main id="main">
-    <header class="hero${page.heroAside ? "" : " hero-single"}">
+    ${page.pilot ? page.pilotBody : `<header class="hero${page.heroAside ? "" : " hero-single"}">
       <div class="hero-copy"><p class="eyebrow">${page.eyebrow}</p><h1>${page.h1}</h1><p class="hero-intro">${page.intro}</p></div>
       ${page.heroAside ? `<aside class="hero-aside">${page.heroAside}</aside>` : ""}
     </header>
-    ${page.body}
+    ${page.body}`}
   </main>
   ${footer()}
 </body>
