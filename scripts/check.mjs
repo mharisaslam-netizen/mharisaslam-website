@@ -123,22 +123,38 @@ for (const page of pages.filter(page => page.kind === "track")) {
   for (const marker of ["Role and mandate", "What was built or fixed", "Commercial contribution", "Technology and operations", "Business relevance"]) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing track-record field ${marker}`);
   }
-  for (const marker of ["record-document", "record-visual-stage", "record-evidence-grid", "visual-module"]) {
+  for (const marker of ["report-layout track-report", "report-contents", "report-main", "report-section", "report-exhibit"]) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing documentary module ${marker}`);
   }
+  atLeast(html, /class="report-exhibit/g, 6, page.path, "report exhibits");
+  atLeast(reportWordCount(html), 600, page.path, "narrative report words");
 }
 
 for (const page of pages.filter(page => page.kind === "case")) {
   const html = await pageHtml(page.path);
-  for (const marker of ["Overview", "Business Problem", "Solution", "Technology", "Commercial Model", "Operating Model"]) {
+  for (const marker of ["Executive summary", "Business context", "Business problem", "Commercial", "Technology", "Operating model", "Risks and dependencies"]) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing use-case field ${marker}`);
   }
-  if (!html.includes("Business Impact") && !html.includes("Modeled Business Impact")) errors.push(`${page.path}: missing impact field`);
-  for (const marker of ["case-hero-visual", "visual-module", "impact-panel"]) {
+  if (!/Business impact|Modeled business impact/i.test(html)) errors.push(`${page.path}: missing impact field`);
+  for (const marker of ["report-layout", "report-contents", "report-main", "report-section", "report-exhibit", "report-table"]) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing case visual module ${marker}`);
   }
+  atLeast(html, /class="report-exhibit/g, 6, page.path, "report exhibits");
+  atLeast(reportWordCount(html), 380, page.path, "narrative report words");
   if (forbiddenCaseNames.test(html)) errors.push(`${page.path}: client or company name leaked into anonymized use case`);
 }
+
+const saudiFlagship = await pageHtml("/use-cases/leading-saudi-bank-commerce-ecosystem");
+for (const heading of [
+  "Executive summary", "Business context", "Business problem", "Commercial opportunity",
+  "Customer and enterprise journey", "Solution design", "Revenue and value pools", "Commercial model",
+  "Unit economics and business case", "Technology architecture", "Data and AI layer", "Operating model",
+  "Governance and decision rights", "Implementation roadmap", "KPI and measurement framework",
+  "Risks and dependencies", "Modeled business impact", "Executive takeaways"
+]) if (!saudiFlagship.includes(heading)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing flagship section ${heading}`);
+atLeast(saudiFlagship, /class="report-exhibit/g, 8, "/use-cases/leading-saudi-bank-commerce-ecosystem", "flagship exhibits");
+const saudiWords = reportWordCount(saudiFlagship);
+if (saudiWords < 1500 || saudiWords > 3000) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: expected 1500-3000 report words, found ${saudiWords}`);
 
 for (const page of pages.filter(page => page.kind === "article")) {
   const html = await pageHtml(page.path);
@@ -148,11 +164,11 @@ for (const page of pages.filter(page => page.kind === "article")) {
 }
 
 for (const [route, markers] of [
-  ["/track-record/floward-oman", ["Zero to local operating rhythm", "Local setup", "Assortment", "Fulfilment", "Occasion trading", "Acquisition", "Operating rhythm", "Oman operating model"]],
-  ["/track-record/salman-miraq-ksm", ["Value-creation and transformation map", "Core retail reset", "Working capital and inventory", "Portfolio decisions", "New venture creation", "Investment and recapitalization assessment", "GCC expansion logic"]],
-  ["/track-record/roumaan", ["Commerce evolution", "Customer demand", "Catalogue", "Digital commerce", "Fulfilment", "Operating model"]],
-  ["/track-record/upapp-factory", ["Product delivery lifecycle", "Business requirement", "Product design", "Development", "Deployment", "Support", "Studio evolution"]],
-  ["/use-cases/leading-saudi-bank-commerce-ecosystem", ["Customer to attributed spend", "Purchase intent", "Customer eligibility", "Relevant value", "Merchant handoff", "Transaction", "Attributed spend", "Commercial value model", "Incremental card spend", "Merchant-funded value", "Loyalty economics", "Customer engagement and data"]]
+  ["/track-record/floward-oman", ["Floward Oman: operating chain", "Local setup", "Assortment", "Fulfilment", "Occasion trading", "Operating rhythm", "Technology and operating architecture"]],
+  ["/track-record/salman-miraq-ksm", ["Salman Corporation, Miraq and KSM: operating chain", "Core diagnosis", "Stock and cash reset", "Portfolio choices", "Capital gates", "GCC options"]],
+  ["/track-record/roumaan", ["Roumaan: operating chain", "Customer demand", "Curated catalogue", "Digital order", "Fulfilment", "Service learning"]],
+  ["/track-record/upapp-factory", ["UpApp Factory: operating chain", "Qualified requirement", "Product design", "Development", "Deployment", "Support"]],
+  ["/use-cases/leading-saudi-bank-commerce-ecosystem", ["Customer journey from purchase intent to attributed spend", "Declare intent", "Resolve eligibility", "Rank relevant value", "Merchant handoff", "Match transaction", "Commercial value-pool waterfall", "Incremental card spend", "Merchant-funded value", "Loyalty and finance value", "KPI and measurement framework"]]
 ]) {
   const html = await pageHtml(route);
   for (const marker of markers) if (!html.includes(marker)) errors.push(`${route}: missing bespoke visual content ${marker}`);
@@ -213,6 +229,25 @@ function routeFor(file) {
 function count(html, regex, wanted, route, label) {
   const found = (html.match(regex) || []).length;
   if (found !== wanted) errors.push(`${route}: expected ${wanted} ${label}, found ${found}`);
+}
+function atLeast(value, regexOrMinimum, minimumOrRoute, routeOrLabel, maybeLabel) {
+  if (typeof value === "number") {
+    if (value < regexOrMinimum) errors.push(`${minimumOrRoute}: expected at least ${regexOrMinimum} ${routeOrLabel}, found ${value}`);
+    return;
+  }
+  const found = (value.match(regexOrMinimum) || []).length;
+  if (found < minimumOrRoute) errors.push(`${routeOrLabel}: expected at least ${minimumOrRoute} ${maybeLabel}, found ${found}`);
+}
+function reportWordCount(html) {
+  const report = capture(html, /<article class="report-main">(.*?)<\/article>/s);
+  return [...report.matchAll(/<p\b[^>]*>(.*?)<\/p>/gis)]
+    .map(match => match[1])
+    .join(" ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z0-9#]+;/gi, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
 }
 function capture(html, regex) { return (html.match(regex) || [])[1] || ""; }
 function unique(map, value, route, label) {

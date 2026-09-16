@@ -31,6 +31,24 @@ const authorityVisual = (title, items, note = "", compact = false) => visualFigu
 const interfaceVisual = (title, status, items, note = "", compact = false) => visualFigure("interface-module", title, `<div class="interface-shell"><div class="interface-top"><span class="interface-dots" aria-hidden="true">● ● ●</span><strong>${esc(status)}</strong></div><div class="interface-grid">${items.map((item, index) => `<div class="interface-panel"><span>${String(index + 1).padStart(2, "0")}</span><strong>${esc(item)}</strong><i></i><i></i></div>`).join("")}</div></div>`, note, compact);
 const valueMapVisual = (title, items, note = "", compact = false) => visualFigure("value-map-module", title, `<div class="value-map">${items.map((item, index) => `<div><span>${String(index + 1).padStart(2, "0")}</span><strong>${esc(item)}</strong></div>`).join("")}</div>`, note, compact);
 
+const prose = paragraphs => `<div class="report-prose">${paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("")}</div>`;
+const bulletList = items => `<ul class="report-list">${items.map(item => `<li>${esc(item)}</li>`).join("")}</ul>`;
+const reportSection = (id, number, title, content, className = "") => `<section class="report-section ${className}" id="${id}"><div class="report-section-head"><span>${String(number).padStart(2, "0")}</span><h2>${esc(title)}</h2></div><div class="report-section-body">${content}</div></section>`;
+const reportCallout = (label, title, text, className = "") => `<aside class="report-callout ${className}"><span>${esc(label)}</span><h3>${esc(title)}</h3><p>${esc(text)}</p></aside>`;
+const reportTable = (caption, headers, rows) => `<div class="report-table-wrap"><table class="report-table"><caption>${esc(caption)}</caption><thead><tr>${headers.map(header => `<th scope="col">${esc(header)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${row.map((cell, index) => `<${index === 0 ? "th scope=\"row\"" : "td"}>${esc(cell)}</${index === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const exhibitFrame = (number, title, body, note = "", className = "") => `<figure class="report-exhibit ${className}" role="img" aria-label="Exhibit ${number}: ${esc(title)}"><figcaption><span>Exhibit ${String(number).padStart(2, "0")}</span><strong>${esc(title)}</strong></figcaption>${body}${note ? `<p class="exhibit-note">${esc(note)}</p>` : ""}</figure>`;
+const journeyExhibit = (number, title, items, note = "") => exhibitFrame(number, title, `<div class="exhibit-journey">${items.map((item, index) => `<div><span>${String(index + 1).padStart(2, "0")}</span><strong>${esc(typeof item === "string" ? item : item.title)}</strong>${typeof item === "string" || !item.detail ? "" : `<p>${esc(item.detail)}</p>`}</div>`).join("")}</div>`, note, "exhibit-journey-wrap");
+const ecosystemExhibit = (number, title, center, parties, note = "") => exhibitFrame(number, title, `<div class="exhibit-ecosystem"><div class="ecosystem-center"><span>Orchestrator</span><strong>${esc(center)}</strong></div>${parties.map((party, index) => `<div class="ecosystem-party party-${index + 1}"><span>${esc(party.label)}</span><strong>${esc(party.title)}</strong><p>${esc(party.detail)}</p></div>`).join("")}</div>`, note, "exhibit-ecosystem-wrap");
+const waterfallExhibit = (number, title, items, note = "") => exhibitFrame(number, title, `<div class="exhibit-waterfall">${items.map((item, index) => `<div class="waterfall-column ${item.kind || "add"}" style="--bar:${item.height || 60}%"><span>${esc(item.kind === "cost" ? "Cost" : index === items.length - 1 ? "Result" : "Value")}</span><i></i><strong>${esc(item.label)}</strong></div>`).join("")}</div>`, note, "exhibit-waterfall-wrap");
+const equationExhibit = (number, title, income, costs, result, note = "") => exhibitFrame(number, title, `<div class="exhibit-equation"><div class="equation-group positive"><span>Value earned</span>${income.map(item => `<strong>${esc(item)}</strong>`).join("")}</div><div class="equation-symbol">−</div><div class="equation-group negative"><span>Cost to serve</span>${costs.map(item => `<strong>${esc(item)}</strong>`).join("")}</div><div class="equation-symbol">=</div><div class="equation-result"><span>Decision metric</span><strong>${esc(result)}</strong></div></div>`, note, "exhibit-equation-wrap");
+const architectureExhibit = (number, title, layers, note = "") => exhibitFrame(number, title, `<div class="exhibit-architecture">${layers.map((layer, index) => `<div class="architecture-layer layer-${index + 1}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${esc(layer.title)}</strong><div>${layer.items.map(item => `<i>${esc(item)}</i>`).join("")}</div></div>`).join("")}</div>`, note, "exhibit-architecture-wrap");
+const swimlaneExhibit = (number, title, lanes, note = "") => exhibitFrame(number, title, `<div class="exhibit-swimlanes">${lanes.map(lane => `<div class="swimlane"><strong>${esc(lane.title)}</strong><div>${lane.steps.map(step => `<span>${esc(step)}</span>`).join("")}</div></div>`).join("")}</div>`, note, "exhibit-swimlane-wrap");
+const kpiExhibit = (number, title, groups, note = "") => exhibitFrame(number, title, `<div class="exhibit-kpis">${groups.map(group => `<div><span>${esc(group.title)}</span>${group.metrics.map(metric => `<strong>${esc(metric)}</strong>`).join("")}</div>`).join("")}</div>`, note, "exhibit-kpi-wrap");
+const roadmapExhibit = (number, title, phases, note = "") => exhibitFrame(number, title, `<div class="exhibit-roadmap">${phases.map((phase, index) => `<div><span>${esc(phase.period)}</span><strong>${esc(phase.title)}</strong><p>${esc(phase.detail)}</p><i>${String(index + 1).padStart(2, "0")}</i></div>`).join("")}</div>`, note, "exhibit-roadmap-wrap");
+const timelineExhibit = (number, title, items, note = "") => exhibitFrame(number, title, `<div class="exhibit-timeline">${items.map((item, index) => `<div><span>${esc(item.period)}</span><strong>${esc(item.title)}</strong><p>${esc(item.detail)}</p><i>${String(index + 1).padStart(2, "0")}</i></div>`).join("")}</div>`, note, "exhibit-timeline-wrap");
+const reportContents = items => `<nav class="report-contents" aria-label="On this page"><span>On this page</span><ol>${items.map(item => `<li><a href="#${item.id}"><b>${String(item.number).padStart(2, "0")}</b>${esc(item.title)}</a></li>`).join("")}</ol></nav>`;
+const reportBlock = (title, content) => `<div class="report-block"><h3>${esc(title)}</h3>${content}</div>`;
+
 const trackRecords = [
   {
     slug: "roumaan", name: "Roumaan", role: "Founder and operator", geography: "Oman", period: "2014 to 2018",
@@ -83,6 +101,224 @@ const trackRecords = [
     visual: ["Customer", "Commerce platform", "Enterprise controls", "Accountable outcome"]
   }
 ];
+
+const trackDeep = {
+  "roumaan": {
+    context: [
+      "Roumaan was built in Oman between 2014 and 2018, when broad online retail was still early and customers could not assume that a digital catalogue reflected stock that could actually be delivered. The opportunity was larger than putting products on a website. The business needed to make assortment, availability, payment, order handling and fulfilment work as one promise.",
+      "The operating history that can be stated publicly is first-party digital commerce. Roumaan traded online, recorded orders and built a customer base. Later marketplace planning explored how third-party supply could extend the proposition, but that work is kept separate from the results of the original retail operation."
+    ],
+    problem: [
+      "A multi-category proposition creates an immediate coordination problem. Each category has different product data, replenishment patterns, delivery constraints and return behaviour. A broad catalogue can attract demand, but poor availability or weak order handling quickly turns range into a service liability.",
+      "The commercial problem was therefore not traffic alone. Each completed order had to carry enough product margin to absorb payment, picking, delivery, returns, customer care and acquisition. Growth that increased cancellations or service work without improving contribution would have made the business busier without making it stronger."
+    ],
+    work: [
+      "Haris shaped the proposition, category choices and operating model, then worked through the daily decisions behind catalogue quality, merchandising, order flow and fulfilment. The business needed a single view of what was sellable, what had been ordered and what could be completed within the service promise shown to the customer.",
+      "The model was deliberately practical. Central control over catalogue and order operations reduced ambiguity while the customer proposition was still being proved. Marketplace expansion could only make sense after seller admission, stock truth, commissions, service responsibility and settlement had their own operating design."
+    ],
+    commercial: [
+      "The relevant equation was completed-order contribution: selling price less product cost, payment cost, fulfilment, delivery, returns, service recovery and attributable acquisition. Revenue and order count were useful signals, but neither could answer whether a category or customer cohort earned cash.",
+      "Working capital sat beside the order P&L. Inventory bought too early could make the digital range look stronger while locking cash into slow stock. The commercial review therefore needed category margin, stock age, sell-through and fulfilment quality in the same conversation."
+    ],
+    operating: [
+      "Category and merchandising decisions sat close to stock and demand. Order operations coordinated availability, customer communication and fulfilment. Service issues fed back into catalogue and supplier decisions rather than remaining isolated in customer care.",
+      "A modern version would preserve those accountabilities while using catalogue automation, live inventory APIs and exception queues to reduce manual work. People would still own price, supplier commitments, refunds and any decision that changes the customer promise."
+    ],
+    technology: [
+      "The original operation used a commerce content layer, product catalogue, customer records and order reporting. The technology supported the retail model; it did not replace the work required to maintain product information, confirm stock and complete orders.",
+      "The current architecture would separate product, inventory, price, order and customer-service records behind APIs. AI could identify missing attributes, classify enquiries and summarize exceptions, but the source systems would remain authoritative for stock, money and order status."
+    ],
+    results: [
+      "Roumaan operated as a live online retailer with recorded orders and customer registrations. That is the public evidence used on this site. No unpublished revenue, profit, market-share or third-party marketplace result is presented.",
+      "The lasting operating lesson was direct: digital commerce is a trading and fulfilment business before it is a traffic business. The catalogue is credible only when the operation can fulfil the promise attached to it."
+    ],
+    lessons: ["Build stock truth before catalogue scale.", "Measure completed-order contribution, not checkout activity alone.", "Treat service failures as commercial data.", "Keep first-party and marketplace economics separate.", "Let automation prepare work, while operators retain consequential decisions."],
+    timeline: [
+      { period: "Build", title: "Proposition and catalogue", detail: "Define the customer promise, categories and first operating controls." },
+      { period: "Trade", title: "Orders and fulfilment", detail: "Connect availability, order handling, delivery and customer communication." },
+      { period: "Learn", title: "Category economics", detail: "Review margin, stock age, service failures and repeat behaviour." },
+      { period: "Extend", title: "Marketplace planning", detail: "Design seller, commission and settlement logic separately from first-party retail." }
+    ],
+    metrics: [
+      { title: "Demand", metrics: ["Qualified sessions", "Category conversion", "Repeat customers"] },
+      { title: "Trade", metrics: ["Completed orders", "Cancellation rate", "Return rate"] },
+      { title: "Economics", metrics: ["Order contribution", "Acquisition payback", "Stock turn"] },
+      { title: "Service", metrics: ["On-time completion", "Care contacts per order", "Refund cycle"] }
+    ]
+  },
+  "salman-miraq-ksm": {
+    context: [
+      "This chapter combined operating leadership, investment work and family-business decision making across Oman and wider GCC opportunities. The starting point was a retail base facing margin pressure, ageing inventory and competing demands on cash. At the same time, distribution and venture opportunities created a legitimate question about where new capital should go.",
+      "The work did not treat turnaround and growth as separate conversations. A new venture could not be judged only on market potential while the core business carried unresolved stock and cash issues. The same discipline had to apply to store economics, portfolio choices, regional rights and any recapitalization proposal."
+    ],
+    problem: [
+      "Retail reporting can hide the difference between sales, gross margin and cash. A category may look profitable before markdown and occupancy. Inventory may appear as an asset while losing relevance and absorbing working capital. Expansion can then add fixed cost before the existing economics are stable.",
+      "The governance problem was equally important. Family businesses often hold operating history, supplier relationships, property decisions and ownership objectives in the same room. The transformation needed a fact base that supported decisions without pretending that every choice was purely financial."
+    ],
+    work: [
+      "Haris connected store and category performance to stock, procurement, cash and governance. The review moved beyond top-line sales into product margin, stock age, supplier terms, channel overlap and the fixed cost required to keep each activity operating.",
+      "Portfolio work examined which activities belonged in the core, which required repair, and which new ideas deserved a separate investment case. Distribution, GCC expansion and venture formation were evaluated through explicit gates covering rights, landed economics, capital needs, operating capacity and downside exposure."
+    ],
+    commercial: [
+      "The core retail test was margin to cash. A price or buying decision mattered only if it improved full contribution and released working capital after markdown, occupancy, labour and handling. The venture test was different: contribution after product, channel, logistics and local overhead, measured against the cash required before sell-through.",
+      "Recapitalization and investment assessment therefore sat downstream of the operating facts. Capital could support a viable reset or a proven growth option, but it could not substitute for category economics, stock discipline or accountable execution."
+    ],
+    operating: [
+      "The operating rhythm brought finance, procurement, category and store perspectives into one review. Each issue needed an owner, a decision and a time-bound measure. Stock actions were not allowed to disappear into a general sales target, and new ventures were not allowed to borrow credibility from the existing group without a separate case.",
+      "Governance separated recommendation, approval and execution. Management prepared operating evidence. Owners and boards retained capital authority. Venture and market-entry options progressed only when commercial rights, operating capacity and downside limits were understood."
+    ],
+    technology: [
+      "The work used management reporting, P&L analysis, inventory data, e-commerce assessment and ERP considerations. The practical gap was less about adding another dashboard than reconciling sales, margin, inventory and cash into one decision view.",
+      "A current control layer would combine POS, inventory, procurement and finance data in a contribution model. AI could summarize exceptions, cluster ageing stock and prepare scenarios. It would not approve markdowns, supplier commitments, investment or financing."
+    ],
+    results: [
+      "The public evidence supports a commercial and operating reset, investment and recapitalization assessment, portfolio decisions and venture formation work. It does not support a claimed group-wide profit uplift, inventory reduction percentage or completed GCC expansion result.",
+      "The useful outcome is the decision architecture itself: repair the core with margin and cash evidence, separate portfolio choices, and require new ventures to pass their own investment gates."
+    ],
+    lessons: ["Turn margin into cash before calling a retail reset successful.", "Separate core repair from venture enthusiasm.", "Make stock age visible beside the P&L.", "Put ownership and decision rights into the operating rhythm.", "Use capital to fund a coherent plan, not to postpone operating choices."],
+    timeline: [
+      { period: "Diagnose", title: "Core retail economics", detail: "Reconcile margin, overhead, stock age and cash pressure." },
+      { period: "Reset", title: "Management rhythm", detail: "Assign owners and review actions through one operating fact base." },
+      { period: "Choose", title: "Portfolio and capital", detail: "Separate repair, hold, exit and investment decisions." },
+      { period: "Build", title: "Venture and GCC options", detail: "Test rights, economics and operating capacity before scale." }
+    ],
+    metrics: [
+      { title: "Retail", metrics: ["Store contribution", "Category margin", "Markdown cost"] },
+      { title: "Working capital", metrics: ["Stock age", "Sell-through", "Supplier days"] },
+      { title: "Portfolio", metrics: ["Cash required", "Downside case", "Investment gate"] },
+      { title: "Governance", metrics: ["Action closure", "Decision latency", "Owner accountability"] }
+    ]
+  },
+  "floward-oman": {
+    context: [
+      "Floward Oman was a country-launch assignment for a digital gifting business. The local operation had to translate a regional proposition into an Oman offer that customers could trust on ordinary days and on the occasions when demand, supplier pressure and delivery complexity all rose together.",
+      "Gifting is not a conventional replenishment business. The product is perishable, the delivery time is part of the promise, and the recipient is often different from the buyer. Assortment, presentation, message accuracy and last-mile execution all affect the same order."
+    ],
+    problem: [
+      "A market launch can produce a website before it produces an operation. The harder work was local assortment, supplier readiness, quality standards, delivery capacity, trading calendars, acquisition and the daily review required to keep them synchronized.",
+      "Occasion peaks made the economics less forgiving. More orders could improve density, but they could also create cancellations, substitution, service recovery and costly delivery failure. The commercial model had to follow completed orders and contribution, not demand captured at checkout."
+    ],
+    work: [
+      "Haris built the local commercial and fulfilment setup. That included local category choices, trading activity, campaign coordination, supplier relationships, delivery execution and the operating rhythm that connected daily demand with capacity.",
+      "The country role sat between regional platform capability and local market reality. Local decisions had to stay close to customer behaviour and supplier capacity while preserving the service proposition of the wider business."
+    ],
+    commercial: [
+      "The order P&L began with product margin, then absorbed packaging, payment, delivery, cancellation, substitution, customer care and acquisition. Occasion trading added a capacity question: how much demand could be accepted without paying for service failure later.",
+      "The useful management view combined demand, available assortment, fulfilment capacity and completed-order contribution. Marketing efficiency could not be read independently from stock readiness and delivery performance."
+    ],
+    operating: [
+      "The local model linked trading, suppliers, fulfilment and customer demand through a country operation. Daily decisions covered what to promote, what could be fulfilled, where capacity was tight and which service issues required immediate commercial action.",
+      "Peak preparation needed a longer cadence. Assortment, supplier commitments, staffing and delivery capacity had to be locked progressively, with clear cut-offs and fallback rules. On the day, the operation needed one exception view rather than separate functional reports."
+    ],
+    technology: [
+      "The operating stack included commerce catalogue, order and fulfilment systems, performance reporting and local workflows. Technology made demand and orders visible, but local teams still had to maintain product readiness and execute the physical service.",
+      "A current setup would add live supplier availability, capacity forecasting, route APIs and a supervised exception layer. AI could prepare demand scenarios or classify service issues. It would not promise unavailable stock or change a customer order without policy and approval."
+    ],
+    results: [
+      "The verified public result used here is the establishment of the Oman operation and its local commercial and fulfilment model. No market-share, revenue or profitability figure is used on this site.",
+      "The operating lesson is that a country launch is complete only when local supply, fulfilment and commercial cadence work together. A regional brand and platform provide leverage, but the customer experiences the local operation."
+    ],
+    lessons: ["Build the local supply and fulfilment system alongside demand.", "Plan occasion capacity before marketing is committed.", "Measure completed-order contribution after service recovery.", "Give the country team clear local decision rights.", "Use one exception view across trading, supply and delivery."],
+    timeline: [
+      { period: "0", title: "Market setup", detail: "Establish the local proposition, supply base and operating responsibilities." },
+      { period: "Launch", title: "Assortment and fulfilment", detail: "Connect sellable range, order flow and last-mile execution." },
+      { period: "Trade", title: "Occasion calendar", detail: "Coordinate campaigns with supplier and delivery capacity." },
+      { period: "Rhythm", title: "Daily operating review", detail: "Manage demand, exceptions, service and contribution together." }
+    ],
+    metrics: [
+      { title: "Demand", metrics: ["Qualified traffic", "Conversion", "Occasion mix"] },
+      { title: "Supply", metrics: ["Sellable range", "Substitution rate", "Supplier readiness"] },
+      { title: "Fulfilment", metrics: ["On-time completion", "Cancellation rate", "Delivery cost"] },
+      { title: "Economics", metrics: ["Order contribution", "Acquisition payback", "Service recovery cost"] }
+    ]
+  },
+  "upapp-factory": {
+    context: [
+      "UpApp Factory was a founder-led product studio serving web and mobile requirements from Oman into regional delivery contexts. The model depended on a small core team, selected delivery partners and disciplined handover rather than a large permanent development bench.",
+      "Custom-product work often looks attractive at contract signature and deteriorates during delivery. Ambiguous requirements, added scope, partner cost, rework and open-ended support can consume the margin before the product reaches the client."
+    ],
+    problem: [
+      "The operating challenge was to turn a business request into a product that could be priced, built, tested and supported. Clients needed flexibility, but the studio needed a clear definition of what was included, which decisions were still open and what evidence would count as acceptance.",
+      "Regional delivery added coordination. Client context, partner availability and handover expectations varied, so the studio model needed consistent gates without pretending every engagement was identical."
+    ],
+    work: [
+      "Haris worked across demand qualification, requirements, product design, delivery planning, testing, deployment and client handover. The commercial conversation began before development by testing whether the brief was specific enough to estimate and whether the intended product justified the delivery effort.",
+      "A lean core coordinated specialist capacity rather than carrying every skill permanently. This kept the cost base variable, but it made scope ownership, quality review and release control more important."
+    ],
+    commercial: [
+      "Project contribution was contract value less internal delivery time, partner cost, hosting or tooling, rework, project management and the support obligation after launch. A project could appear profitable until late changes or unresolved defects moved effort beyond the priced scope.",
+      "The practical controls were milestone billing, change discipline, acceptance criteria and a clear support boundary. The model worked only when client decisions arrived in time and delivery capacity matched the promise made during sale."
+    ],
+    operating: [
+      "The delivery chain moved from qualified requirement to product design, development, testing, deployment and support. Each gate produced a specific artifact or decision, reducing the chance that uncertainty simply moved downstream.",
+      "The core team owned client context, scope and quality. Delivery partners owned agreed work packages. The client owned timely decisions and acceptance. Support began from a documented release rather than an informal handover."
+    ],
+    technology: [
+      "The work covered web and mobile development, requirements, project planning, testing and release workflows. Technology choices followed the client context and delivery scope rather than a single product platform.",
+      "A current studio would use shared component libraries, automated testing, cloud deployment and AI-assisted documentation or test preparation. Code, security and acceptance would still receive accountable human review."
+    ],
+    results: [
+      "The studio delivered contracted digital products across more than one market context and completed client handovers. Client performance gains, total project count, studio revenue and profitability are not published.",
+      "The main operating lesson was that a product studio sells managed uncertainty. Scope, decision speed, quality and support shape the economics as much as the development rate."
+    ],
+    lessons: ["Qualify the business requirement before pricing the build.", "Turn uncertainty into explicit delivery gates.", "Protect contribution through scope and acceptance discipline.", "Keep partner capacity variable but quality ownership internal.", "Treat handover and support as designed parts of the product."],
+    timeline: [
+      { period: "Qualify", title: "Business requirement", detail: "Clarify the user, outcome, constraints and decision owner." },
+      { period: "Design", title: "Scope and product", detail: "Translate the requirement into an agreed release and acceptance plan." },
+      { period: "Build", title: "Delivery and test", detail: "Coordinate specialist capacity, quality and client decisions." },
+      { period: "Release", title: "Deployment and support", detail: "Complete acceptance, documentation, handover and support boundaries." }
+    ],
+    metrics: [
+      { title: "Pipeline", metrics: ["Qualified briefs", "Proposal conversion", "Decision time"] },
+      { title: "Delivery", metrics: ["Milestone variance", "Defect escape", "Rework hours"] },
+      { title: "Economics", metrics: ["Project contribution", "Partner cost", "Cash collection"] },
+      { title: "Handover", metrics: ["Acceptance cycle", "Open issues", "Support demand"] }
+    ]
+  },
+  "vodafone-qatar-marqa": {
+    context: [
+      "This page records Haris's current public role context in strategic digital commerce at Vodafone Qatar and work connected to MARQA. It is included because enterprise scale, governance and cross-functional delivery are part of the operating record.",
+      "Detailed programmes, internal roadmaps, performance data, commercial terms and customer information remain confidential. The page therefore explains the nature of the operating environment without turning current-employer work into a public case study."
+    ],
+    problem: [
+      "Enterprise commerce sits across customer experience, product, commercial priorities, technology delivery, operations, risk and governance. A change can improve one step while creating service cost or control problems elsewhere.",
+      "The management requirement is to connect customer activity to an attributable commercial outcome, then assign ownership for the platform, process and service decisions required to deliver it."
+    ],
+    work: [
+      "The public-safe description is strategic digital-commerce work inside a large enterprise environment in Qatar. Haris contributes an operator's perspective shaped by ventures, country launch, retail economics and product delivery.",
+      "Specific initiatives are intentionally excluded. The transferable work concerns framing commercial problems, connecting platform delivery to operating change and keeping decision rights clear across functions."
+    ],
+    commercial: [
+      "The commercial lens follows attributable revenue, service cost, adoption quality and accountable ownership rather than digital activity in isolation. The exact measures, targets and results used internally are not published.",
+      "This boundary matters. A current role can demonstrate the ability to work at enterprise scale without disclosing programmes that belong to the employer."
+    ],
+    operating: [
+      "Enterprise delivery requires formal ownership, dependency management and control. Product, commercial, technology and operations need a shared definition of the customer journey and the result being measured.",
+      "Governance also determines where automation belongs. AI can prepare analysis or summarize operational evidence. Decisions affecting customers, money, eligibility, access or material commercial commitments remain inside enterprise controls."
+    ],
+    technology: [
+      "The public technology description is limited to enterprise commerce, customer and operating platforms. Internal architecture, vendors, data flows and delivery plans are not described.",
+      "The broader lesson is that platform work earns value only when it changes a customer or operating outcome and the business can measure that outcome reliably."
+    ],
+    results: [
+      "No internal programme result, financial outcome or customer metric is published. The evidence presented is the role context itself and the addition of large-enterprise delivery and governance to Haris's earlier founder and operator experience.",
+      "This page will remain deliberately bounded until specific material is approved for public use."
+    ],
+    lessons: ["Connect platform work to a named commercial or service outcome.", "Define ownership across product, technology and operations.", "Use governance to speed sound decisions, not only to approve work.", "Keep current-employer evidence inside publication boundaries.", "Apply AI where authority, data and audit are explicit."],
+    timeline: [
+      { period: "Frame", title: "Business outcome", detail: "Define the customer or commercial result before platform work." },
+      { period: "Align", title: "Enterprise owners", detail: "Connect product, commercial, technology, operations and control functions." },
+      { period: "Deliver", title: "Platform and process", detail: "Coordinate the technology change with the operating change." },
+      { period: "Measure", title: "Attribution and service", detail: "Review adoption, value, cost and accountable ownership." }
+    ],
+    metrics: [
+      { title: "Customer", metrics: ["Journey completion", "Service quality", "Adoption"] },
+      { title: "Commercial", metrics: ["Attributable value", "Cost to serve", "Quality of use"] },
+      { title: "Delivery", metrics: ["Dependency closure", "Release quality", "Decision latency"] },
+      { title: "Control", metrics: ["Approval evidence", "Audit trail", "Issue resolution"] }
+    ]
+  }
+};
 
 const useCases = [
   {
@@ -298,6 +534,310 @@ const allUseCases = [...useCases, ...aiProjects];
 const usePath = item => item.path || `/use-cases/${item.slug}`;
 const trackPath = item => `/track-record/${item.slug}`;
 
+const supportingCaseMetrics = item => ({
+  "oman-bank-value-wallet": [
+    { title: "Customer use", metrics: ["Eligible-wallet views", "Offer activation", "Repeat card use"] },
+    { title: "Economics", metrics: ["Incremental spend", "Benefit cost", "Net contribution"] },
+    { title: "Control", metrics: ["Consent coverage", "Eligibility accuracy", "Complaints"] }
+  ],
+  "partner-retail-gifting-network": [
+    { title: "Demand", metrics: ["Attachment rate", "Average add-on value", "Repeat gifting"] },
+    { title: "Service", metrics: ["Custody exceptions", "On-time delivery", "Care contacts"] },
+    { title: "Economics", metrics: ["Service contribution", "Pickup cost", "Partner share"] }
+  ],
+  "multi-category-digital-commerce": [
+    { title: "Trade", metrics: ["Completed orders", "Category conversion", "Repeat rate"] },
+    { title: "Service", metrics: ["Stock accuracy", "Cancellation rate", "On-time fulfilment"] },
+    { title: "Economics", metrics: ["Order contribution", "Acquisition payback", "Stock turn"] }
+  ],
+  "agent-led-social-commerce": [
+    { title: "Liquidity", metrics: ["Active merchant-agent pairs", "Trade-ready offers", "Completed orders"] },
+    { title: "Trust", metrics: ["Attribution accuracy", "Dispute rate", "Payout accuracy"] },
+    { title: "Economics", metrics: ["Take rate", "Agent cost", "Order contribution"] }
+  ],
+  "retail-group-transformation": [
+    { title: "Retail", metrics: ["Store contribution", "Category margin", "Markdown cost"] },
+    { title: "Cash", metrics: ["Stock age", "Sell-through", "Cash released"] },
+    { title: "Management", metrics: ["Action closure", "Forecast accuracy", "Decision time"] }
+  ],
+  "retail-clearance-stock-profitability": [
+    { title: "Stock", metrics: ["Units cleared", "Age profile", "Cash recovered"] },
+    { title: "Trade", metrics: ["Markdown depth", "Basket mix", "Return rate"] },
+    { title: "P&L", metrics: ["Gross profit", "Store contribution", "EBITDA"] }
+  ],
+  "payments-embedded-finance-growth": [
+    { title: "Volume", metrics: ["Active clients", "Transactions", "Payment value"] },
+    { title: "Revenue", metrics: ["Gross fees", "Partner share", "Net revenue"] },
+    { title: "Risk and service", metrics: ["Loss rate", "Exceptions", "Support cost"] }
+  ],
+  "warehouse-working-capital-3pl": [
+    { title: "Capacity", metrics: ["Usable positions", "Occupancy", "Throughput"] },
+    { title: "Service", metrics: ["Pick accuracy", "On-time dispatch", "Claims"] },
+    { title: "Economics", metrics: ["Cash released", "Cost per order", "Client contribution"] }
+  ],
+  "saudi-market-entry-distribution": [
+    { title: "Demand", metrics: ["Qualified accounts", "Pilot sell-through", "Repeat orders"] },
+    { title: "Economics", metrics: ["Landed margin", "Channel cost", "Cash cycle"] },
+    { title: "Readiness", metrics: ["Rights secured", "Partner capacity", "Compliance gates"] }
+  ],
+  "enterprise-software-marketplace": [
+    { title: "Supply", metrics: ["Verified vendors", "Trade-ready offers", "Provisioning accuracy"] },
+    { title: "Customer", metrics: ["Quote conversion", "Renewal rate", "Service attachment"] },
+    { title: "Economics", metrics: ["Licence margin", "Platform fees", "Support cost"] }
+  ],
+  "heritage-lifestyle-commerce": [
+    { title: "Place", metrics: ["Qualified footfall", "Repeat visits", "Dwell time"] },
+    { title: "Tenant", metrics: ["Sales density", "Occupancy quality", "Event conversion"] },
+    { title: "Economics", metrics: ["Rent yield", "Programme cost", "Pilot payback"] }
+  ],
+  "digital-wedding-platform": [
+    { title: "Guest", metrics: ["Response rate", "Change rate", "Check-in success"] },
+    { title: "Service", metrics: ["Concierge hours", "Message cost", "Recovery cases"] },
+    { title: "Economics", metrics: ["Package value", "Service margin", "Cash collection"] }
+  ],
+  "enterprise-ai-transformation-practice": [
+    { title: "Demand", metrics: ["Qualified mandates", "Diagnostic conversion", "Pipeline coverage"] },
+    { title: "Delivery", metrics: ["Cycle time", "Specialist use", "Benefit evidence"] },
+    { title: "Economics", metrics: ["Blended contribution", "Fixed-cost cover", "Cash collection"] }
+  ],
+  "aeofind": [
+    { title: "Visibility", metrics: ["Intent coverage", "Source accuracy", "Answer presence"] },
+    { title: "Action", metrics: ["Verified gaps", "Fix completion", "Refresh cycle"] },
+    { title: "Commercial", metrics: ["Qualified visits", "Assisted pipeline", "Cost per action"] }
+  ],
+  "ai-commerce-command-center": [
+    { title: "Decision", metrics: ["Exceptions surfaced", "Approval time", "Action accuracy"] },
+    { title: "Operation", metrics: ["Care cost", "Stock exceptions", "Catalogue quality"] },
+    { title: "Economics", metrics: ["Operator time", "Contribution change", "Recovery cost"] }
+  ],
+  "career-runway-ai": [
+    { title: "Use", metrics: ["Completed assessments", "Scenario comparisons", "Return visits"] },
+    { title: "Trust", metrics: ["Calculation accuracy", "Assumption clarity", "Deletion success"] },
+    { title: "Decision", metrics: ["Trade-offs reviewed", "Runway understood", "User ownership"] }
+  ]
+}[item.slug] || [
+  { title: "Demand", metrics: ["Qualified activity", "Conversion", "Repeat use"] },
+  { title: "Operation", metrics: ["Cycle time", "Service quality", "Exceptions"] },
+  { title: "Economics", metrics: ["Net revenue", "Cost to serve", "Contribution"] }
+]);
+
+const supportingCaseRisks = item => ({
+  "oman-bank-value-wallet": [["Eligibility", "A value explanation must never override bank product rules."], ["Consent", "Intent and transaction data need explicit purpose and retention rules."], ["Economics", "Rewards can increase activity while reducing net contribution."]],
+  "partner-retail-gifting-network": [["Custody", "The retail item passes through more than one operator."], ["Service", "A failed pickup can break the full gifting promise."], ["Integration", "The pilot must work without forcing deep retailer system changes."]],
+  "multi-category-digital-commerce": [["Availability", "Catalogue breadth can outrun reliable stock."], ["Cash", "Slow inventory can absorb the benefit of sales growth."], ["Service", "Category complexity can increase cancellation and return cost."]],
+  "agent-led-social-commerce": [["Attribution", "Agents need evidence for why an order earned commission."], ["Payout", "Ledger errors damage trust quickly."], ["Liquidity", "Registrations do not guarantee active trading pairs."]],
+  "retail-group-transformation": [["Data", "Store, inventory and finance records may not reconcile."], ["Behaviour", "Actions fail when owners and deadlines remain vague."], ["Capital", "New ventures can distract from unresolved core economics."]],
+  "retail-clearance-stock-profitability": [["Margin", "Markdown can release cash while deepening the store loss."], ["Signal", "A short pilot may reflect season or location rather than the model."], ["Brand", "Clearance activity can change customer price expectations."]],
+  "payments-embedded-finance-growth": [["Regulation", "Permissions and client use cases differ by market."], ["Loss", "Fraud and operational error can erase a thin fee pool."], ["Volume", "Transaction growth can hide weak net revenue."]],
+  "warehouse-working-capital-3pl": [["Capacity", "Space is not spare if the retail operation needs it seasonally."], ["Service", "Claims and failed delivery can change client contribution."], ["Cash", "External revenue may arrive after service cost is paid."]],
+  "saudi-market-entry-distribution": [["Rights", "Representation must be documented and enforceable."], ["Landed cost", "Import and channel cost can erase headline margin."], ["Fixed cost", "A local setup can precede proven sell-through."]],
+  "enterprise-software-marketplace": [["Entitlement", "Every offer needs verified vendor or distributor rights."], ["Provisioning", "A licence error creates service and financial exposure."], ["Working capital", "Renewal and reseller terms can create cash strain."]],
+  "heritage-lifestyle-commerce": [["Demand", "Programming can raise visits without improving tenant sales."], ["Capital", "Physical investment should follow trading evidence."], ["Tenant mix", "Occupancy alone can weaken the customer proposition."]],
+  "digital-wedding-platform": [["Privacy", "Guest data requires strict purpose and access controls."], ["Messaging", "Incorrect or repeated messages create reputational harm."], ["Service", "Event-day recovery capacity is part of the product."]],
+  "enterprise-ai-transformation-practice": [["Pipeline", "A permanent bench can form before signed demand."], ["Independence", "Specialists must work within client security and approval."], ["Value", "A pilot can ship without changing the business measure."]],
+  "aeofind": [["Sampling", "AI answers vary by prompt, model and time."], ["Claims", "Generated recommendations need source review."], ["Attribution", "Visibility does not automatically equal qualified demand."]],
+  "ai-commerce-command-center": [["Authority", "Agents must not change money, price or stock without permission."], ["Source data", "Bad operational facts produce confident bad recommendations."], ["Adoption", "A new control layer can add work if it does not replace an existing queue."]],
+  "career-runway-ai": [["Privacy", "Financial inputs need strict access and deletion controls."], ["Explanation", "An LLM must not alter deterministic calculations."], ["Dependence", "The product supports a decision; it does not make one."]]
+}[item.slug] || [["Evidence", "The pilot needs an agreed baseline."], ["Economics", "Activity can grow without contribution."], ["Ownership", "Every consequential decision needs a named person."]]);
+
+const supportingCaseRoadmap = item => {
+  const design = item.type === "Operating case" || item.type === "Operating pilot" ? "Reconcile the operating baseline and choose one constrained improvement." : "Confirm the customer, commercial and control assumptions with one accountable sponsor.";
+  return [
+    { period: "0 to 30 days", title: "Baseline and design", detail: design },
+    { period: "30 to 90 days", title: "Controlled pilot", detail: `Test ${item.visual.slice(0, 2).join(" and ").toLowerCase()} with a limited cohort and explicit stop conditions.` },
+    { period: "90 to 180 days", title: "Scale decision", detail: "Compare service, economics and control evidence before adding markets, fixed cost or broader authority." }
+  ];
+};
+
+const supportingArchitecture = item => architectureExhibit(3, "Technology and data architecture", [
+  { title: "Experience", items: [item.sector, "Customer or operator interface"] },
+  { title: "Workflow", items: item.visual.slice(0, 2) },
+  { title: "Systems of record", items: item.visual.slice(2).length ? item.visual.slice(2) : ["Transaction record", "Operating ledger"] },
+  { title: "Control", items: ["Permissions", "Audit", "Measurement"] }
+], "Operational facts stay in source systems. AI prepares or ranks work inside defined permissions.");
+
+const supportingEconomics = item => equationExhibit(2, "Commercial equation", [item.visual[0], item.visual[1] || "Qualified demand"], ["Acquisition and service", "Operating and control cost"], item.impactLabel === "Business Impact" ? "Verified operating result" : "Modeled contribution", "The exhibit shows the decision logic, not achieved financial values.");
+
+const supportingCaseBody = item => {
+  const contents = [
+    { id: "executive-summary", number: 1, title: "Executive summary" },
+    { id: "context", number: 2, title: "Business context and problem" },
+    { id: "opportunity", number: 3, title: "Commercial opportunity" },
+    { id: "journey", number: 4, title: "Journey and solution design" },
+    { id: "economics", number: 5, title: "Commercial model and economics" },
+    { id: "technology", number: 6, title: "Technology, data and AI" },
+    { id: "operating-model", number: 7, title: "Operating model and governance" },
+    { id: "implementation", number: 8, title: "Implementation and measurement" },
+    { id: "risks", number: 9, title: "Risks and dependencies" },
+    { id: "impact", number: 10, title: item.impactLabel }
+  ];
+  const metrics = supportingCaseMetrics(item);
+  const roadmap = supportingCaseRoadmap(item);
+  const risks = supportingCaseRisks(item);
+  return `${tagRow([item.sector, item.geography, item.type])}<div class="report-layout supporting-report">${reportContents(contents)}<article class="report-main">${reportSection("executive-summary", 1, "Executive summary", `<div class="report-opening">${prose([item.overview, item.impact])}${reportCallout(item.impactLabel === "Business Impact" ? "Evidence" : "Business case", item.impactLabel, item.impact, item.impactLabel === "Modeled Business Impact" ? "modeled" : "")}</div>`)}${reportSection("context", 2, "Business context and problem", `<div class="report-split">${reportBlock("Business context", prose([`${item.sector} in ${item.geography} creates a coordination problem across customer demand, operating ownership and commercial economics. The case is framed around the specific model described here, without extending its evidence beyond the source material.`]))}${reportBlock("Business problem", prose([item.problem]))}</div>`, "tint-band")}${reportSection("opportunity", 3, "Commercial opportunity", `<div class="report-split">${reportBlock("Value pool", prose([item.commercial]))}${reportBlock("Decision test", prose([`The model should progress only when the activity measure, cost to serve and accountable result can be read together. ${item.impactLabel === "Modeled Business Impact" ? "Forecasts remain scenario inputs until a controlled pilot produces evidence." : "Historical evidence remains limited to the operating result stated on this page."}`]))}</div>`)}${reportSection("journey", 4, "Journey and solution design", `${prose([item.solution])}${journeyExhibit(1, `${item.title}: operating journey`, item.visual, "The sequence makes the handoffs and decision points visible.")}`, "dark-band")}${reportSection("economics", 5, "Commercial model and unit economics", `<div class="report-split">${reportBlock("Commercial model", prose([item.commercial]))}${reportBlock("Unit-economics question", prose(["Revenue or volume is not enough. The business case must deduct partner share, service, support, losses, technology and the fixed operating capacity required to keep the promise."]))}</div>${supportingEconomics(item)}`)}${reportSection("technology", 6, "Technology, data and AI", `${prose([item.technology])}${supportingArchitecture(item)}`, "tint-band")}${reportSection("operating-model", 7, "Operating model and governance", `${prose([item.operating])}${swimlaneExhibit(4, "Decision and execution model", [{ title: "Commercial owner", steps: ["Set proposition", "Approve economics", "Review result"] }, { title: "Operations", steps: ["Prepare capacity", "Execute service", "Resolve exceptions"] }, { title: "Technology and data", steps: ["Expose source facts", "Run workflow", "Maintain audit"] }, { title: "Control", steps: ["Set policy", "Approve exceptions", "Review risk"] }], "AI can prepare evidence and recommendations. Named people retain consequential authority.")}`)}${reportSection("implementation", 8, "Implementation roadmap and KPI framework", `${roadmapExhibit(5, "Controlled path to scale", roadmap, "Each stage has a commercial, service and control gate.")}${kpiExhibit(6, "Measurement framework", metrics, "The scorecard pairs activity with economics and operating quality.")}`, "dark-band")}${reportSection("risks", 9, "Risks and dependencies", reportTable("Critical risks", ["Risk", "Management response"], risks))}${reportSection("impact", 10, item.impactLabel, `<div class="impact-conclusion ${item.impactLabel === "Modeled Business Impact" ? "modeled" : "evidence"}"><span>${item.impactLabel === "Modeled Business Impact" ? "Scenario, not achieved result" : "Evidence boundary"}</span><p>${esc(item.impact)}</p></div>${reportBlock("Executive reading", prose(["The case is useful because it connects a real operating problem to the economics, technology, ownership and evidence required for a scale decision. It does not rely on an unverified outcome to make the model credible."]))}`, "impact-band")}</article></div>${section("Continue exploring", `<div class="continue-grid">${card("/use-cases", "Use cases", "More business problems", "Browse commerce, retail, fintech, enterprise technology and growth cases.")}${card("/ai-transformation", "Applied AI", "AI & Transformation", "See how AI fits inside commercial and operating workflows.")}</div>`)}`;
+};
+
+const saudiBankBody = item => {
+  const contents = [
+    ["executive-summary", "Executive summary"], ["business-context", "Business context"], ["business-problem", "Business problem"], ["commercial-opportunity", "Commercial opportunity"], ["customer-journey", "Customer journey"], ["solution-design", "Solution design"], ["value-pools", "Revenue and value pools"], ["commercial-model", "Commercial model"], ["unit-economics", "Unit economics"], ["technology", "Technology architecture"], ["data-ai", "Data and AI layer"], ["operating-model", "Operating model"], ["governance", "Governance and decision rights"], ["roadmap", "Implementation roadmap"], ["kpis", "KPI framework"], ["risks", "Risks and dependencies"], ["impact", "Modeled business impact"], ["takeaways", "Executive takeaways"]
+  ].map(([id, title], index) => ({ id, title, number: index + 1 }));
+  const decisionRows = [
+    ["Offer eligibility", "Cards and loyalty product", "Apply approved financial and campaign rules", "AI model"],
+    ["Offer ranking", "Commerce product", "Rank only eligible options and show reason codes", "Merchant sales team"],
+    ["Credit or instalment approval", "Bank credit and risk", "Use existing underwriting and affordability controls", "Commerce product or AI model"],
+    ["Retail transaction", "Merchant", "Own product, price, checkout, delivery and returns", "Bank"],
+    ["Attribution and funding", "Finance and loyalty operations", "Reconcile events, returns and merchant funding", "Marketing alone"],
+    ["Model change", "Data and model governance", "Approve features, tests, monitoring and rollback", "Individual analyst"]
+  ];
+  const riskRows = [
+    ["Consent and purpose", "Intent data is collected for one use and quietly reused for another.", "Purpose-specific consent, minimal data and clear withdrawal."],
+    ["Credit boundary", "Offer ranking is mistaken for credit or affordability advice.", "Eligibility is resolved by bank systems before ranking. AI does not approve finance."],
+    ["False incrementality", "Existing spend is credited to the programme.", "Control cohorts, pre-period baselines and agreed attribution windows."],
+    ["Merchant service", "A relevant offer leads to weak stock, delivery or returns service.", "Merchant admission, service standards and suppression rules."],
+    ["Funding leakage", "Offers, returns and chargebacks are not reconciled correctly.", "Transaction ledger, return events, settlement controls and audit."],
+    ["Model bias or drift", "Ranking repeatedly favours one segment or merchant without commercial cause.", "Feature review, merchant exposure limits, drift monitoring and human override."],
+    ["Customer fatigue", "Frequent offers reduce trust in the bank channel.", "Frequency caps, need-state relevance and complaint monitoring."],
+    ["Economics", "Reward and platform cost exceed incremental value.", "Merchant-funded design, contribution floors and stop conditions."]
+  ];
+  return `${tagRow([item.sector, item.geography, "Flagship strategy blueprint", "Modeled impact only"])}<div class="report-layout flagship-report">${reportContents(contents)}<article class="report-main">${reportSection("executive-summary", 1, "Executive summary", `<div class="report-opening flagship-opening">${prose([
+    "A bank normally appears at the end of a shopping journey. By the time a card authorization arrives, the customer has already chosen the category, product, merchant and payment method. The bank can process the transaction and award points, but it has little influence over the commercial decision that created the spend.",
+    "This blueprint moves the bank upstream without asking it to become a retailer. A consented intent layer inside the bank channel would identify a customer's declared shopping need, resolve which cards, rewards, merchant offers or instalment options are eligible, and rank the relevant value. The customer then completes the retail transaction with the merchant. The bank retains financial-product, risk, consent and attribution controls. The merchant retains product, price, fulfilment and return responsibility.",
+    "The commercial case rests on incremental card spend, merchant-funded value, better use of existing loyalty assets and higher engagement with the bank's owned channels. Each pool is measured after reward cost, merchant funding, acquisition, platform, service, fraud, returns and operating capacity. A large payment value is not treated as revenue, and attributed spend is not treated as incremental until control evidence supports the claim.",
+    "This is a strategy blueprint, not an implemented bank result. The recommended first move is a 90-day pilot with a small customer cohort, two or three anchor merchant categories, explicit consent, existing card and loyalty rails, and a control group. The pilot is successful only if it proves customer relevance, merchant service, clean attribution, funding reconciliation and positive modeled contribution together."
+  ])}${reportCallout("Evidence boundary", "No achieved bank result is claimed", "All commercial outcomes on this page are scenarios and measurement designs. They become evidence only after a controlled pilot and reconciled financial review.", "modeled")}</div>`, "opening-band")}${reportSection("business-context", 2, "Business context", `<div class="report-split">${reportBlock("The bank's current position", prose([
+    "Retail banks already hold several assets that matter to commerce: a trusted authenticated channel, card relationships, loyalty balances, transaction history, payment rails and, for eligible customers, financing products. These assets usually operate as separate products. The customer discovers a purchase elsewhere and encounters the bank only when choosing how to pay.",
+    "Merchant programmes often sit downstream as well. A discount directory or campaign page can list offers, yet it may not connect the customer's current need to eligibility, stock, merchant service or a measurable transaction. The programme reports clicks or redeemed offers without showing whether it changed behaviour or merely subsidized a purchase that would have happened anyway."
+  ]))}${reportBlock("The design premise", prose([
+    "The bank should enter at declared purchase intent, not at product search across the whole internet. A customer might state a need such as travel, electronics, home, education or a planned large purchase. The bank can then show value that is already permitted for that customer and category.",
+    "This keeps the scope credible. The bank is not building a general marketplace, carrying inventory or managing retail service. It is coordinating eligible financial value and merchant-funded demand before handing the customer to a merchant."
+  ]))}</div>`)}${reportSection("business-problem", 3, "Business problem", `<div class="problem-led-grid">${reportBlock("Too late to influence choice", prose([
+    "Authorization data explains where money was spent after the commercial decision. It does not reveal the alternatives considered, the reason one merchant won, or which benefit could have changed the choice. Post-transaction rewards can reinforce loyalty, but they cannot consistently move spend upstream.",
+    "The result is a gap between card portfolio strategy and day-to-day commerce. The bank can promote card benefits, a loyalty team can issue points and merchants can fund campaigns, while the customer still sees no coherent answer to a simple question: what is the best eligible value for the purchase I am planning now?"
+  ]))}${reportCallout("Management question", "Can the bank influence intent without owning retail?", "The answer depends on strict role separation: the bank resolves financial eligibility and value; the merchant owns the product and service; the customer controls consent and choice.")}</div>`)}${reportSection("commercial-opportunity", 4, "Commercial opportunity", `<div class="report-split">${reportBlock("Move upstream into intent", prose([
+    "A purchase-intent entry point gives the bank a chance to recapture wallet share before another card, wallet or finance provider becomes the default. The customer receives an explanation of relevant value rather than a long offer catalogue. Merchants gain qualified demand tied to eligible cardholders, not only undifferentiated campaign traffic.",
+    "Segmentation should begin with commercial and service relevance: declared category, value sensitivity, existing product eligibility, location or fulfilment feasibility, loyalty balance, recent engagement and consented transaction patterns. Protected characteristics and unrelated sensitive data do not belong in offer ranking."
+  ]))}${reportBlock("Choose narrow demand pools", prose([
+    "The first merchant categories should have meaningful basket value, reliable digital handoff, usable transaction descriptors and enough repeat or planned demand to measure. Electronics, travel, home, education or selected lifestyle categories may fit, but the actual pilot categories require bank and merchant evidence.",
+    "The opportunity is not the number of merchants signed. It is the amount of eligible demand that can be served with a clear value proposition, clean transaction match and positive contribution after the full cost of the offer."
+  ]))}</div>` , "tint-band")}${reportSection("customer-journey", 5, "Customer and enterprise journey", `${prose([
+    "The journey begins when the customer declares a purchase need inside an authenticated bank channel or a consented partner entry point. Eligibility is resolved before ranking. The customer sees a short set of relevant options with the value, conditions, merchant and payment route explained in plain language.",
+    "The customer then moves to the merchant through a tracked handoff. The merchant owns catalogue, price, stock, checkout, delivery and returns. The bank observes consented handoff and transaction events, applies the attribution policy, and reconciles merchant funding, rewards and any card-linked benefit after returns or chargebacks."
+  ])}${journeyExhibit(1, "Customer journey from purchase intent to attributed spend", [
+    { title: "Declare intent", detail: "Customer selects a need or planned purchase." },
+    { title: "Resolve eligibility", detail: "Bank systems confirm cards, rewards, finance and consent." },
+    { title: "Rank relevant value", detail: "Only eligible merchant and bank value enters the ranking." },
+    { title: "Explain the option", detail: "Customer sees value, conditions and payment route." },
+    { title: "Merchant handoff", detail: "Merchant owns product selection, checkout and service." },
+    { title: "Match transaction", detail: "Card and merchant events feed attribution and settlement." },
+    { title: "Measure incrementality", detail: "Control evidence tests whether behaviour changed." }
+  ], "A transparent handoff preserves the role of each party and creates a measurable event chain.")}`, "dark-band")}${reportSection("solution-design", 6, "Solution design", `<div class="report-split">${reportBlock("Four connected capabilities", prose([
+    "The customer layer captures intent and explains value. The eligibility layer calls existing card, loyalty and financing rules. The commerce layer manages merchant offers, category fit, handoff and service metadata. The measurement layer matches events, reconciles funding and compares the exposed cohort with a control.",
+    "The ranking service sits between eligibility and explanation. It cannot create an entitlement, approve credit or invent a merchant benefit. It orders options that have already passed policy and availability checks, using features that the bank has approved for this purpose."
+  ]))}${reportBlock("Merchant ecosystem", prose([
+    "Anchor merchants need a clear reason to participate: qualified demand, measurable acquisition and a funding model linked to completed transactions. The bank needs reliable offer data, recognizable transaction descriptors, return events and service ownership. The customer needs relevant value without losing control of choice.",
+    "The pilot can begin with merchant-funded offers and existing card benefits. Instalment or financing options enter only where current underwriting, affordability, disclosure and product rules already support them."
+  ]))}</div>${ecosystemExhibit(2, "Bank, merchant and customer ecosystem", "Bank commerce layer", [
+    { label: "Customer", title: "Purchase intent and consent", detail: "Chooses the need, reviews eligible value and controls the final purchase." },
+    { label: "Merchant", title: "Product and retail service", detail: "Owns offer terms, stock, checkout, delivery, returns and customer remedy." },
+    { label: "Bank products", title: "Cards, loyalty and finance", detail: "Resolve eligibility, apply policy and execute financial benefits." },
+    { label: "Bank operations", title: "Attribution and settlement", detail: "Match transactions, reconcile funding, monitor service and report impact." }
+  ], "The model coordinates value across parties without moving retail responsibility to the bank.")}`)}${reportSection("value-pools", 7, "Revenue and value pools", `${prose([
+    "The first value pool is incremental card spend: purchases that move to the bank's card portfolio or occur more often because relevant value appeared before checkout. The second is merchant-funded demand, where the merchant contributes to a benefit or acquisition fee because the bank can identify eligible customers and attribute completed transactions.",
+    "Loyalty creates a third pool when existing balances and benefits become easier to use, but the programme must count the cost of points, redemption and operational liability. Eligible instalment or financing can create product value on selected purchases, subject to existing credit policy and net revenue after funding, risk and service cost. Engagement and data improve the bank's owned channel only if customers continue to find the experience useful and consent remains valid.",
+    "The deductions are substantial: reward subsidy, merchant acquisition, platform and integration cost, customer care, fraud or dispute loss, settlement work and campaign operations. The programme should not claim success from payment volume before these costs are visible."
+  ])}${waterfallExhibit(3, "Commercial value-pool waterfall", [
+    { label: "Incremental card spend", kind: "add", height: 86 },
+    { label: "Merchant-funded value", kind: "add", height: 72 },
+    { label: "Loyalty and finance value", kind: "add", height: 62 },
+    { label: "Reward and acquisition cost", kind: "cost", height: 54 },
+    { label: "Platform and service cost", kind: "cost", height: 46 },
+    { label: "Risk and reconciliation", kind: "cost", height: 38 },
+    { label: "Net modeled contribution", kind: "result", height: 64 }
+  ], "Conceptual waterfall. Bar heights show the logic, not a forecast or achieved value.")}`, "tint-band")}${reportSection("commercial-model", 8, "Commercial model", `<div class="report-split">${reportBlock("Merchant-funded demand", prose([
+    "A merchant can fund a fixed benefit, a percentage offer, a category campaign or a completed-transaction acquisition fee. The contract must define eligible customers, offer inventory, attribution window, returns, chargebacks, funding caps, data use and settlement timing.",
+    "The merchant should see a reconciled view of qualified handoffs and attributable transactions. The bank should avoid promising sales volume before the pilot establishes conversion and incrementality."
+  ]))}${reportBlock("Card, loyalty and finance", prose([
+    "The bank's value can include card benefits, points, statement credit or an existing instalment route. Each option needs its own funding source and accounting treatment. A blended customer proposition should not blur who paid for the benefit or which product rules apply.",
+    "Where financing is relevant, the commerce layer can explain an eligible route after bank systems approve it. The ranking model cannot relax affordability, exposure or credit rules."
+  ]))}</div>${equationExhibit(4, "Commercial model and contribution equation", ["Incremental interchange or card contribution", "Merchant funding", "Loyalty or finance contribution"], ["Customer benefit", "Acquisition and platform", "Service, risk and settlement"], "Net incremental contribution", "Every term is measured against an agreed baseline and control cohort.")}`)}${reportSection("unit-economics", 9, "Unit economics and business case", `${prose([
+    "The unit of analysis should be an engaged eligible customer and the attributable completed transaction that follows. Start with the eligible audience, multiply by the share that declares or signals a covered need, the offer-view rate, merchant handoff, completed conversion, basket value and purchase frequency. This produces attributed spend, not yet incremental spend.",
+    "Incrementality comes from the difference between exposed and comparable control behaviour after adjusting for season, merchant campaigns and existing card preference. The value side then applies card, merchant, loyalty or finance economics. The cost side applies the benefit, acquisition, integration, platform, care, reconciliation and risk costs generated by the same cohort.",
+    "A useful scenario model has base, downside and upside cases. The downside should assume lower conversion, more existing-spend cannibalization, higher service cost and slower merchant funding recovery. The pilot should stop or narrow if the base case survives only through optimistic attribution."
+  ])}${reportTable("Unit-economics model", ["Line", "Calculation", "Management use"], [
+    ["Eligible demand", "Eligible customers x covered purchase intent", "Defines the reachable cohort"],
+    ["Attributed spend", "Handoffs x completed conversion x basket x frequency", "Shows activity linked to the journey"],
+    ["Incremental spend", "Exposed spend less control and baseline spend", "Tests behavioural lift"],
+    ["Gross value", "Card + merchant + loyalty or finance contribution", "Combines funded value pools"],
+    ["Variable cost", "Benefit + acquisition + service + risk + settlement", "Shows cost created by the cohort"],
+    ["Net contribution", "Gross value less variable and allocated platform cost", "Determines whether to scale"]
+  ])}`)}${reportSection("technology", 10, "Technology architecture", `${prose([
+    "The design should use existing bank capabilities wherever possible. The mobile app or authenticated web channel captures intent and displays eligible value. API services call card, loyalty, offer and, where permitted, financing systems. A merchant gateway holds offer and handoff data without copying the merchant's full catalogue into the bank.",
+    "An event and attribution layer connects intent, eligibility, offer view, merchant handoff, transaction, return and settlement. A consent ledger records purpose, scope and withdrawal. The bank's card, loyalty and credit systems remain authoritative. Merchant systems remain authoritative for product, price, stock, fulfilment and returns.",
+    "The first pilot does not require a new core banking platform or full marketplace. It requires reliable interfaces, a small merchant schema, event identifiers, a transaction-matching policy and an operator console for exceptions."
+  ])}${architectureExhibit(5, "Technology and data architecture", [
+    { title: "Customer experience", items: ["Bank app", "Intent entry", "Offer explanation", "Merchant handoff"] },
+    { title: "Eligibility and ranking", items: ["Card rules", "Loyalty rules", "Finance eligibility", "AI ranking"] },
+    { title: "Commerce services", items: ["Merchant offers", "Handoff tokens", "Campaign rules", "Service metadata"] },
+    { title: "Systems of record", items: ["Cards", "Loyalty", "Transactions", "Merchant checkout and returns"] },
+    { title: "Control and measurement", items: ["Consent ledger", "Attribution", "Settlement", "Model and audit logs"] }
+  ], "The architecture separates eligibility, ranking, retail execution and financial settlement.")}`, "dark-band")}${reportSection("data-ai", 11, "Data and AI layer", `<div class="report-split">${reportBlock("Data required", prose([
+    "The minimum dataset covers customer consent, eligible card and loyalty products, approved merchant offers, declared category intent, handoff events, transaction descriptors, returns and settlement. Features should have a documented purpose and retention period. Raw merchant browsing or unrelated personal data should not be collected simply because it might improve a model.",
+    "Attribution needs stable but controlled identifiers. Tokenized handoff IDs and transaction matching can reduce the need to expose personal data to merchants. Finance and loyalty teams need a reconciled ledger that can reverse rewards or funding when a purchase is returned."
+  ]))}${reportBlock("AI role", prose([
+    "AI ranks eligible value and can explain why an option appears. It may use category intent, value sensitivity, current eligible products, loyalty balance, merchant service quality and recent consented engagement. Deterministic policy resolves whether an option is allowed before the model sees it.",
+    "The model should return reason codes, confidence and alternatives. Monitoring covers ranking quality, merchant concentration, segment outcomes, drift and complaints. A person can suppress a merchant, campaign, category or model version immediately."
+  ]))}</div>${reportCallout("Control principle", "Eligibility first, ranking second", "The model can order permitted options. It cannot create financial eligibility, approve credit, alter rewards liability or override consent.", "control")}`)}${reportSection("operating-model", 12, "Operating model", `${prose([
+    "The proposition needs one accountable product owner with authority across the customer journey and a weekly commercial review. Cards, loyalty, merchant partnerships, data, technology, risk, compliance, finance and operations each retain specialist responsibilities, but they work from one pilot scorecard and one exception queue.",
+    "Merchant operations manage offer readiness, service issues and funding files. Attribution and settlement operations reconcile transactions, returns, rewards and merchant obligations. Customer care needs the same offer and eligibility evidence shown to the customer so it can resolve a complaint without searching across teams.",
+    "The cadence should include daily pilot operations, weekly commercial and service review, monthly risk and model review, and a formal scale gate at the end of the test period."
+  ])}${swimlaneExhibit(6, "Operating model from intent to settlement", [
+    { title: "Customer and channel", steps: ["Declare intent", "Review value", "Choose merchant", "Complete purchase"] },
+    { title: "Commerce product", steps: ["Define journey", "Rank eligible value", "Monitor conversion", "Own pilot result"] },
+    { title: "Merchant operations", steps: ["Load offer", "Maintain service", "Receive handoff", "Resolve retail issue"] },
+    { title: "Cards and loyalty", steps: ["Resolve eligibility", "Execute benefit", "Match transaction", "Reverse on return"] },
+    { title: "Finance and control", steps: ["Set policy", "Reconcile funding", "Review risk", "Approve scale gate"] }
+  ], "One product owner coordinates the journey; specialist owners retain financial, retail and control authority.")}`)}${reportSection("governance", 13, "Governance and decision rights", `${prose([
+    "Governance should make the line between commercial optimization and regulated decision clear. The commerce team can design the journey, merchant mix and ranking objective. Card, loyalty, credit, compliance and data owners approve the rules and data permitted inside it. The merchant cannot see or influence a customer's financial eligibility.",
+    "Material model changes, new data features, new financial products or wider customer cohorts require approval and rollback plans. The pilot should maintain an audit trail from consent and eligibility through the ranked offer, customer selection, transaction match and settlement."
+  ])}${reportTable("Decision-rights matrix", ["Decision", "Accountable owner", "Control", "Must not decide"], decisionRows)}`, "tint-band")}${reportSection("roadmap", 14, "Implementation roadmap", `${prose([
+    "The first 30 days establish the commercial and control design: select categories and anchor merchants, define eligible customer cohorts, confirm existing card and loyalty capabilities, agree the attribution policy, map consent and approve the scorecard. No customer pilot should begin while offer funding or return treatment remains ambiguous.",
+    "Days 31 to 60 build the narrow journey, merchant offer feed, eligibility calls, event IDs, operator console and reconciliation file. Internal and employee testing should prove that ineligible value is suppressed, returns reverse correctly and customer care can see the same evidence as the product team.",
+    "Days 61 to 90 run a limited customer test with control cohorts and weekly stop-go decisions. The next three to twelve months depend on evidence: add categories, merchants or finance options only when contribution, service, consent and operational control remain within threshold."
+  ])}${roadmapExhibit(7, "90-day MVP and 12-month scale path", [
+    { period: "Days 0 to 30", title: "Design and approve", detail: "Merchant cohort, eligibility, consent, attribution, economics and scorecard." },
+    { period: "Days 31 to 60", title: "Build and reconcile", detail: "Customer flow, APIs, event IDs, operator view, return and funding files." },
+    { period: "Days 61 to 90", title: "Controlled customer pilot", detail: "Limited cohort, control group, weekly service and contribution review." },
+    { period: "Months 4 to 6", title: "Prove repeatability", detail: "Second category or merchant cohort only after the first economics reconcile." },
+    { period: "Months 7 to 12", title: "Selective scale", detail: "Wider segments, merchant self-service and eligible finance use cases." }
+  ], "Each expansion step requires commercial, service, risk and data approval.")}`, "dark-band")}${reportSection("kpis", 15, "KPI and measurement framework", `${prose([
+    "The scorecard begins upstream with eligible demand and customer engagement, then follows the event chain to merchant handoff, completed transaction and repeat behaviour. Activity metrics are paired with control and economics so the team can see whether conversion came with acceptable service and cost.",
+    "Incremental card spend is the central commercial measure, not total attributed spend. Merchant funding recovery, reward cost, service cost and net contribution must reconcile to finance. Risk and trust measures include complaints, consent withdrawal, model overrides, ineligible-offer incidents and merchant service failures."
+  ])}${kpiExhibit(8, "Executive KPI dashboard", [
+    { title: "Reach and relevance", metrics: ["Eligible customers", "Intent starts", "Offer relevance", "Frequency cap"] },
+    { title: "Journey", metrics: ["Offer views", "Merchant handoff", "Completed conversion", "Repeat use"] },
+    { title: "Incrementality", metrics: ["Control lift", "Incremental spend", "Wallet recapture", "Category lift"] },
+    { title: "Economics", metrics: ["Merchant funding", "Reward cost", "Service cost", "Net contribution"] },
+    { title: "Service and trust", metrics: ["Merchant failure", "Complaints", "Consent withdrawal", "Care contacts"] },
+    { title: "Control", metrics: ["Eligibility errors", "Settlement breaks", "Model overrides", "Audit closure"] }
+  ], "Every executive view should distinguish attributed activity from measured incremental value.")}`)}${reportSection("risks", 16, "Risks and dependencies", `${prose([
+    "The programme depends on more than an offer-ranking model. It needs clear data rights, usable merchant integrations, recognizable transactions, timely return events, funding agreements, customer-care readiness and finance reconciliation. Weakness in any one of these can make the customer journey look successful while the operating or financial result remains unresolved.",
+    "The most serious risks sit at the boundaries between teams: commerce and credit, marketing and consent, merchant sales and service, attribution and finance. The pilot should make these boundaries explicit and assign a stop condition to each."
+  ])}${reportTable("Risk and dependency register", ["Risk", "Failure mode", "Control"], riskRows)}` , "tint-band")}${reportSection("impact", 17, "Modeled business impact", `<div class="impact-conclusion modeled flagship-impact"><span>Scenario, not achieved result</span><p>${esc(item.impact)}</p></div>${prose([
+    "The business case should be expressed as a range, not a headline promise. A base case models eligible customers, covered intent, conversion, basket, frequency and control lift. It then applies card, merchant, loyalty or finance contribution and deducts benefit, acquisition, platform, service, risk and settlement cost. A downside case assumes lower incrementality and higher service effort.",
+    "The management decision is whether net incremental contribution, customer engagement and strategic card value justify the operating complexity and control exposure. If merchant funding, attribution or service cannot be reconciled, the programme should remain narrow even if customer clicks are strong.",
+    "No percentage uplift, revenue forecast or customer adoption figure is published because the source material does not provide an approved achieved result. The page supplies the model and the evidence required to make a future claim responsibly."
+  ])}` , "impact-band")}${reportSection("takeaways", 18, "Executive takeaways", `<div class="takeaway-grid">${[
+    "Enter at declared intent, before the customer has fixed the merchant and payment route.",
+    "Use the bank's existing cards, loyalty and approved finance capabilities before building a new retail layer.",
+    "Resolve eligibility with policy systems before AI ranks any option.",
+    "Keep the merchant accountable for product, price, fulfilment and returns.",
+    "Measure incremental behaviour against controls, not attributed spend alone.",
+    "Reconcile merchant funding, rewards, returns and settlement before scaling.",
+    "Run one customer, service, economics and risk scorecard under a named product owner.",
+    "Treat the first 90 days as an evidence programme, not a launch campaign."
+  ].map((takeaway, index) => `<div><span>${String(index + 1).padStart(2, "0")}</span><p>${esc(takeaway)}</p></div>`).join("")}</div>` , "takeaway-band")}</article></div>${section("Related work", `<div class="continue-grid">${card("/use-cases/oman-bank-value-wallet", "Banking", "Oman bank value wallet", "A portfolio-first model connecting cards, rewards and instalments to shopping intent.")}${card("/insights/payment-volume-versus-net-revenue", "Economics", "Payment volume versus net revenue", "Why transaction value is not the amount a provider keeps.")}</div>`)}`;
+};
+
 const caseVisual = (item, compact = false) => {
   switch (item.slug) {
     case "leading-saudi-bank-commerce-ecosystem": return journeyVisual("Customer to attributed spend", ["Purchase intent", "Customer eligibility", "Relevant value", "Merchant handoff", "Transaction", "Attributed spend"], "The merchant retains the retail transaction. The bank connects eligible value to intent.", compact);
@@ -352,19 +892,84 @@ const trackCard = (item, index = 0) => `<a class="record-card" href="${trackPath
 const recordField = (label, text) => `<section class="record-field"><h2>${esc(label)}</h2><p>${esc(text)}</p></section>`;
 const productPreview = item => `<a class="product-preview" href="${usePath(item)}"><div class="product-preview-copy"><span class="card-label">${esc(item.type)}</span><h3>${esc(item.title)}</h3><p>${esc(item.summary)}</p><span class="card-link">Open product page <span aria-hidden="true">→</span></span></div>${caseVisual(item, true)}</a>`;
 
-const trackPage = item => ({
-  path: trackPath(item), type: "WebPage", kind: "track", title: `${item.name} | Track Record | Haris Aslam`,
-  description: `${item.summary} An operating record of mandate, economics, technology and relevance.`,
-  eyebrow: "Track record", h1: item.name, intro: item.summary,
-  body: `${tagRow([item.role, item.geography, item.period])}<article class="record-document">${recordVisual(item)}<div class="record-evidence-grid">${recordField("Role and mandate", item.mandate)}${recordField("What was built or fixed", item.built)}${recordField("Commercial contribution", item.commercial)}${recordField("Technology and operations", item.technology)}${recordField("Business relevance", item.relevance)}</div></article>${section("Related use cases", `<div class="visual-card-grid">${allUseCases.filter(useCase => item.slug === "roumaan" ? useCase.slug.includes("commerce") : item.slug === "floward-oman" ? useCase.slug.includes("gifting") : item.slug === "upapp-factory" ? useCase.slug.includes("software") || useCase.slug.includes("enterprise-ai") : useCase.slug.includes("retail")).slice(0, 3).map(useCard).join("")}</div>`)}`
-});
+const recordJourneyExhibit = item => {
+  const items = {
+    "roumaan": ["Customer demand", "Curated catalogue", "Digital order", "Fulfilment", "Service learning"],
+    "salman-miraq-ksm": ["Core diagnosis", "Stock and cash reset", "Portfolio choices", "Capital gates", "GCC options"],
+    "floward-oman": ["Local setup", "Assortment", "Supplier readiness", "Fulfilment", "Occasion trading", "Operating rhythm"],
+    "upapp-factory": ["Qualified requirement", "Product design", "Development", "Testing", "Deployment", "Support"],
+    "vodafone-qatar-marqa": ["Business outcome", "Customer journey", "Platform delivery", "Operating change", "Measured result"]
+  }[item.slug];
+  return journeyExhibit(2, `${item.name}: operating chain`, items, item.slug === "vodafone-qatar-marqa" ? "Public operating context only. Internal programmes and measures remain confidential." : "The sequence shows how the mandate translated into an operating system.");
+};
+
+const recordEconomicsExhibit = item => {
+  const model = {
+    "roumaan": { income: ["Product margin", "Completed-order value"], costs: ["Delivery and payment", "Returns and acquisition"], result: "Order contribution" },
+    "salman-miraq-ksm": { income: ["Product margin", "Cash released", "Qualified venture value"], costs: ["Markdown and overhead", "Stock and capital required"], result: "Sustainable value creation" },
+    "floward-oman": { income: ["Product margin", "Completed gifting order"], costs: ["Packaging and delivery", "Cancellation and acquisition"], result: "Order contribution" },
+    "upapp-factory": { income: ["Contract value", "Approved change value"], costs: ["Delivery and partner hours", "Rework and support"], result: "Project contribution" },
+    "vodafone-qatar-marqa": { income: ["Attributable customer value"], costs: ["Platform and service cost"], result: "Accountable commercial outcome" }
+  }[item.slug];
+  return equationExhibit(3, "Commercial model", model.income, model.costs, model.result, "The equation identifies the management measure. It does not state an unpublished financial result.");
+};
+
+const recordArchitectureExhibit = item => {
+  const layers = {
+    "roumaan": [
+      { title: "Customer", items: ["Storefront", "Account", "Care"] },
+      { title: "Commerce", items: ["Catalogue", "Price", "Order"] },
+      { title: "Operation", items: ["Stock", "Fulfilment", "Returns"] },
+      { title: "Management", items: ["Category P&L", "Service", "Cash"] }
+    ],
+    "salman-miraq-ksm": [
+      { title: "Trade", items: ["POS", "Category", "Channel"] },
+      { title: "Working capital", items: ["Inventory", "Procurement", "Supplier terms"] },
+      { title: "Finance", items: ["P&L", "Cash", "Investment case"] },
+      { title: "Governance", items: ["Action owner", "Capital gate", "Board decision"] }
+    ],
+    "floward-oman": [
+      { title: "Demand", items: ["Catalogue", "Campaign", "Customer order"] },
+      { title: "Supply", items: ["Assortment", "Supplier", "Quality"] },
+      { title: "Fulfilment", items: ["Order flow", "Capacity", "Delivery"] },
+      { title: "Control", items: ["Daily trade", "Exceptions", "Contribution"] }
+    ],
+    "upapp-factory": [
+      { title: "Client", items: ["Requirement", "Decision", "Acceptance"] },
+      { title: "Product", items: ["Design", "Scope", "Release"] },
+      { title: "Delivery", items: ["Core team", "Partners", "Testing"] },
+      { title: "Control", items: ["Milestones", "Change", "Support"] }
+    ],
+    "vodafone-qatar-marqa": [
+      { title: "Customer", items: ["Journey", "Service", "Adoption"] },
+      { title: "Commerce", items: ["Proposition", "Platform", "Operations"] },
+      { title: "Enterprise", items: ["Technology", "Risk", "Governance"] },
+      { title: "Outcome", items: ["Attribution", "Cost", "Ownership"] }
+    ]
+  }[item.slug];
+  return architectureExhibit(4, "Technology and operating architecture", layers, item.slug === "vodafone-qatar-marqa" ? "The architecture is intentionally generic and contains no current-employer system detail." : "Technology is organized around the commercial and operating decisions it supports.");
+};
+
+const trackPage = item => {
+  const detail = trackDeep[item.slug];
+  const contents = [
+    ["executive-overview", "Executive overview"], ["market-context", "Market context"], ["role-mandate", "Role and mandate"], ["work", "What was built or fixed"], ["commercial", "Commercial contribution"], ["operating-model", "Operating model"], ["technology", "Technology and operations"], ["results", "Results and evidence"], ["lessons", "Business relevance and lessons"]
+  ].map(([id, title], index) => ({ id, title, number: index + 1 }));
+  const related = allUseCases.filter(useCase => item.slug === "roumaan" ? useCase.slug.includes("commerce") : item.slug === "floward-oman" ? useCase.slug.includes("gifting") : item.slug === "upapp-factory" ? useCase.slug.includes("software") || useCase.slug.includes("enterprise-ai") : item.slug === "vodafone-qatar-marqa" ? useCase.slug.includes("ai") || useCase.slug.includes("commerce") : useCase.slug.includes("retail")).slice(0, 3);
+  return {
+    path: trackPath(item), type: "WebPage", kind: "track", title: `${item.name} | Track Record | Haris Aslam`,
+    description: `Operating record from ${item.geography}: ${item.role.toLowerCase()}, covering commercial model, operating design, technology, evidence and lessons.`,
+    eyebrow: "Track record", h1: item.name, intro: item.summary,
+    body: `${tagRow([item.role, item.geography, item.period])}<div class="report-layout track-report">${reportContents(contents)}<article class="report-main">${reportSection("executive-overview", 1, "Executive overview", `<div class="report-opening">${prose([item.summary, item.relevance])}${reportCallout("Evidence boundary", item.slug === "vodafone-qatar-marqa" ? "Current-employer material remains confidential" : "Only verified public outcomes are stated", detail.results[0], item.slug === "vodafone-qatar-marqa" ? "control" : "evidence")}</div>`, "opening-band")}${reportSection("market-context", 2, "Market context", `${prose(detail.context)}${timelineExhibit(1, "Mandate and operating progression", detail.timeline, "The timeline shows the work sequence rather than implying an achieved financial result.")}`)}${reportSection("role-mandate", 3, "Role and mandate", `<div class="report-split">${reportBlock("Mandate", prose([item.mandate]))}${reportBlock("Operating problem", prose(detail.problem))}</div>`, "tint-band")}${reportSection("work", 4, "What was built or fixed", `${prose(detail.work)}${recordJourneyExhibit(item)}`, "dark-band")}${reportSection("commercial", 5, "Commercial contribution", `${prose(detail.commercial)}${recordEconomicsExhibit(item)}`)}${reportSection("operating-model", 6, "Operating model", `<div class="report-split">${reportBlock("How the work ran", prose(detail.operating))}${reportBlock("Decision discipline", prose([item.relevance]))}</div>${swimlaneExhibit(5, "Operating cadence and decision rights", [{ title: "Commercial", steps: ["Set priority", "Read economics", "Choose action"] }, { title: "Operations", steps: ["Prepare capacity", "Execute", "Resolve exception"] }, { title: "Finance and control", steps: ["Reconcile evidence", "Approve commitment", "Review result"] }], "The exact cadence varies by role; the common pattern is named ownership and one operating fact base.")}`)}${reportSection("technology", 7, "Technology and operations", `${prose(detail.technology)}${recordArchitectureExhibit(item)}`, "tint-band")}${reportSection("results", 8, "Results and evidence", `<div class="report-split">${reportBlock("Verified record", prose(detail.results))}${reportBlock("What is not claimed", prose([item.slug === "vodafone-qatar-marqa" ? "No internal programme, architecture, customer or financial result is disclosed." : "No unpublished revenue, profit, market-share or broad transformation percentage is added to the record."]))}</div>${kpiExhibit(6, "Operating measurement framework", detail.metrics, "These are the measures that make the model governable. They are not presented as achieved values.")}`, "impact-band")}${reportSection("lessons", 9, "Business relevance and lessons", `<div class="lessons-layout">${bulletList(detail.lessons)}${reportCallout("Business relevance", "Why this experience matters", item.relevance)}</div>`, "takeaway-band")}</article></div>${section("Related use cases", `<div class="visual-card-grid">${related.map(useCard).join("")}</div>`)}`
+  };
+};
 
 const useCasePage = item => ({
   path: usePath(item), type: "WebPage", kind: "case", title: `${item.title} | Use Case | Haris Aslam`,
   description: item.summary.length >= 80 ? item.summary : `${item.summary} A business use case covering solution, technology, commercial model, operations and impact.`,
   eyebrow: `${item.type} · ${item.geography}`, h1: item.title, intro: item.summary,
   project: item.slug === "ai-commerce-command-center" || item.slug === "career-runway-ai" ? { name: item.title, status: item.type, description: item.summary } : undefined,
-  body: `${tagRow([item.sector, item.geography, item.type])}<section class="case-hero-visual">${caseVisual(item)}${commercialCaseVisual(item)}</section><div class="case-body-layout"><div class="detail-main">${field("Overview", item.overview)}${field("Business Problem", item.problem)}${field("Solution", item.solution)}${field("Technology", item.technology)}${field("Commercial Model", item.commercial)}${field("Operating Model", item.operating)}</div><aside class="impact-panel${item.impactLabel === "Modeled Business Impact" ? " is-modeled" : ""}"><span>${item.impactLabel === "Modeled Business Impact" ? "Modeled" : "Evidence"}</span><h2>${esc(item.impactLabel)}</h2><p>${esc(item.impact)}</p></aside></div>${section("Continue exploring", `<div class="continue-grid">${card("/use-cases", "Use cases", "More business problems", "Browse commerce, retail, fintech, enterprise technology and growth cases.")}${card("/ai-transformation", "Applied AI", "AI & Transformation", "See how AI fits inside commercial and operating workflows.")}</div>`)}`
+  body: item.slug === "leading-saudi-bank-commerce-ecosystem" ? saudiBankBody(item) : supportingCaseBody(item)
 });
 
 const insights = [
