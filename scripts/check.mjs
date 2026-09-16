@@ -38,6 +38,8 @@ const developmentNotes = [
   /source discovery/i
 ];
 const forbiddenCaseNames = /\bSAB\b|Bank Dhofar|Floward|\bBDO\b|KalSoft|Al Raid|Vodafone|Salman Corporation|Miraq|\bKSM\b/i;
+const currentEmployerNames = /MARQA|Vodafone Qatar/i;
+const permittedRoleSentence = "Currently working on strategic digital-commerce initiatives in Qatar's telecom sector.";
 
 for (const file of htmlFiles) {
   const route = routeFor(file);
@@ -93,6 +95,8 @@ for (const file of htmlFiles) {
   for (const regex of jobSignals) if (regex.test(html)) errors.push(`${route}: job-seeking signal ${regex}`);
   for (const regex of rejectedLanguage) if (regex.test(html)) errors.push(`${route}: rejected language ${regex}`);
   for (const regex of developmentNotes) if (regex.test(html)) errors.push(`${route}: public development note ${regex}`);
+  if (currentEmployerNames.test(html)) errors.push(`${route}: current-employer name exposed`);
+  if (route !== "/about" && html.includes(permittedRoleSentence)) errors.push(`${route}: current-role sentence must appear only on About`);
   if (/[—–]/.test(html)) errors.push(`${route}: em or en dash found`);
   if (html.includes("__bundler") || html.includes("Unpacking...")) errors.push(`${route}: unpacking shell`);
 }
@@ -101,28 +105,31 @@ if (navigation.length !== 7) errors.push(`navigation must contain seven items, f
 for (const [index, expected] of ["Home", "Track Record", "Use Cases", "AI & Transformation", "Insights", "About", "Contact"].entries()) {
   if (navigation[index]?.[0] !== expected) errors.push(`navigation position ${index + 1}: expected ${expected}`);
 }
-if (pages.filter(page => page.kind === "track").length !== 5) errors.push("release must have five track-record pages");
+if (pages.filter(page => page.kind === "track").length !== 4) errors.push("release must have four track-record pages");
 if (pages.filter(page => page.kind === "case").length !== 17) errors.push("release must have seventeen use-case pages");
 if (pages.filter(page => page.kind === "article").length !== 8) errors.push("release must have eight insight pages");
-if (pages.length !== 37) errors.push(`release must have 37 indexable routes, found ${pages.length}`);
+if (pages.length !== 36) errors.push(`release must have 36 indexable routes, found ${pages.length}`);
 
 const home = await readFile(join(root, "index.html"), "utf8");
 for (const sentence of [
-  "Build businesses.<br>Fix economics.<br>Scale what works.",
-  "Operating leadership across commerce, retail, marketplaces, enterprise technology and applied AI."
+  "Building growth engines, fixing business economics and turning ideas into operating models.",
+  "GCC operator and business builder working across commerce, retail, marketplaces, enterprise technology, fintech and AI."
 ]) if (!home.includes(sentence)) errors.push(`home missing required copy: ${sentence}`);
-for (const heading of ["Selected operating record", "Where I create value", "Selected flagship use cases", "AI & Transformation", "Investment and venture building", "Insights", "About", "Contact"]) {
+for (const heading of ["Build New Businesses", "Transform Existing Businesses", "Create New Revenue Pools", "Redesign for AI", "Selected business problems", "Operating evidence", "AI Commerce Command Center", "Insights"]) {
   if (!home.includes(heading)) errors.push(`home missing section ${heading}`);
 }
-for (const marker of ["p-home-hero", "p-record-rail", "p-value-system", "p-case-mosaic", "p-product-stage", "p-insight-list", "p-contact-band"]) {
+for (const marker of ["v3-home-hero", "v3-capability-system", "v3-sector-ribbon", "v3-case-editorial", "v3-value-band", "v3-evidence-band", "v3-ai-products", "v3-insight-ledger"]) {
   if (!home.includes(marker)) errors.push(`home missing visual module ${marker}`);
+}
+for (const credential of ["17+ years", "GCC", "Founder", "Operator", "Transformation", "Venture Building"]) {
+  if (!home.includes(credential)) errors.push(`home missing credential ${credential}`);
 }
 
 const trackIndex = await pageHtml("/track-record");
-for (const marker of ["p-track-hero", "p-record-stories", "p-record-story", "p-capital-band"]) {
-  if (!trackIndex.includes(marker)) errors.push(`/track-record: missing pilot module ${marker}`);
+for (const sentence of ["Building, launching and transforming businesses.", "Selected operating roles and ventures where Haris held direct responsibility for building, growth, transformation or investment."]) {
+  if (!trackIndex.includes(sentence)) errors.push(`/track-record: missing required copy ${sentence}`);
 }
-count(trackIndex, /class="p-record-story/g, 5, "/track-record", "operating stories");
+count(trackIndex, /class="record-card"/g, 4, "/track-record", "operating stories");
 
 for (const page of pages.filter(page => page.kind === "track")) {
   const html = await pageHtml(page.path);
@@ -152,29 +159,29 @@ for (const page of pages.filter(page => page.kind === "case")) {
 }
 
 const saudiFlagship = await pageHtml("/use-cases/leading-saudi-bank-commerce-ecosystem");
-for (const marker of ["p-bank-hero", "p-case-nav", "p-case-section", "p-exhibit", "p-kpi-cockpit"]) {
-  if (!saudiFlagship.includes(marker)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing pilot module ${marker}`);
+for (const marker of ["v3-case-hero", "v3-case-nav", "v3-case-section", "v3-exhibit", "v3-kpi-table"]) {
+  if (!saudiFlagship.includes(marker)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing V3 module ${marker}`);
 }
 for (const heading of [
   "Executive summary", "Business problem", "Solution design", "Commercial model",
   "Technology, data and AI", "Operating model and governance", "MVP and scale roadmap",
-  "Measurement and modeled impact", "Modeled business impact", "Risks that can invalidate the case"
+  "Measurement and modeled impact", "Modeled business impact", "Risks and dependencies"
 ]) if (!saudiFlagship.includes(heading)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing flagship section ${heading}`);
 for (const exhibit of [
   "The bank enters after the commercial decision",
-  "A commerce-enabled journey begins at declared intent",
+  "A commerce-enabled journey starts at declared intent",
   "Bank, merchant and customer ecosystem",
   "Commercial value pools and cost deductions",
   "Technology and data architecture",
-  "AI ranks approved value; it does not create eligibility",
+  "AI ranks permitted value; policy controls eligibility",
   "Operating model and decision rights",
   "Twelve-month implementation roadmap"
 ]) if (!saudiFlagship.includes(exhibit)) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing flagship exhibit ${exhibit}`);
 for (const term of ["cardholder segmentation", "merchant-funded", "customer consent", "attribution", "merchant settlement", "net incremental contribution", "90-day"]) {
   if (!saudiFlagship.toLowerCase().includes(term.toLowerCase())) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: missing commercial depth ${term}`);
 }
-count(saudiFlagship, /<figure class="p-exhibit\b/g, 8, "/use-cases/leading-saudi-bank-commerce-ecosystem", "flagship exhibits");
-const saudiWords = pilotWordCount(saudiFlagship);
+count(saudiFlagship, /<figure class="v3-exhibit\b/g, 8, "/use-cases/leading-saudi-bank-commerce-ecosystem", "flagship exhibits");
+const saudiWords = v3WordCount(saudiFlagship);
 if (saudiWords < 1500 || saudiWords > 3000) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: expected 1500-3000 report words, found ${saudiWords}`);
 
 for (const page of pages.filter(page => page.kind === "article")) {
@@ -198,12 +205,18 @@ const ai = await pageHtml("/ai-transformation");
 for (const target of ["/ai-commerce", "/career-runway", "/use-cases/aeofind"]) {
   if (!ai.includes(`href="${target}"`)) errors.push(`AI & Transformation missing ${target}`);
 }
-for (const marker of ["p-commerce-ui", "p-runway-ui", "p-aeo-ui", "p-agent-architecture", "p-authority-ladder", "p-ai-delivery"]) {
-  if (!ai.includes(marker)) errors.push(`AI & Transformation missing pilot module ${marker}`);
+for (const marker of ["v3-ai-ui-command", "v3-ai-ui-runway", "v3-ai-ui-aeo", "v3-agent-stack", "v3-authority-matrix", "v3-ai-delivery"]) {
+  if (!ai.includes(marker)) errors.push(`AI & Transformation missing V3 module ${marker}`);
 }
 
 const useCasesIndex = await pageHtml("/use-cases");
-count(useCasesIndex, /class="visual-card"/g, 17, "/use-cases", "visual use-case cards");
+atLeast(useCasesIndex, /class="v3-library-entry/g, 40, "/use-cases", "library entries");
+for (const marker of ["case-filters", "data-sector=", "data-problem=", "data-solution=", "case-count", "reset-filters", 'href="/use-cases/leading-saudi-bank-commerce-ecosystem"']) {
+  if (!useCasesIndex.includes(marker)) errors.push(`/use-cases: missing library capability ${marker}`);
+}
+
+const aboutPage = await pageHtml("/about");
+count(aboutPage, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/about", "permitted current-role sentence");
 
 const insightsIndex = await pageHtml("/insights");
 count(insightsIndex, /class="insight-card"/g, 8, "/insights", "editorial insight cards");
@@ -234,7 +247,7 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, 5 track-record pages, 17 use cases and 8 insights.`);
+console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, 4 track-record pages, 61 browsable use-case entries, 17 detailed use cases and 8 insights.`);
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -270,7 +283,7 @@ function reportWordCount(html) {
     .split(/\s+/)
     .filter(Boolean).length;
 }
-function pilotWordCount(html) {
+function v3WordCount(html) {
   const main = capture(html, /<main id="main">(.*?)<\/main>/s);
   return [...main.matchAll(/<p\b[^>]*>(.*?)<\/p>/gis)]
     .map(match => match[1])

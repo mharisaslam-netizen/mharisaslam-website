@@ -1,4 +1,4 @@
-import { pilotAi, pilotHome, pilotSaudi, pilotTrack } from "./pilot.mjs";
+import { v3Ai, v3Home, v3Saudi, v3UseLibrary } from "./v3-pilot.mjs";
 
 export const site = {
   name: "Muhammad Haris Aslam",
@@ -91,16 +91,6 @@ const trackRecords = [
     technology: "Web and mobile development, project planning, requirements, testing and release workflows.",
     relevance: "UpApp Factory gave Haris direct experience of selling, building and handing over enterprise technology. Client performance gains and studio profitability are not published.",
     visual: ["Qualified brief", "Scoped build", "Test and release", "Handover"]
-  },
-  {
-    slug: "vodafone-qatar-marqa", name: "Vodafone Qatar and MARQA", role: "Strategic digital commerce", geography: "Qatar", period: "Current public role context",
-    summary: "Strategic digital-commerce work inside a large enterprise environment in Qatar.",
-    mandate: "Work at the intersection of customer experience, commercial priorities, platform delivery and operating governance.",
-    built: "The public record covers role context and enterprise perspective. Detailed roadmaps, internal programmes and operating data remain confidential.",
-    commercial: "The business lens remains consistent: customer activity must connect to attributable revenue, service cost and accountable ownership.",
-    technology: "Enterprise commerce, customer and operating platforms, described only at a public-safe level.",
-    relevance: "The role adds large-enterprise scale and governance to an operating record built across ventures, retail and digital commerce.",
-    visual: ["Customer", "Commerce platform", "Enterprise controls", "Accountable outcome"]
   }
 ];
 
@@ -275,49 +265,6 @@ const trackDeep = {
       { title: "Delivery", metrics: ["Milestone variance", "Defect escape", "Rework hours"] },
       { title: "Economics", metrics: ["Project contribution", "Partner cost", "Cash collection"] },
       { title: "Handover", metrics: ["Acceptance cycle", "Open issues", "Support demand"] }
-    ]
-  },
-  "vodafone-qatar-marqa": {
-    context: [
-      "This page records Haris's current public role context in strategic digital commerce at Vodafone Qatar and work connected to MARQA. It is included because enterprise scale, governance and cross-functional delivery are part of the operating record.",
-      "Detailed programmes, internal roadmaps, performance data, commercial terms and customer information remain confidential. The page therefore explains the nature of the operating environment without turning current-employer work into a public case study."
-    ],
-    problem: [
-      "Enterprise commerce sits across customer experience, product, commercial priorities, technology delivery, operations, risk and governance. A change can improve one step while creating service cost or control problems elsewhere.",
-      "The management requirement is to connect customer activity to an attributable commercial outcome, then assign ownership for the platform, process and service decisions required to deliver it."
-    ],
-    work: [
-      "The public-safe description is strategic digital-commerce work inside a large enterprise environment in Qatar. Haris contributes an operator's perspective shaped by ventures, country launch, retail economics and product delivery.",
-      "Specific initiatives are intentionally excluded. The transferable work concerns framing commercial problems, connecting platform delivery to operating change and keeping decision rights clear across functions."
-    ],
-    commercial: [
-      "The commercial lens follows attributable revenue, service cost, adoption quality and accountable ownership rather than digital activity in isolation. The exact measures, targets and results used internally are not published.",
-      "This boundary matters. A current role can demonstrate the ability to work at enterprise scale without disclosing programmes that belong to the employer."
-    ],
-    operating: [
-      "Enterprise delivery requires formal ownership, dependency management and control. Product, commercial, technology and operations need a shared definition of the customer journey and the result being measured.",
-      "Governance also determines where automation belongs. AI can prepare analysis or summarize operational evidence. Decisions affecting customers, money, eligibility, access or material commercial commitments remain inside enterprise controls."
-    ],
-    technology: [
-      "The public technology description is limited to enterprise commerce, customer and operating platforms. Internal architecture, vendors, data flows and delivery plans are not described.",
-      "The broader lesson is that platform work earns value only when it changes a customer or operating outcome and the business can measure that outcome reliably."
-    ],
-    results: [
-      "No internal programme result, financial outcome or customer metric is published. The evidence presented is the role context itself and the addition of large-enterprise delivery and governance to Haris's earlier founder and operator experience.",
-      "This page will remain deliberately bounded until specific material is approved for public use."
-    ],
-    lessons: ["Connect platform work to a named commercial or service outcome.", "Define ownership across product, technology and operations.", "Use governance to speed sound decisions, not only to approve work.", "Keep current-employer evidence inside publication boundaries.", "Apply AI where authority, data and audit are explicit."],
-    timeline: [
-      { period: "Frame", title: "Business outcome", detail: "Define the customer or commercial result before platform work." },
-      { period: "Align", title: "Enterprise owners", detail: "Connect product, commercial, technology, operations and control functions." },
-      { period: "Deliver", title: "Platform and process", detail: "Coordinate the technology change with the operating change." },
-      { period: "Measure", title: "Attribution and service", detail: "Review adoption, value, cost and accountable ownership." }
-    ],
-    metrics: [
-      { title: "Customer", metrics: ["Journey completion", "Service quality", "Adoption"] },
-      { title: "Commercial", metrics: ["Attributable value", "Cost to serve", "Quality of use"] },
-      { title: "Delivery", metrics: ["Dependency closure", "Release quality", "Decision latency"] },
-      { title: "Control", metrics: ["Approval evidence", "Audit trail", "Issue resolution"] }
     ]
   }
 };
@@ -899,10 +846,9 @@ const recordJourneyExhibit = item => {
     "roumaan": ["Customer demand", "Curated catalogue", "Digital order", "Fulfilment", "Service learning"],
     "salman-miraq": ["Core diagnosis", "Stock and cash reset", "Portfolio choices", "Capital gates", "GCC options"],
     "floward-oman": ["Local setup", "Assortment", "Supplier readiness", "Fulfilment", "Occasion trading", "Operating rhythm"],
-    "upapp-factory": ["Qualified requirement", "Product design", "Development", "Testing", "Deployment", "Support"],
-    "vodafone-qatar-marqa": ["Business outcome", "Customer journey", "Platform delivery", "Operating change", "Measured result"]
+    "upapp-factory": ["Qualified requirement", "Product design", "Development", "Testing", "Deployment", "Support"]
   }[item.slug];
-  return journeyExhibit(2, `${item.name}: operating chain`, items, item.slug === "vodafone-qatar-marqa" ? "Public operating context only. Internal programmes and measures remain confidential." : "The sequence shows how the mandate translated into an operating system.");
+  return journeyExhibit(2, `${item.name}: operating chain`, items, "The sequence shows how the mandate translated into an operating system.");
 };
 
 const recordEconomicsExhibit = item => {
@@ -910,8 +856,7 @@ const recordEconomicsExhibit = item => {
     "roumaan": { income: ["Product margin", "Completed-order value"], costs: ["Delivery and payment", "Returns and acquisition"], result: "Order contribution" },
     "salman-miraq": { income: ["Product margin", "Cash released", "Qualified venture value"], costs: ["Markdown and overhead", "Stock and capital required"], result: "Sustainable value creation" },
     "floward-oman": { income: ["Product margin", "Completed gifting order"], costs: ["Packaging and delivery", "Cancellation and acquisition"], result: "Order contribution" },
-    "upapp-factory": { income: ["Contract value", "Approved change value"], costs: ["Delivery and partner hours", "Rework and support"], result: "Project contribution" },
-    "vodafone-qatar-marqa": { income: ["Attributable customer value"], costs: ["Platform and service cost"], result: "Accountable commercial outcome" }
+    "upapp-factory": { income: ["Contract value", "Approved change value"], costs: ["Delivery and partner hours", "Rework and support"], result: "Project contribution" }
   }[item.slug];
   return equationExhibit(3, "Commercial model", model.income, model.costs, model.result, "The equation identifies the management measure. It does not state an unpublished financial result.");
 };
@@ -941,15 +886,9 @@ const recordArchitectureExhibit = item => {
       { title: "Product", items: ["Design", "Scope", "Release"] },
       { title: "Delivery", items: ["Core team", "Partners", "Testing"] },
       { title: "Control", items: ["Milestones", "Change", "Support"] }
-    ],
-    "vodafone-qatar-marqa": [
-      { title: "Customer", items: ["Journey", "Service", "Adoption"] },
-      { title: "Commerce", items: ["Proposition", "Platform", "Operations"] },
-      { title: "Enterprise", items: ["Technology", "Risk", "Governance"] },
-      { title: "Outcome", items: ["Attribution", "Cost", "Ownership"] }
     ]
   }[item.slug];
-  return architectureExhibit(4, "Technology and operating architecture", layers, item.slug === "vodafone-qatar-marqa" ? "The architecture is intentionally generic and contains no current-employer system detail." : "Technology is organized around the commercial and operating decisions it supports.");
+  return architectureExhibit(4, "Technology and operating architecture", layers, "Technology is organized around the commercial and operating decisions it supports.");
 };
 
 const trackPage = item => {
@@ -957,12 +896,12 @@ const trackPage = item => {
   const contents = [
     ["executive-overview", "Executive overview"], ["market-context", "Market context"], ["role-mandate", "Role and mandate"], ["work", "What was built or fixed"], ["commercial", "Commercial contribution"], ["operating-model", "Operating model"], ["technology", "Technology and operations"], ["results", "Results and evidence"], ["lessons", "Business relevance and lessons"]
   ].map(([id, title], index) => ({ id, title, number: index + 1 }));
-  const related = allUseCases.filter(useCase => item.slug === "roumaan" ? useCase.slug.includes("commerce") : item.slug === "floward-oman" ? useCase.slug.includes("gifting") : item.slug === "upapp-factory" ? useCase.slug.includes("software") || useCase.slug.includes("enterprise-ai") : item.slug === "vodafone-qatar-marqa" ? useCase.slug.includes("ai") || useCase.slug.includes("commerce") : useCase.slug.includes("retail")).slice(0, 3);
+  const related = allUseCases.filter(useCase => item.slug === "roumaan" ? useCase.slug.includes("commerce") : item.slug === "floward-oman" ? useCase.slug.includes("gifting") : item.slug === "upapp-factory" ? useCase.slug.includes("software") || useCase.slug.includes("enterprise-ai") : useCase.slug.includes("retail")).slice(0, 3);
   return {
     path: trackPath(item), type: "WebPage", kind: "track", title: `${item.name} | Track Record | Haris Aslam`,
     description: `Operating record from ${item.geography}: ${item.role.toLowerCase()}, covering commercial model, operating design, technology, evidence and lessons.`,
     eyebrow: "Track record", h1: item.name, intro: item.summary,
-    body: `${tagRow([item.role, item.geography, item.period])}<div class="report-layout track-report">${reportContents(contents)}<article class="report-main">${reportSection("executive-overview", 1, "Executive overview", `<div class="report-opening">${prose([item.summary, item.relevance])}${reportCallout("Evidence boundary", item.slug === "vodafone-qatar-marqa" ? "Current-employer material remains confidential" : "Only verified public outcomes are stated", detail.results[0], item.slug === "vodafone-qatar-marqa" ? "control" : "evidence")}</div>`, "opening-band")}${reportSection("market-context", 2, "Market context", `${prose(detail.context)}${timelineExhibit(1, "Mandate and operating progression", detail.timeline, "The timeline shows the work sequence rather than implying an achieved financial result.")}`)}${reportSection("role-mandate", 3, "Role and mandate", `<div class="report-split">${reportBlock("Mandate", prose([item.mandate]))}${reportBlock("Operating problem", prose(detail.problem))}</div>`, "tint-band")}${reportSection("work", 4, "What was built or fixed", `${prose(detail.work)}${recordJourneyExhibit(item)}`, "dark-band")}${reportSection("commercial", 5, "Commercial contribution", `${prose(detail.commercial)}${recordEconomicsExhibit(item)}`)}${reportSection("operating-model", 6, "Operating model", `<div class="report-split">${reportBlock("How the work ran", prose(detail.operating))}${reportBlock("Decision discipline", prose([item.relevance]))}</div>${swimlaneExhibit(5, "Operating cadence and decision rights", [{ title: "Commercial", steps: ["Set priority", "Read economics", "Choose action"] }, { title: "Operations", steps: ["Prepare capacity", "Execute", "Resolve exception"] }, { title: "Finance and control", steps: ["Reconcile evidence", "Approve commitment", "Review result"] }], "The exact cadence varies by role; the common pattern is named ownership and one operating fact base.")}`)}${reportSection("technology", 7, "Technology and operations", `${prose(detail.technology)}${recordArchitectureExhibit(item)}`, "tint-band")}${reportSection("results", 8, "Results and evidence", `<div class="report-split">${reportBlock("Verified record", prose(detail.results))}${reportBlock("What is not claimed", prose([item.slug === "vodafone-qatar-marqa" ? "No internal programme, architecture, customer or financial result is disclosed." : "No unpublished revenue, profit, market-share or broad transformation percentage is added to the record."]))}</div>${kpiExhibit(6, "Operating measurement framework", detail.metrics, "These are the measures that make the model governable. They are not presented as achieved values.")}`, "impact-band")}${reportSection("lessons", 9, "Business relevance and lessons", `<div class="lessons-layout">${bulletList(detail.lessons)}${reportCallout("Business relevance", "Why this experience matters", item.relevance)}</div>`, "takeaway-band")}</article></div>${section("Related use cases", `<div class="visual-card-grid">${related.map(useCard).join("")}</div>`)}`
+    body: `${tagRow([item.role, item.geography, item.period])}<div class="report-layout track-report">${reportContents(contents)}<article class="report-main">${reportSection("executive-overview", 1, "Executive overview", `<div class="report-opening">${prose([item.summary, item.relevance])}${reportCallout("Evidence boundary", "Only verified public outcomes are stated", detail.results[0], "evidence")}</div>`, "opening-band")}${reportSection("market-context", 2, "Market context", `${prose(detail.context)}${timelineExhibit(1, "Mandate and operating progression", detail.timeline, "The timeline shows the work sequence rather than implying an achieved financial result.")}`)}${reportSection("role-mandate", 3, "Role and mandate", `<div class="report-split">${reportBlock("Mandate", prose([item.mandate]))}${reportBlock("Operating problem", prose(detail.problem))}</div>`, "tint-band")}${reportSection("work", 4, "What was built or fixed", `${prose(detail.work)}${recordJourneyExhibit(item)}`, "dark-band")}${reportSection("commercial", 5, "Commercial contribution", `${prose(detail.commercial)}${recordEconomicsExhibit(item)}`)}${reportSection("operating-model", 6, "Operating model", `<div class="report-split">${reportBlock("How the work ran", prose(detail.operating))}${reportBlock("Decision discipline", prose([item.relevance]))}</div>${swimlaneExhibit(5, "Operating cadence and decision rights", [{ title: "Commercial", steps: ["Set priority", "Read economics", "Choose action"] }, { title: "Operations", steps: ["Prepare capacity", "Execute", "Resolve exception"] }, { title: "Finance and control", steps: ["Reconcile evidence", "Approve commitment", "Review result"] }], "The exact cadence varies by role; the common pattern is named ownership and one operating fact base.")}`)}${reportSection("technology", 7, "Technology and operations", `${prose(detail.technology)}${recordArchitectureExhibit(item)}`, "tint-band")}${reportSection("results", 8, "Results and evidence", `<div class="report-split">${reportBlock("Verified record", prose(detail.results))}${reportBlock("What is not claimed", prose(["No unpublished revenue, profit, market-share or broad transformation percentage is added to the record."]))}</div>${kpiExhibit(6, "Operating measurement framework", detail.metrics, "These are the measures that make the model governable. They are not presented as achieved values.")}`, "impact-band")}${reportSection("lessons", 9, "Business relevance and lessons", `<div class="lessons-layout">${bulletList(detail.lessons)}${reportCallout("Business relevance", "Why this experience matters", item.relevance)}</div>`, "takeaway-band")}</article></div>${section("Related use cases", `<div class="visual-card-grid">${related.map(useCard).join("")}</div>`)}`
   };
 };
 
@@ -970,8 +909,8 @@ const useCasePage = item => ({
   path: usePath(item), type: "WebPage", kind: "case", title: `${item.title} | Use Case | Haris Aslam`,
   description: item.summary.length >= 80 ? item.summary : `${item.summary} A business use case covering solution, technology, commercial model, operations and impact.`,
   eyebrow: `${item.type} · ${item.geography}`, h1: item.title, intro: item.summary,
-  pilot: item.slug === "leading-saudi-bank-commerce-ecosystem",
-  pilotBody: item.slug === "leading-saudi-bank-commerce-ecosystem" ? pilotSaudi({ item }) : "",
+  v3: item.slug === "leading-saudi-bank-commerce-ecosystem",
+  v3Body: item.slug === "leading-saudi-bank-commerce-ecosystem" ? v3Saudi({ item }) : "",
   project: item.slug === "ai-commerce-command-center" || item.slug === "career-runway-ai" ? { name: item.title, status: item.type, description: item.summary } : undefined,
   body: item.slug === "leading-saudi-bank-commerce-ecosystem" ? saudiBankBody(item) : supportingCaseBody(item)
 });
@@ -991,21 +930,21 @@ const articleCard = item => `<a class="insight-card" href="/insights/${item.slug
 const articlePage = item => ({ path: `/insights/${item.slug}`, type: "Article", kind: "article", datePublished: "2026-09-16", title: `${item.title} | Haris Aslam`, description: `${item.lead} A practical note on GCC business economics and operating decisions.`, eyebrow: "Insight", h1: item.title, intro: item.lead, body: `<div class="article-visual-stage">${articleVisual(item)}</div><div class="article-layout"><article class="article-copy">${item.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("")}</article><aside class="article-lens"><span>Operating question</span><p>What changes in the economics, decision rights and evidence before this model can scale?</p></aside></div>${section("Related work", `<div class="continue-grid">${card("/use-cases", "Use cases", "See the models in practice", "Explore business problems, solutions, operating models and economics.")}${card("/ai-transformation", "Applied AI", "AI & Transformation", "See bounded automation inside real workflows.")}</div>`)}` });
 
 const home = {
-  path: "/", type: "WebPage", kind: "home", title: "Muhammad Haris Aslam | GCC Operator and Business Builder", description: "Muhammad Haris Aslam is a GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.", eyebrow: "Muhammad Haris Aslam", h1: "Build businesses. Fix economics. Scale what works.", intro: "GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.", heroAside: `<figure class="hero-portrait"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"><figcaption>Operator · Builder · Transformation leader</figcaption></figure>`,
-  pilot: true,
-  pilotBody: pilotHome({ trackRecords, useCases, aiProjects, insights }),
+  path: "/", type: "WebPage", kind: "home", title: "Muhammad Haris Aslam | GCC Operator and Business Builder", description: "Muhammad Haris Aslam builds growth engines, fixes business economics and turns ideas into operating models across the GCC.", eyebrow: "Muhammad Haris Aslam", h1: "Building growth engines, fixing business economics and turning ideas into operating models.", intro: "GCC operator and business builder working across commerce, retail, marketplaces, enterprise technology, fintech and AI.",
+  v3: true,
+  v3Body: v3Home({ trackRecords, insights }),
   body: `<div class="hero-actions">${link("/track-record", "View track record", "button")}${link("/use-cases", "Explore use cases", "button button-secondary")}</div>${section("Selected operating record", `<div class="record-feature-grid">${trackRecords.slice(0, 4).map(trackCard).join("")}</div>${link("/track-record", "View full track record")}`, "record-section")}${section("Areas of work", `<div class="builder-system"><div class="builder-path"><span>Business problem</span><span>Commercial economics</span><span>Operating model</span><span>Technology and AI</span><span>Measurable impact</span></div><div class="builder-disciplines"><span>Business building</span><span>Commerce and marketplaces</span><span>Retail economics</span><span>Enterprise technology</span><span>GCC growth</span><span>Applied AI</span></div></div>`, "builder-section")}${section("Selected use cases", `<div class="visual-card-grid">${[useCases[0], useCases[2], useCases[5], useCases[7], aiProjects[0], useCases[10]].map(useCard).join("")}</div>${link("/use-cases", "Browse all use cases")}`)}${section("AI & Transformation", `<p class="section-intro">AI works when it is attached to an operating decision, reliable data and a person who owns the result.</p><div class="product-preview-grid">${[...aiProjects, useCases.find(item => item.slug === "aeofind")].map(productPreview).join("")}</div>${link("/ai-transformation", "Explore AI & Transformation")}`, "ai-preview-section")}${section("Insights", `<div class="insight-grid">${insights.slice(0, 4).map(articleCard).join("")}</div>${link("/insights", "Read all insights")}`)}${section("About", `<div class="narrow-copy"><p>Haris works across the decisions that turn an idea into an operating business: proposition, economics, technology and execution.</p>${link("/about", "More about Haris")}</div>`)}${section("Contact", `<div class="narrow-copy"><p>For a discussion about business building, commerce, transformation or applied AI.</p>${link("/contact", "Get in touch", "button")}</div>`, "contact-section")}`
 };
 
-const trackIndex = { path: "/track-record", type: "CollectionPage", kind: "track-index", title: "Track Record | Muhammad Haris Aslam", description: "Operating stories across Roumaan, UpApp Factory, Floward Oman, Salman Corporation, Miraq Lifestyle and Vodafone Qatar.", eyebrow: "Track record", h1: "Building, launching and transforming businesses", intro: "Selected operating roles and ventures where Haris held direct responsibility for building, growth, transformation or investment.", pilot: true, pilotBody: pilotTrack({ trackRecords }), body: `${section("Selected record", `<div class="record-feature-grid record-index-grid">${trackRecords.map(trackCard).join("")}</div>`, "record-section")}${section("Operating arc", journeyVisual("From founder-led commerce to enterprise scale", ["Build a commerce venture", "Create digital products", "Launch a country operation", "Reset retail economics", "Work at enterprise scale"], "The common thread is direct responsibility for the commercial and operating model."), "operating-arc-section")}` };
+const trackIndex = { path: "/track-record", type: "CollectionPage", kind: "track-index", title: "Track Record | Muhammad Haris Aslam", description: "Selected operating roles and ventures across Roumaan, UpApp Factory, Floward Oman, Salman Corporation and Miraq Lifestyle.", eyebrow: "Track record", h1: "Building, launching and transforming businesses.", intro: "Selected operating roles and ventures where Haris held direct responsibility for building, growth, transformation or investment.", body: `${section("Selected record", `<div class="record-feature-grid record-index-grid">${trackRecords.map(trackCard).join("")}</div>`, "record-section")}${section("Operating arc", journeyVisual("From founder-led commerce to enterprise scale", ["Build a commerce venture", "Create digital products", "Launch a country operation", "Reset retail economics", "Work at enterprise scale"], "The common thread is direct responsibility for the commercial and operating model."), "operating-arc-section")}` };
 
-const useIndex = { path: "/use-cases", type: "CollectionPage", kind: "use-index", title: "Business Use Cases | Muhammad Haris Aslam", description: "Anonymized business use cases across banking, commerce, retail, payments, logistics, enterprise technology, AI and GCC market entry.", eyebrow: "Use cases", h1: "Business problems turned into operating models", intro: "Each case connects the problem to a solution, technology, commercial model, operating model and impact.", body: `${section("Implemented work and operating pilots", `<div class="visual-card-grid">${allUseCases.filter(item => ["Operating case", "Operating pilot", "Live"].includes(item.type)).map(useCard).join("")}</div>`)}${section("Business cases and product concepts", `<p class="section-intro">These cases describe designed models. Their impact is explicitly modeled rather than presented as achieved.</p><div class="visual-card-grid">${allUseCases.filter(item => !["Operating case", "Operating pilot", "Live"].includes(item.type)).map(useCard).join("")}</div>`, "soft-section")}` };
+const useIndex = { path: "/use-cases", type: "CollectionPage", kind: "use-index", title: "Business Use Cases | Muhammad Haris Aslam", description: "A browsable library of business models and transformation cases across banking, commerce, retail, payments, logistics, enterprise technology, AI and GCC market entry.", eyebrow: "Use cases", h1: "Business problems turned into operating models", intro: "Each case connects the problem to commercial logic, technology, operating design and measurable value.", v3: true, v3Body: v3UseLibrary(), body: "" };
 
-const aiPage = { path: "/ai-transformation", type: "CollectionPage", kind: "ai", title: "AI & Transformation | Muhammad Haris Aslam", description: "Applied AI products and enterprise workflows built around reliable data, bounded authority and measurable business economics.", eyebrow: "AI & Transformation", h1: "Operational AI, under control", intro: "Products and enterprise workflows built around reliable facts, bounded authority and measurable business economics.", pilot: true, pilotBody: pilotAi({ useCases }), body: `${section("Product interfaces", `<div class="product-preview-grid product-showcase-grid">${[...aiProjects, useCases.find(item => item.slug === "aeofind")].map(productPreview).join("")}</div>`, "ai-product-section")}${section("Transformation cases", `<div class="visual-card-grid">${[useCases[0], useCases[1], useCases[7], useCases[13]].map(useCard).join("")}</div>`)}${section("Operating principle", `<div class="feature-split"><div><p>Use retrieval for approved knowledge. Use live APIs for prices, stock, orders and money. Give agents narrow permissions and widen them only after accuracy, service and economics hold.</p>${link("/insights/commerce-tasks-for-ai-agents", "Read the automation note")}</div>${authorityVisual("Agent control loop", ["Reliable signal", "Policy and evidence", "Human decision", "Audited action"], "Decision rights stay explicit as automation expands.")}</div>`, "dark-section")}` };
+const aiPage = { path: "/ai-transformation", type: "CollectionPage", kind: "ai", title: "AI & Transformation | Muhammad Haris Aslam", description: "Applied AI products and enterprise workflows built around reliable data, bounded authority and measurable business economics.", eyebrow: "AI & Transformation", h1: "Operational AI, under control", intro: "Products and enterprise workflows built around reliable facts, bounded authority and measurable business economics.", v3: true, v3Body: v3Ai(), body: "" };
 
 const insightsPage = { path: "/insights", type: "CollectionPage", kind: "insights", title: "Insights on Commerce and Transformation | Haris Aslam", description: "Eight practical articles on marketplace economics, retail cash, social commerce, AI operations, payments and warehouse contribution.", eyebrow: "Insights", h1: "Notes from operating work", intro: "Short reads on the economics and decisions that determine whether a model works.", body: `${section("Latest", `<div class="insight-grid">${insights.map(articleCard).join("")}</div>`)}${section("Editorial focus", `<div class="feature-split"><p>The writing stays close to operating questions: how revenue is earned, where cost enters, who owns the decision and what evidence is needed before scale.</p>${journeyVisual("Business lens", ["Problem", "Economics", "Operating choice", "Evidence"], "A practical sequence for testing whether a model works.")}</div>`, "soft-section")}` };
 
-const about = { path: "/about", type: "ProfilePage", kind: "about", title: "About Muhammad Haris Aslam | GCC Operator", description: "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.", eyebrow: "About", h1: "Muhammad Haris Aslam", intro: "Operator, business builder and transformation leader.", heroAside: `<figure class="hero-portrait compact"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"></figure>`, body: `${section("Operating background", `<div class="about-layout"><div class="article-copy"><p>Haris has built and operated digital-commerce ventures, launched a country operation, worked through retail margin and cash problems, and delivered enterprise technology.</p><p>His work starts with the business model. Where will value come from? What has to change in the operation? Which technology belongs in the solution, and which decisions still need an accountable person?</p><p>He is based in Doha and works across GCC commerce, retail, enterprise technology and applied AI.</p></div>${diagram("Working pattern", ["Find the problem", "Design the economics", "Build the operation", "Measure the result"])}</div>`)}${section("Selected track record", grid(trackRecords.slice(0, 3).map(trackCard)))}` };
+const about = { path: "/about", type: "ProfilePage", kind: "about", title: "About Muhammad Haris Aslam | GCC Operator", description: "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.", eyebrow: "About", h1: "Muhammad Haris Aslam", intro: "Operator, business builder and transformation leader.", heroAside: `<figure class="hero-portrait compact"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"></figure>`, body: `${section("Operating background", `<div class="about-layout"><div class="article-copy"><p>Haris has built and operated digital-commerce ventures, launched a country operation, worked through retail margin and cash problems, and delivered enterprise technology.</p><p>His work starts with the business model. Where will value come from? What has to change in the operation? Which technology belongs in the solution, and which decisions still need an accountable person?</p><p>He is based in Doha and works across GCC commerce, retail, enterprise technology and applied AI.</p><p>Currently working on strategic digital-commerce initiatives in Qatar's telecom sector.</p></div>${diagram("Working pattern", ["Find the problem", "Design the economics", "Build the operation", "Measure the result"])}</div>`)}${section("Selected track record", grid(trackRecords.slice(0, 3).map(trackCard)))}` };
 
 const contact = { path: "/contact", type: "ContactPage", kind: "contact", title: "Contact Muhammad Haris Aslam", description: "Contact Muhammad Haris Aslam about business building, digital commerce, retail transformation, enterprise technology, GCC growth and applied AI.", eyebrow: "Contact", h1: "Start with the business problem", intro: "A useful conversation begins with the market, the economics and the decision that needs to be made.", body: `${section("Contact", `<div class="contact-grid"><div><span>Email</span><a href="mailto:${site.email}">${site.email}</a></div><div><span>LinkedIn</span><a href="${site.linkedin}" rel="me noopener">Connect with Haris <span aria-hidden="true">↗</span></a></div></div><p class="contact-note">A short note on the problem and its operating context is enough.</p>`)}` };
 
