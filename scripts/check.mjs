@@ -2,6 +2,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { navigation, pages, site } from "../src/v2-content.mjs";
+import { aiOperatingCases, expandedLibraryCases } from "../src/v4-expansion.mjs";
 
 const root = fileURLToPath(new URL("../dist", import.meta.url));
 const files = await walk(root);
@@ -37,9 +38,9 @@ const developmentNotes = [
   /preserv(?:ed|ing) pages?/i,
   /source discovery/i
 ];
-const forbiddenCaseNames = /\bSAB\b|Bank Dhofar|Floward|\bBDO\b|KalSoft|Al Raid|Vodafone|Salman Corporation|Miraq|\bKSM\b/i;
+const forbiddenCaseNames = /\bSAB\b|Bank Dhofar|Floward|\bBDO\b|KalSoft|Al Raid|Vodafone|VOPAY|Salman Corporation|Miraq|\bKSM\b/i;
 const currentEmployerNames = /MARQA|Vodafone Qatar/i;
-const permittedRoleSentence = "Currently working on strategic digital-commerce initiatives in Qatar's telecom sector.";
+const permittedRoleSentence = "Currently working on strategic digital-commerce, marketplace and operating-model transformation within a major telecom operator in Qatar.";
 
 for (const file of htmlFiles) {
   const route = routeFor(file);
@@ -96,7 +97,7 @@ for (const file of htmlFiles) {
   for (const regex of rejectedLanguage) if (regex.test(html)) errors.push(`${route}: rejected language ${regex}`);
   for (const regex of developmentNotes) if (regex.test(html)) errors.push(`${route}: public development note ${regex}`);
   if (currentEmployerNames.test(html)) errors.push(`${route}: current-employer name exposed`);
-  if (route !== "/about" && html.includes(permittedRoleSentence)) errors.push(`${route}: current-role sentence must appear only on About`);
+  if (!["/", "/about", "/track-record"].includes(route) && html.includes(permittedRoleSentence)) errors.push(`${route}: current-role sentence appears outside approved pages`);
   if (/[—–]/.test(html)) errors.push(`${route}: em or en dash found`);
   if (html.includes("__bundler") || html.includes("Unpacking...")) errors.push(`${route}: unpacking shell`);
 }
@@ -106,9 +107,9 @@ for (const [index, expected] of ["Home", "Track Record", "Use Cases", "AI & Tran
   if (navigation[index]?.[0] !== expected) errors.push(`navigation position ${index + 1}: expected ${expected}`);
 }
 if (pages.filter(page => page.kind === "track").length !== 4) errors.push("release must have four track-record pages");
-if (pages.filter(page => page.kind === "case").length !== 17) errors.push("release must have seventeen use-case pages");
+if (pages.filter(page => page.kind === "case").length < expandedLibraryCases.length) errors.push(`release must have at least ${expandedLibraryCases.length} public use-case pages`);
 if (pages.filter(page => page.kind === "article").length !== 8) errors.push("release must have eight insight pages");
-if (pages.length !== 36) errors.push(`release must have 36 indexable routes, found ${pages.length}`);
+if (pages.length < 95) errors.push(`release must have at least 95 indexable routes, found ${pages.length}`);
 
 const home = await readFile(join(root, "index.html"), "utf8");
 for (const sentence of [
@@ -149,15 +150,37 @@ for (const page of pages.filter(page => page.kind === "track")) {
 for (const page of pages.filter(page => page.kind === "case")) {
   if (page.path === "/use-cases/leading-saudi-bank-commerce-ecosystem") continue;
   const html = await pageHtml(page.path);
-  for (const marker of ["Executive summary", "Business context", "Business problem", "Commercial", "Technology", "Operating model", "Risks and dependencies"]) {
-    if (!html.includes(marker)) errors.push(`${page.path}: missing use-case field ${marker}`);
+  if (html.includes("report-layout")) {
+    for (const marker of ["Executive summary", "Business context", "Business problem", "Commercial", "Technology", "Operating model", "Risks and dependencies"]) {
+      if (!html.includes(marker)) errors.push(`${page.path}: missing use-case field ${marker}`);
+    }
+    if (!/Business impact|Modeled business impact/i.test(html)) errors.push(`${page.path}: missing impact field`);
+    for (const marker of ["report-layout", "report-contents", "report-main", "report-section", "report-exhibit", "report-table"]) {
+      if (!html.includes(marker)) errors.push(`${page.path}: missing case visual module ${marker}`);
+    }
+    atLeast(html, /class="report-exhibit/g, 6, page.path, "report exhibits");
+    atLeast(reportWordCount(html), 380, page.path, "narrative report words");
+  } else if (page.path === "/use-cases/rent-as-a-utility-qatar") {
+    for (const marker of ["Executive summary", "Market problem", "Market opportunity", "Commercial model and value pools", "Technology, data and AI layer", "Operating model, exceptions and governance", "Pilot and scale roadmap", "Modeled business impact"]) {
+      if (!html.includes(marker)) errors.push(`${page.path}: missing flagship section ${marker}`);
+    }
+  } else if (aiOperatingCases.some(item => item.href === page.path)) {
+    for (const marker of ["Problem and commercial diagnosis", "Operating model", "AI agents and automated workflows", "Technology and data architecture", "Commercial model and KPIs", "Implementation roadmap", "Modeled business impact"]) {
+      if (!html.includes(marker)) errors.push(`${page.path}: missing AI case section ${marker}`);
+    }
+    atLeast(html, /class="v4-ai-exhibit/g, 3, page.path, "AI case exhibits");
+    const aiWords = v3WordCount(html);
+    if (aiWords < 1000 || aiWords > 2000) errors.push(`${page.path}: expected 1000-2000 AI operating-case words, found ${aiWords}`);
+  } else if (html.includes("v4-note-hero")) {
+    for (const marker of ["Executive summary", "Business problem and commercial opportunity", "Solution, technology and operating model", "Implementation, KPIs and risk"]) {
+      if (!html.includes(marker)) errors.push(`${page.path}: missing strategy-note section ${marker}`);
+    }
+    if (!/Modeled business impact|Business impact boundary/i.test(html)) errors.push(`${page.path}: missing strategy-note impact boundary`);
+    atLeast(html, /class="v4-case-exhibit/g, 3, page.path, "strategy-note exhibits");
+    atLeast(v3WordCount(html), 600, page.path, "strategy-note words");
+  } else {
+    errors.push(`${page.path}: unknown use-case presentation`);
   }
-  if (!/Business impact|Modeled business impact/i.test(html)) errors.push(`${page.path}: missing impact field`);
-  for (const marker of ["report-layout", "report-contents", "report-main", "report-section", "report-exhibit", "report-table"]) {
-    if (!html.includes(marker)) errors.push(`${page.path}: missing case visual module ${marker}`);
-  }
-  atLeast(html, /class="report-exhibit/g, 6, page.path, "report exhibits");
-  atLeast(reportWordCount(html), 380, page.path, "narrative report words");
   if (forbiddenCaseNames.test(html)) errors.push(`${page.path}: client or company name leaked into anonymized use case`);
 }
 
@@ -187,6 +210,17 @@ count(saudiFlagship, /<figure class="v3-exhibit\b/g, 8, "/use-cases/leading-saud
 const saudiWords = v3WordCount(saudiFlagship);
 if (saudiWords < 1500 || saudiWords > 3000) errors.push(`/use-cases/leading-saudi-bank-commerce-ecosystem: expected 1500-3000 report words, found ${saudiWords}`);
 
+const rentFlagship = await pageHtml("/use-cases/rent-as-a-utility-qatar");
+for (const exhibit of [
+  "Current cheque problem map", "Future rent-as-a-utility ecosystem", "Tenant journey from lease to reconciliation",
+  "Stakeholder value exchange", "Commercial model and revenue-share logic", "API-first technology and data architecture",
+  "Settlement and reconciliation flow", "Operating model and decision rights", "Risk and control matrix",
+  "Modeled economics waterfall", "Six-month controlled pilot", "Eighteen-month scale and recurring-payments scenario"
+]) if (!rentFlagship.includes(exhibit)) errors.push(`/use-cases/rent-as-a-utility-qatar: missing flagship exhibit ${exhibit}`);
+count(rentFlagship, /<figure class="v3-exhibit v4-rent-exhibit/g, 12, "/use-cases/rent-as-a-utility-qatar", "rent flagship exhibits");
+const rentWords = v3WordCount(rentFlagship);
+if (rentWords < 2000 || rentWords > 3500) errors.push(`/use-cases/rent-as-a-utility-qatar: expected 2000-3500 report words, found ${rentWords}`);
+
 for (const page of pages.filter(page => page.kind === "article")) {
   const html = await pageHtml(page.path);
   for (const marker of ["article-visual-stage", "visual-module", "article-lens"]) {
@@ -211,18 +245,34 @@ for (const target of ["/ai-commerce", "/career-runway", "/use-cases/aeofind"]) {
 for (const marker of ["v3-ai-ui-command", "v3-ai-ui-runway", "v3-ai-ui-aeo", "v3-agent-stack", "v3-authority-matrix", "v3-ai-delivery"]) {
   if (!ai.includes(marker)) errors.push(`AI & Transformation missing V3 module ${marker}`);
 }
+count(ai, /class="v4-ai-family-grid"/g, 1, "/ai-transformation", "AI operating-case family");
+for (const item of aiOperatingCases) if (!ai.includes(`href="${item.href}"`)) errors.push(`AI & Transformation missing operating case ${item.href}`);
 
 const useCasesIndex = await pageHtml("/use-cases");
-atLeast(useCasesIndex, /class="v3-library-entry/g, 40, "/use-cases", "library entries");
+count(useCasesIndex, /class="v3-library-entry/g, expandedLibraryCases.length, "/use-cases", "library entries");
 for (const marker of ["case-filters", "data-sector=", "data-problem=", "data-solution=", "case-count", "reset-filters", 'href="/use-cases/leading-saudi-bank-commerce-ecosystem"']) {
   if (!useCasesIndex.includes(marker)) errors.push(`/use-cases: missing library capability ${marker}`);
 }
+for (const expected of ["Banking &amp; Fintech", "Telecom", "Retail &amp; Consumer", "Marketplaces", "Enterprise Technology", "Logistics", "New Ventures", "Customer Experience", "AI / Automation", "Operating Model"]) {
+  if (!useCasesIndex.includes(expected)) errors.push(`/use-cases: missing normalized filter ${expected}`);
+}
+for (const tag of [...useCasesIndex.matchAll(/<a class="v3-library-entry"([^>]*)>/g)].map(match => match[1])) {
+  const href = capture(tag, /href="([^"]+)"/);
+  if (!href || href === "#" || href.startsWith("#")) errors.push(`/use-cases: public tile has missing or placeholder href`);
+  else if (!routes.has(href)) errors.push(`/use-cases: public tile points to missing route ${href}`);
+}
+if (/\bHOLD\b|private case/i.test(useCasesIndex)) errors.push(`/use-cases: HOLD or private case rendered publicly`);
 
 const aboutPage = await pageHtml("/about");
 count(aboutPage, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/about", "permitted current-role sentence");
+count(home, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/", "permitted current-role sentence");
+count(trackIndex, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/track-record", "permitted current-role sentence");
 
 const insightsIndex = await pageHtml("/insights");
-count(insightsIndex, /class="insight-card"/g, 8, "/insights", "editorial insight cards");
+count(insightsIndex, /class="v4-insight-card"/g, 8, "/insights", "editorial insight cards");
+for (const marker of ["min read", "Read insight", "v4-insight-waterfall", "v4-insight-funnel", "v4-insight-bridge", "v4-insight-ladder", "v4-insight-architecture"]) {
+  if (!insightsIndex.includes(marker)) errors.push(`/insights: missing editorial teaser element ${marker}`);
+}
 for (const [route, name, status] of [
   ["/ai-commerce", "AI Commerce Command Center", "In development"],
   ["/career-runway", "Career Runway AI", "Live"]
@@ -250,7 +300,7 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, 4 track-record pages, 61 browsable use-case entries, 17 detailed use cases and 8 insights.`);
+console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, ${expandedLibraryCases.length} fully clickable public use cases, ${aiOperatingCases.length} AI operating cases and 8 insights.`);
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });

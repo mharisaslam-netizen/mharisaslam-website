@@ -9,6 +9,7 @@ await rm(out, { recursive: true, force: true });
 await mkdir(join(out, "assets"), { recursive: true });
 await cp(join(root, "src", "v2.css"), join(out, "assets", "site.css"));
 await cp(join(root, "src", "v3-pilot.css"), join(out, "assets", "v3-pilot.css"));
+await cp(join(root, "src", "v4-expansion.css"), join(out, "assets", "v4-expansion.css"));
 await cp(join(root, "src", "pilot.css"), join(out, "assets", "pilot.css"));
 try { await cp(join(root, "public", "assets"), join(out, "assets"), { recursive: true }); } catch {}
 
@@ -52,6 +53,7 @@ function render(page) {
   <meta name="theme-color" content="${page.v3 ? "#f4f0e7" : page.pilot ? "#071821" : "#ffffff"}">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="stylesheet" href="/assets/v3-pilot.css">
+  <link rel="stylesheet" href="/assets/v4-expansion.css">
   <link rel="stylesheet" href="/assets/pilot.css">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <script type="application/ld+json">${safeJson(schema)}</script>
