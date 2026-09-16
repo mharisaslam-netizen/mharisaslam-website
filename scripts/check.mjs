@@ -114,14 +114,18 @@ for (const sentence of [
 for (const heading of ["Selected operating record", "Areas of work", "Selected use cases", "AI & Transformation", "Insights", "About", "Contact"]) {
   if (!home.includes(heading)) errors.push(`home missing section ${heading}`);
 }
-if (!home.includes("hero-portrait") || !home.includes("concept-visual")) errors.push("home missing visual content");
+for (const marker of ["hero-portrait", "record-feature-grid", "builder-system", "visual-card-grid", "product-preview-grid", "insight-grid"]) {
+  if (!home.includes(marker)) errors.push(`home missing visual module ${marker}`);
+}
 
 for (const page of pages.filter(page => page.kind === "track")) {
   const html = await pageHtml(page.path);
   for (const marker of ["Role and mandate", "What was built or fixed", "Commercial contribution", "Technology and operations", "Business relevance"]) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing track-record field ${marker}`);
   }
-  if (!html.includes("concept-visual")) errors.push(`${page.path}: missing visual`);
+  for (const marker of ["record-document", "record-visual-stage", "record-evidence-grid", "visual-module"]) {
+    if (!html.includes(marker)) errors.push(`${page.path}: missing documentary module ${marker}`);
+  }
 }
 
 for (const page of pages.filter(page => page.kind === "case")) {
@@ -130,19 +134,42 @@ for (const page of pages.filter(page => page.kind === "case")) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing use-case field ${marker}`);
   }
   if (!html.includes("Business Impact") && !html.includes("Modeled Business Impact")) errors.push(`${page.path}: missing impact field`);
-  if (!html.includes("concept-visual")) errors.push(`${page.path}: missing visual`);
+  for (const marker of ["case-hero-visual", "visual-module", "impact-panel"]) {
+    if (!html.includes(marker)) errors.push(`${page.path}: missing case visual module ${marker}`);
+  }
   if (forbiddenCaseNames.test(html)) errors.push(`${page.path}: client or company name leaked into anonymized use case`);
 }
 
 for (const page of pages.filter(page => page.kind === "article")) {
   const html = await pageHtml(page.path);
-  if (!html.includes("concept-visual")) errors.push(`${page.path}: missing article visual`);
+  for (const marker of ["article-visual-stage", "visual-module", "article-lens"]) {
+    if (!html.includes(marker)) errors.push(`${page.path}: missing article visual module ${marker}`);
+  }
+}
+
+for (const [route, markers] of [
+  ["/track-record/floward-oman", ["Zero to local operating rhythm", "Local setup", "Assortment", "Fulfilment", "Occasion trading", "Acquisition", "Operating rhythm", "Oman operating model"]],
+  ["/track-record/salman-miraq-ksm", ["Value-creation and transformation map", "Core retail reset", "Working capital and inventory", "Portfolio decisions", "New venture creation", "Investment and recapitalization assessment", "GCC expansion logic"]],
+  ["/track-record/roumaan", ["Commerce evolution", "Customer demand", "Catalogue", "Digital commerce", "Fulfilment", "Operating model"]],
+  ["/track-record/upapp-factory", ["Product delivery lifecycle", "Business requirement", "Product design", "Development", "Deployment", "Support", "Studio evolution"]],
+  ["/use-cases/leading-saudi-bank-commerce-ecosystem", ["Customer to attributed spend", "Purchase intent", "Customer eligibility", "Relevant value", "Merchant handoff", "Transaction", "Attributed spend", "Commercial value model", "Incremental card spend", "Merchant-funded value", "Loyalty economics", "Customer engagement and data"]]
+]) {
+  const html = await pageHtml(route);
+  for (const marker of markers) if (!html.includes(marker)) errors.push(`${route}: missing bespoke visual content ${marker}`);
 }
 
 const ai = await pageHtml("/ai-transformation");
 for (const target of ["/ai-commerce", "/career-runway", "/use-cases/aeofind"]) {
   if (!ai.includes(`href="${target}"`)) errors.push(`AI & Transformation missing ${target}`);
 }
+count(ai, /class="product-preview"/g, 3, "/ai-transformation", "product previews");
+if (!ai.includes("interface-module") || !ai.includes("authority-module")) errors.push("AI & Transformation missing interface or decision-authority visual");
+
+const useCasesIndex = await pageHtml("/use-cases");
+count(useCasesIndex, /class="visual-card"/g, 17, "/use-cases", "visual use-case cards");
+
+const insightsIndex = await pageHtml("/insights");
+count(insightsIndex, /class="insight-card"/g, 8, "/insights", "editorial insight cards");
 for (const [route, name, status] of [
   ["/ai-commerce", "AI Commerce Command Center", "In development"],
   ["/career-runway", "Career Runway AI", "Live"]
