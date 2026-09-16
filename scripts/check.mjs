@@ -129,7 +129,10 @@ const trackIndex = await pageHtml("/track-record");
 for (const sentence of ["Building, launching and transforming businesses.", "Selected operating roles and ventures where Haris held direct responsibility for building, growth, transformation or investment."]) {
   if (!trackIndex.includes(sentence)) errors.push(`/track-record: missing required copy ${sentence}`);
 }
-count(trackIndex, /class="record-card"/g, 4, "/track-record", "operating stories");
+for (const marker of ["p-track-hero", "p-record-stories", "p-record-story", "p-capital-band"]) {
+  if (!trackIndex.includes(marker)) errors.push(`/track-record: existing presentation missing ${marker}`);
+}
+count(trackIndex, /class="p-record-story/g, 4, "/track-record", "operating stories");
 
 for (const page of pages.filter(page => page.kind === "track")) {
   const html = await pageHtml(page.path);
