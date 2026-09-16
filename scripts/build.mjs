@@ -42,7 +42,7 @@ function render(page) {
   <meta property="og:image" content="${site.origin}/assets/og-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Muhammad Haris Aslam — operator, builder and transformation leader">
+  <meta property="og:image:alt" content="Muhammad Haris Aslam, operator, builder and transformation leader">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
@@ -73,25 +73,26 @@ function header(path) {
   return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
 }
 function footer() {
-  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/work">Work</a><a href="/ai-transformation">AI & Transformation</a><a href="/ai-lab">AI Lab</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
+  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
 }
 function render404() {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage or selected work.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage, track record or use cases.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
   if (path === "/ai-commerce" || path === "/career-runway") {
     const page = pages.find(item => item.path === path);
-    return [["Home", "/"], ["AI Lab", "/ai-lab"], [page.h1, path]];
+    return [["Home", "/"], ["Use Cases", "/use-cases"], [page.h1, path]];
   }
   const parts = path.split("/").filter(Boolean); let acc = "";
-  return [["Home","/"], ...parts.map(p => { acc += `/${p}`; const page = pages.find(item => item.path === acc); return page ? [page.path === path ? page.h1 : page.path === "/work/cases" ? "Cases" : page.path === "/work/blueprints" ? "Blueprints" : page.h1, acc] : null; }).filter(Boolean)];
+  const hubLabels = { "/track-record":"Track Record", "/use-cases":"Use Cases", "/ai-transformation":"AI & Transformation", "/insights":"Insights" };
+  return [["Home","/"], ...parts.map(p => { acc += `/${p}`; const page = pages.find(item => item.path === acc); return page ? [page.path === path ? page.h1 : hubLabels[page.path] || page.h1, acc] : null; }).filter(Boolean)];
 }
 function breadcrumbs(items) {
   return `<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>${items.map(([name, href], i) => `<li>${i === items.length-1 ? `<span aria-current="page">${name}</span>` : `<a href="${href}">${name}</a>`}</li>`).join("")}</ol></nav>`;
 }
 function schemaGraph(page, url, crumbs) {
-  const person = { "@type":"Person", "@id":`${site.origin}/#person`, name:site.name, url:`${site.origin}/about`, image:`${site.origin}/assets/haris-aslam.webp`, sameAs:[site.linkedin], jobTitle:"Digital-commerce operator and builder", description:"GCC operator and transformation leader across commerce, retail, marketplaces, venture building and applied AI.", knowsAbout:["Retail transformation","Marketplace operating models","Digital commerce","GCC growth","Family-business transformation","Venture building","AI-enabled commerce","Payments and logistics"], homeLocation:{"@type":"Place",name:"Doha, Qatar"} };
+  const person = { "@type":"Person", "@id":`${site.origin}/#person`, name:site.name, url:`${site.origin}/about`, image:`${site.origin}/assets/haris-aslam.webp`, sameAs:[site.linkedin], jobTitle:"GCC operator and business builder", description:"Operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and applied AI.", knowsAbout:["Retail transformation","Marketplace operating models","Digital commerce","GCC growth","Family-business transformation","Venture building","Applied AI","Payments and logistics"], homeLocation:{"@type":"Place",name:"Doha, Qatar"} };
   const website = { "@type":"WebSite", "@id":`${site.origin}/#website`, url:`${site.origin}/`, name:site.name, publisher:{"@id":person["@id"]}, inLanguage:"en" };
   const webpage = { "@type":page.type === "Article" ? "WebPage" : page.type, "@id":`${url}#webpage`, url, name:page.title, description:page.description, isPartOf:{"@id":website["@id"]}, about:{"@id":person["@id"]}, inLanguage:"en", breadcrumb:{"@id":`${url}#breadcrumb`} };
   if (page.type === "ProfilePage") webpage.mainEntity = {"@id":person["@id"]};
@@ -119,9 +120,9 @@ function sitemap() {
 }
 function llmsTxt() {
   const links = pages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
-  return `# ${site.name}\n\n> Operator, builder and transformation leader across GCC commerce, retail, marketplaces, fintech, enterprise technology and AI.\n\n## Public pages\n\n${links}\n`;
+  return `# ${site.name}\n\n> GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.\n\n## Public pages\n\n${links}\n`;
 }
 function pageLabel(page) { return page.path === "/" ? "Home" : page.title.split("|")[0].trim(); }
-function current(path, href) { return path === href || (href !== "/" && path.startsWith(`${href}/`)) || (href === "/ai-transformation" && ["/ai-lab","/ai-commerce","/career-runway"].includes(path)); }
+function current(path, href) { return path === href || (href !== "/" && path.startsWith(`${href}/`)) || (href === "/use-cases" && ["/ai-commerce","/career-runway"].includes(path)); }
 function safeJson(value) { return JSON.stringify(value).replaceAll("<", "\\u003c"); }
 function escapeHtml(value) { return value.replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }

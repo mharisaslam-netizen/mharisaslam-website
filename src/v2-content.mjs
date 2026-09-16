@@ -7,288 +7,333 @@ export const site = {
 };
 
 export const navigation = [
-  ["Home", "/"], ["Work", "/work"], ["AI & Transformation", "/ai-transformation"],
-  ["Insights", "/insights"], ["About", "/about"], ["Contact", "/contact"]
+  ["Home", "/"], ["Track Record", "/track-record"], ["Use Cases", "/use-cases"],
+  ["AI & Transformation", "/ai-transformation"], ["Insights", "/insights"],
+  ["About", "/about"], ["Contact", "/contact"]
 ];
 
 const esc = value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const link = (href, label, className = "text-link") => `<a class="${className}" href="${href}">${esc(label)} <span aria-hidden="true">→</span></a>`;
-const section = (title, content, className = "") => `<section class="section ${className}"><div class="section-heading"><h2>${title}</h2></div>${content}</section>`;
-const card = (href, label, title, text, status = "") => `<a class="work-card" href="${href}"><span class="card-label">${esc(label)}</span><h3>${esc(title)}</h3><p>${esc(text)}</p>${status ? `<span class="card-status">${esc(status)}</span>` : ""}<span class="card-link">View details <span aria-hidden="true">→</span></span></a>`;
+const section = (title, content, className = "") => `<section class="section ${className}"><div class="section-heading"><h2>${esc(title)}</h2></div>${content}</section>`;
 const grid = items => `<div class="card-grid">${items.join("")}</div>`;
-const para = text => `<p>${esc(text)}</p>`;
+const card = (href, label, title, text, meta = "") => `<a class="work-card" href="${href}"><span class="card-label">${esc(label)}</span><h3>${esc(title)}</h3><p>${esc(text)}</p>${meta ? `<span class="card-meta">${esc(meta)}</span>` : ""}<span class="card-link">View details <span aria-hidden="true">→</span></span></a>`;
+const tagRow = items => `<div class="tag-row">${items.map(item => `<span>${esc(item)}</span>`).join("")}</div>`;
+const field = (label, text) => `<section class="case-field"><h2>${esc(label)}</h2><p>${esc(text)}</p></section>`;
+const diagram = (title, items, note = "") => `<figure class="concept-visual"><figcaption>${esc(title)}</figcaption><div class="visual-flow">${items.map((item, index) => `<div class="visual-node"><span>${String(index + 1).padStart(2, "0")}</span><strong>${esc(item)}</strong></div>`).join("")}</div>${note ? `<p>${esc(note)}</p>` : ""}</figure>`;
 
-const cases = [
+const trackRecords = [
   {
-    slug: "multi-category-digital-commerce", title: "Multi-category digital commerce", sector: "Commerce", geography: "Oman", period: "2014-2018", type: "Operating case",
-    summary: "Built and operated a broad-category online retailer, with a separate seller-marketplace expansion examined in planning materials.",
-    problem: "A fragmented online market needed a dependable catalogue, clear stock availability and fulfilment customers could trust.",
-    solution: "The operating business brought multiple retail categories into one online proposition, with central merchandising and order handling. A later seller model was evaluated but is not presented as a launched marketplace. Today, catalogue-quality agents and demand signals could support the same trading discipline.",
-    technology: "The original operation used a commerce CMS, product catalogue and order analytics. A current implementation would connect stock, orders, pricing and care through APIs, with AI suggestions checked against live source data.",
-    commercial: "First-party order contribution depends on product margin after delivery, payment, returns and acquisition costs. Seller take rate would need a separate model for onboarding, service and disputes.",
-    operating: "Category, inventory, fulfilment and customer care decisions belonged to accountable operators. Automation should surface exceptions; people should retain price, supplier and refund authority.",
-    impact: "The retailer traded online with recorded orders and customer registrations. Seller-marketplace expansion remained a separate plan, not a launched result.",
-    impactLabel: "Business Impact"
+    slug: "roumaan", name: "Roumaan", role: "Founder and operator", geography: "Oman", period: "2014 to 2018",
+    summary: "Built and operated a multi-category online commerce business in Oman.",
+    mandate: "Create a credible online retail proposition in a market where assortment, stock accuracy and fulfilment still had to be built together.",
+    built: "The work covered the customer proposition, catalogue, trading, order operations and fulfilment. Later seller-marketplace planning remained separate from the proven first-party operation.",
+    commercial: "The operating focus was completed-order contribution after product cost, delivery, payment, returns and acquisition cost.",
+    technology: "Commerce CMS, product catalogue, customer and order reporting, with centrally managed merchandising and fulfilment.",
+    relevance: "Roumaan established Haris's operating base in digital commerce: build the proposition, own the daily decisions and keep growth connected to order economics.",
+    visual: ["Customer demand", "Curated catalogue", "Order operations", "Fulfilment"]
   },
   {
-    slug: "agent-led-social-commerce", title: "Agent-led social commerce", sector: "Marketplace", geography: "Oman", period: "2020-2021", type: "Operating case",
-    summary: "A merchant-and-agent commerce platform with live apps, onboarding records, campaigns and a dated operational handover.",
-    problem: "Small merchants needed digital distribution while independent sales agents needed a reliable way to discover offers and earn commissions.",
-    solution: "Merchant and agent apps supported onboarding, catalogue sharing and campaign activity. A modern layer could help merchants prepare product data and match agents to offers, but it should not obscure who made a sale.",
-    technology: "The original operation used mobile apps, a CMS and funnel reporting. Current APIs, identity checks, event attribution and a payout ledger would make each transaction easier to trace.",
-    commercial: "Order contribution must cover platform service, agent payout, payment fees, disputes and fulfilment. Registrations and downloads are not substitutes for active trading pairs.",
-    operating: "Merchant admission, commissions, claims and payouts require human ownership. Agents can help with onboarding and care, while the platform audits attribution.",
-    impact: "Merchant and agent apps went live, supported onboarding and campaigns, and reached an operational handover. No verified profitability result is attributed to the platform.",
-    impactLabel: "Business Impact"
+    slug: "salman-miraq-ksm", name: "Salman Corporation, Miraq and KSM", role: "Operating and investment leadership", geography: "Oman and GCC", period: "2023 to 2025",
+    summary: "Worked across retail performance, working capital, portfolio choices and new venture direction.",
+    mandate: "Bring commercial and operating discipline to a family-owned retail setting while evaluating where new growth could be funded responsibly.",
+    built: "The work connected store and category economics with stock, procurement, cash and governance. It also shaped distribution and venture options around clear investment gates.",
+    commercial: "The central test was whether margin improvement released cash and whether a new venture could earn its fixed cost without hiding weakness in the core business.",
+    technology: "Management reporting, retail P&L analysis, inventory data, e-commerce and ERP assessment, supported by a regular operating review.",
+    relevance: "This work combined turnaround thinking with family-business governance and investment discipline. No group-wide financial uplift is claimed.",
+    visual: ["Margin", "Stock", "Cash", "Investment gates"]
   },
   {
-    slug: "retail-group-transformation", title: "Retail group transformation", sector: "Retail", geography: "Oman", period: "2023-2025", type: "Operating case",
-    summary: "A family-retail operating reset focused on store economics, stock, procurement and management cadence.",
-    problem: "Weak cash conversion, ageing stock and overlapping channels made growth plans hard to fund and hard to measure.",
-    solution: "The work set category, store and channel decisions against margin and cash. A present-day control layer could consolidate POS and inventory feeds, flag stock ageing and draft variance explanations for finance review.",
-    technology: "Historical sources include management reporting, e-commerce and ERP assessment. A modern stack would use POS/ERP integration, a contribution data mart and a supervised exception workflow.",
-    commercial: "Sales only help when gross profit covers occupancy, labour, returns, stock holding and working-capital needs. Expansion scenarios should be evaluated separately from the core reset.",
-    operating: "Store, category, procurement and finance owners need one weekly review of margin, stock and cash. AI can find anomalies, not approve capital or reclassify forecasts as results.",
-    impact: "A management and operating reset was undertaken across store economics, stock and procurement. A whole-group financial turnaround has not been established.",
-    impactLabel: "Business Impact"
+    slug: "floward-oman", name: "Floward Oman", role: "Country launch and operating leadership", geography: "Oman", period: "Public role experience",
+    summary: "Built the local commercial and fulfilment setup for a digital gifting operation in Oman.",
+    mandate: "Turn a regional digital proposition into a locally relevant business with dependable assortment, service and fulfilment.",
+    built: "The operating work brought together local trading, category choices, campaigns, supplier coordination and delivery execution.",
+    commercial: "Order volume had to translate into contribution after product margin, cancellations, delivery cost and peak-capacity pressure.",
+    technology: "Commerce catalogue, order and fulfilment systems, performance reporting and local operating workflows.",
+    relevance: "The experience added country launch, fast-cycle trading and perishable fulfilment to Haris's commerce operating record. No market-share figure is published.",
+    visual: ["Local demand", "Assortment", "Fulfilment capacity", "Completed order"]
   },
   {
-    slug: "retail-clearance-stock-profitability", title: "Retail clearance and stock profitability", sector: "Retail", geography: "Oman", period: "2023-2024", type: "Operating pilot",
-    summary: "A clearance pilot tested price, assortment and cost decisions against full store profitability.",
-    problem: "Slow-moving stock tied up cash; deeper discounts could release it but also destroy gross profit.",
-    solution: "A temporary clearance format tested markdown and assortment changes using store P&L records. Current stock-age models could recommend markdown bands, with merchants approving price floors and finance checking cash release.",
-    technology: "The original pilot used store-level sales and P&L tracking. A current system would connect SKU age, landed cost, POS sales and replenishment into a governed dashboard.",
-    commercial: "Measure cash recovered and contribution after markdown, rent, labour and handling, not gross margin alone.",
-    operating: "Merchandising owns price tests; stores execute; finance reviews the entire P&L. Any automated markdown remains inside approved policy limits.",
-    impact: "Pilot trading showed changing gross margins alongside uneven EBITDA, including a loss-making month. The pilot did not establish a lasting turnaround.",
-    impactLabel: "Business Impact"
+    slug: "upapp-factory", name: "UpApp Factory", role: "Co-founder and operator", geography: "Oman and regional delivery", period: "2019 to 2021",
+    summary: "Built a lean studio model for contracted web and mobile products.",
+    mandate: "Deliver custom digital products with a small core team while keeping scope, partner capacity and handover under control.",
+    built: "The studio qualified demand, translated requirements into delivery plans, managed testing and completed client handovers.",
+    commercial: "Project contribution depended on scope control, delivery hours, partner cost, rework and the support commitment after launch.",
+    technology: "Web and mobile development, project planning, requirements, testing and release workflows.",
+    relevance: "UpApp Factory gave Haris direct experience of selling, building and handing over enterprise technology. Client performance gains and studio profitability are not published.",
+    visual: ["Qualified brief", "Scoped build", "Test and release", "Handover"]
   },
   {
-    slug: "app-studio-operating-model", title: "App-studio operating model", sector: "Enterprise technology", geography: "Oman", period: "2018-2021", type: "Operating case",
-    summary: "A lean studio model for contracted web and mobile products, with scoped delivery, testing and handover.",
-    problem: "Custom digital projects needed repeatable delivery quality without carrying a large fixed team for every new brief.",
-    solution: "The studio used qualification, requirements, project plans and handover discipline. Today, AI can help trace requirements to tests and support tickets while a delivery lead remains responsible for scope and acceptance.",
-    technology: "Historical work used web and mobile development tools, requirements documents and testing workflows. A current setup would add API contracts, CI, issue tracking and an approved knowledge assistant.",
-    commercial: "Project contribution depends on scope control, delivery hours, partner cost, rework and post-launch support.",
-    operating: "A commercial lead qualifies work; product and technical owners control delivery; clients approve milestones. Automation helps document and test the work, not claim client outcomes.",
-    impact: "The studio launched and delivered client project work with scoped plans, testing and handovers. Studio profitability and client-performance gains are not attributed to this model.",
-    impactLabel: "Business Impact"
-  },
-  {
-    slug: "90-day-retail-performance-reset", title: "90-day retail performance reset", sector: "Retail operations", geography: "Oman", period: "2023-2024", type: "Strategy blueprint",
-    summary: "A short-cycle plan for identifying margin, inventory and store-execution problems before expansion.",
-    problem: "Management needed a fast way to distinguish weak demand from pricing, stock, procurement and service leakage.",
-    solution: "Begin with store and category baselines, run a small number of controlled markdown and replenishment tests, then shift resources to the fixes that release cash. AI can prepare exceptions and forecast demand, subject to owner approval.",
-    technology: "POS, inventory and finance feeds would support a daily view of sell-through, stock age and order contribution; workflow agents could route exceptions to store and category owners.",
-    commercial: "The reset should measure gross-profit bridge, cash released from stock and store contribution after occupancy and labour.",
-    operating: "One accountable commercial owner runs a weekly review with finance, procurement and store managers. Human approval is required for pricing, supplier and staffing decisions.",
-    impact: "A store and category baseline would identify where margin and cash leak. Controlled tests would then select only fixes that improve contribution and cash before wider rollout.",
-    impactLabel: "Modeled Business Impact"
-  },
-  {
-    slug: "embedded-finance-growth-model", title: "Payments and embedded-finance growth model", sector: "Payments", geography: "GCC and MENAP", period: "2026 strategy", type: "Strategy blueprint",
-    summary: "An outside-in growth model for payment APIs, platform settlement and partner-led financial operations.",
-    problem: "Payment volume can rise while net revenue remains weak after partners, losses, support and regulatory cost.",
-    solution: "Separate treasury, bank and platform use cases; prove one segment at a time through partner integrations and measurable transaction economics. AI can flag reconciliation exceptions but should not move funds or change risk rules autonomously.",
-    technology: "Permissioned payment APIs, auditable transaction ledger, webhook/event feeds, risk controls and settlement reporting. AI uses grounded policy and live transaction APIs under tool approval.",
-    commercial: "Net revenue is fee income less partner share, incentives, fraud and service cost. Transaction volume is an activity measure, not an outcome.",
-    operating: "Commercial, product, finance, compliance and partner teams share a segment-level scorecard. Regulated decisions remain with authorized people.",
-    impact: "The model tests net revenue per transaction and contribution in one segment at a time. Growth would proceed only where partner costs, losses and service expense leave a positive result.",
-    impactLabel: "Modeled Business Impact"
-  },
-  {
-    slug: "warehouse-working-capital-transformation", title: "Warehouse and working-capital transformation", sector: "Retail and logistics", geography: "Oman", period: "2023-2024", type: "Strategy blueprint",
-    summary: "A capacity and cash case linking slow stock, warehouse space and a potential third-party fulfilment service.",
-    problem: "Stock and spare storage capacity carried cost before they created service revenue.",
-    solution: "Release aged inventory, define capacity that is genuinely available, and test an anchor-client fulfilment offer before treating the warehouse as a 3PL business. Forecasting and route automation can support service promises.",
-    technology: "Inventory and warehouse-management feeds, SKU-age analytics, order/route APIs and a service-cost dashboard; supervised agents can flag exceptions and draft client updates.",
-    commercial: "A 3PL fee must cover pick, pack, storage, delivery, claims and working capital. Rent already paid does not make each additional order free.",
-    operating: "Retail stock owner and logistics lead share capacity planning; finance checks cash and client contribution; humans approve service-level commitments.",
-    impact: "The case compares cash released from old stock with the incremental contribution from an anchor-client fulfilment pilot, after its full service costs.",
-    impactLabel: "Modeled Business Impact"
-  },
-  {
-    slug: "saudi-market-entry-distribution", title: "Saudi market entry and distribution", sector: "Consumer distribution", geography: "Oman to Saudi Arabia", period: "2023-2025", type: "Strategy blueprint",
-    summary: "A market-entry case built around distribution rights, landed cost, channel choices and local operating capacity.",
-    problem: "Regional demand alone could not justify a Saudi setup without local rights, cost-to-serve and a credible route to customers.",
-    solution: "Sequence representation and supplier rights before committing to inventory or fixed cost. A current commercial stack could compare channel demand, landed cost and forecast contribution with live partner data.",
-    technology: "Partner and product master data, commerce APIs, landed-cost model, CRM and supply-chain events; AI can draft demand scenarios but cannot certify rights or compliance.",
-    commercial: "Market contribution is sales less product, import, channel, logistics, acquisition and local fixed costs. The business case must survive slower sell-through.",
-    operating: "Local commercial owner manages partner terms and launch decisions; procurement and finance approve inventory and investment gates.",
-    impact: "A limited pilot would test channel contribution, sell-through and cash needs before committing to a full local operating setup.",
-    impactLabel: "Modeled Business Impact"
+    slug: "vodafone-qatar-marqa", name: "Vodafone Qatar and MARQA", role: "Strategic digital commerce", geography: "Qatar", period: "Current public role context",
+    summary: "Strategic digital-commerce work inside a large enterprise environment in Qatar.",
+    mandate: "Work at the intersection of customer experience, commercial priorities, platform delivery and operating governance.",
+    built: "The public record covers role context and enterprise perspective. Detailed roadmaps, internal programmes and operating data remain confidential.",
+    commercial: "The business lens remains consistent: customer activity must connect to attributable revenue, service cost and accountable ownership.",
+    technology: "Enterprise commerce, customer and operating platforms, described only at a public-safe level.",
+    relevance: "The role adds large-enterprise scale and governance to an operating record built across ventures, retail and digital commerce.",
+    visual: ["Customer", "Commerce platform", "Enterprise controls", "Accountable outcome"]
   }
 ];
 
-const casePath = item => `/work/${item.slug}`;
-const caseCard = item => card(casePath(item), `${item.type} · ${item.sector}`, item.title, item.summary);
-const impact = item => `<div class="impact-note"><h2>${item.impactLabel}</h2>${para(item.impact)}</div>`;
-const casePage = item => ({
-  path: casePath(item), type: "WebPage", kind: "case", h1: item.title,
-  title: `${item.title} | Haris Aslam`,
-  description: item.summary,
-  eyebrow: `${item.type} · ${item.geography}`,
-  intro: item.summary,
-  body: `<div class="case-meta"><span>${esc(item.sector)}</span><span>${esc(item.geography)}</span><span>${esc(item.period)}</span></div>
-    <div class="case-layout"><div class="case-fields">
-      ${[["Business Problem", item.problem], ["Solution", item.solution], ["Technology", item.technology], ["Commercial Model", item.commercial], ["Operating Model", item.operating]].map(([label, value]) => `<section class="case-field"><h2>${label}</h2>${para(value)}</section>`).join("")}
-      ${impact(item)}
-    </div></div>
-    ${section("Related work", grid(cases.filter(other => other.slug !== item.slug && other.sector === item.sector).slice(0,2).map(caseCard).concat([card("/ai-transformation", "Applied AI", "AI & Transformation", "Operational AI projects and practical ways to improve commercial workflows.")])))}`
+const useCases = [
+  {
+    slug: "leading-saudi-bank-commerce-ecosystem", title: "Leading Saudi bank commerce ecosystem", sector: "Banking and commerce", geography: "Saudi Arabia", type: "Strategy blueprint",
+    summary: "A card-led commerce model designed to influence customer choice before checkout.",
+    overview: "An anonymized strategy case for connecting card value, merchant offers and purchase intent without turning a bank into a retailer.",
+    problem: "The bank enters the journey at payment, after the customer has already selected a product, merchant and card.",
+    solution: "A consented intent layer would rank eligible card value and merchant offers, then hand the customer to the merchant. The bank retains financial decision rights and the merchant remains responsible for retail service.",
+    technology: "Bank app APIs, card and loyalty rails, merchant offer feeds, consent records and transaction attribution. AI can rank eligible value, but risk teams control card, finance and campaign rules.",
+    commercial: "Value comes from incremental card spend and merchant-funded demand. Rewards, acquisition, platform and service cost must be deducted before calling the model profitable.",
+    operating: "A bank product owner, risk and compliance teams govern eligibility. Merchant partners own price, checkout, delivery and returns.",
+    impact: "The model would be tested with a small anchor-merchant cohort and control groups. No bank implementation or revenue result is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Purchase intent", "Eligible card value", "Merchant handoff", "Attributed spend"]
+  },
+  {
+    slug: "oman-bank-value-wallet", title: "Oman bank value wallet", sector: "Banking, rewards and commerce", geography: "Oman", type: "Strategy blueprint",
+    summary: "A portfolio-first model linking cards, rewards and instalments to shopping intent.",
+    overview: "An anonymized commerce and rewards case that uses products the bank already has before adding a new loyalty currency or retail layer.",
+    problem: "Cards, rewards and instalment products can be useful individually but disconnected when a customer is deciding what to buy.",
+    solution: "A value wallet would show eligible card and reward options before merchant checkout. It would explain the value and preserve the merchant's role in the transaction.",
+    technology: "Mobile banking, card, rewards and instalment APIs, an offer engine and event attribution. AI can classify intent and explain eligible choices under bank-approved rules.",
+    commercial: "The test is recaptured wallet share and repeat card usage, net of benefits funding, merchant support and platform cost.",
+    operating: "The bank governs customer consent, eligibility and financial recommendations. Merchants retain product, price and service responsibility.",
+    impact: "The concept would compare card usage and offer conversion with matched customer cohorts. No implementation or customer-value result is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Customer intent", "Cards and rewards", "Best eligible value", "Merchant checkout"]
+  },
+  {
+    slug: "partner-retail-gifting-network", title: "Partner-retail gifting network", sector: "Gifting and retail partnerships", geography: "GCC", type: "Strategy blueprint",
+    summary: "A low-integration model for adding flowers, presentation and delivery to a retail purchase.",
+    overview: "An anonymized expansion model for a regional gifting platform, designed around separate transactions and one controlled custody chain.",
+    problem: "Customers often buy the main gift in a store, then arrange flowers, packaging and delivery through separate journeys.",
+    solution: "A store code opens a gift-building flow. The purchased item enters a sealed custody process, moves to a gifting hub for assembly and reaches the recipient in one delivery.",
+    technology: "QR or deep-link entry, mobile checkout, custody scans, order orchestration and route batching. AI can recommend gift combinations and pickup routes, while staff control custody and quality.",
+    commercial: "The retailer keeps its sale. The gifting platform earns service and add-on contribution after partner share, pickup, packaging, delivery and customer-care cost.",
+    operating: "Store teams accept the sealed item. The platform manages collection, assembly, quality and delivery without requiring deep POS integration for the first pilot.",
+    impact: "A limited door-level pilot would test attachment rate, custody loss, service cost and contribution. No partner rollout or revenue is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Retail purchase", "Gift add-ons", "Custody and assembly", "One delivery"]
+  },
+  {
+    slug: "multi-category-digital-commerce", title: "Multi-category digital commerce", sector: "Digital retail", geography: "Oman", type: "Operating case",
+    summary: "A broad-category online retailer built around catalogue, order and fulfilment discipline.",
+    overview: "An operating case from Haris's own venture record. The proven business was first-party online retail; later seller expansion remained a plan.",
+    problem: "Customers faced fragmented online assortment and uncertain fulfilment. The business needed a dependable catalogue and clear stock availability.",
+    solution: "The operation brought several retail categories into one proposition with central merchandising and order handling. A current setup would add catalogue-quality automation and demand signals without presenting a planned seller model as a historical result.",
+    technology: "Commerce CMS, product catalogue and order reporting. A modern stack would connect stock, price, orders and care through APIs, with AI suggestions checked against source data.",
+    commercial: "First-party order contribution equals selling margin after delivery, payment, returns and acquisition. A seller model needs separate take-rate and service economics.",
+    operating: "Category, inventory, fulfilment and care owners make the commercial decisions. Automation surfaces exceptions and improves catalogue work.",
+    impact: "The retailer traded online with recorded orders and customer registrations. No third-party marketplace result or unpublished revenue figure is presented.", impactLabel: "Business Impact",
+    visual: ["Demand", "Catalogue", "Order", "Fulfilment"]
+  },
+  {
+    slug: "agent-led-social-commerce", title: "Agent-led social commerce", sector: "Marketplace", geography: "Oman", type: "Operating case",
+    summary: "A live merchant-and-agent platform designed around attributable sales and transparent payouts.",
+    overview: "An operating marketplace case with live applications, onboarding, campaigns and an operational handover.",
+    problem: "Small merchants needed digital distribution. Independent sales agents needed reliable offers, attribution and commissions.",
+    solution: "Merchant and agent apps supported onboarding, catalogue sharing and campaigns. A current model would add assisted catalogue preparation and matching while keeping attribution visible.",
+    technology: "Mobile apps, CMS and funnel reporting, extended today with verified identity, event attribution, order APIs and a payout ledger.",
+    commercial: "Order contribution must cover platform service, agent commission, payment, disputes and fulfilment. Downloads and registrations are not substitutes for completed trade.",
+    operating: "Platform operators govern merchant admission, commissions, disputes and payouts. AI can flag anomalies and prepare content, but it does not move money.",
+    impact: "Merchant and agent applications went live and reached an operational handover. No unreconciled transaction, profit or expansion figure is published.", impactLabel: "Business Impact",
+    visual: ["Merchant", "Agent", "Buyer order", "Settlement"]
+  },
+  {
+    slug: "retail-group-transformation", title: "Retail group transformation", sector: "Family retail", geography: "Oman", type: "Operating case",
+    summary: "A management reset connecting store economics, stock, procurement and cash.",
+    overview: "An anonymized operating case from a family-owned retail group. It covers management and transformation work, not a claimed group-wide turnaround result.",
+    problem: "Ageing stock, cost pressure and overlapping channels weakened cash conversion and made expansion difficult to evaluate.",
+    solution: "Store, category and channel decisions were brought back to margin and cash. A current control layer would combine POS, inventory and finance feeds, then flag stock and performance exceptions for review.",
+    technology: "Management reporting, P&L and inventory analysis, e-commerce and ERP assessment. A modern system would add a contribution data mart and supervised exception workflow.",
+    commercial: "Sales matter only when gross profit covers occupancy, labour, markdown, returns and working capital. New ventures need separate investment gates.",
+    operating: "Finance, category, procurement and store owners share one weekly view of margin, stock and cash. People retain price, supplier and capital authority.",
+    impact: "A commercial and operating reset was undertaken across store economics, stock and procurement. A whole-group financial turnaround is not claimed.", impactLabel: "Business Impact",
+    visual: ["Store margin", "Stock age", "Cash release", "Management action"]
+  },
+  {
+    slug: "retail-clearance-stock-profitability", title: "Retail clearance and stock profitability", sector: "Retail", geography: "Oman", type: "Operating pilot",
+    summary: "A clearance pilot judged against cash release and the full store P&L.",
+    overview: "An anonymized operating pilot. The evidence supports a real test and uneven P&L movement, not a lasting turnaround claim.",
+    problem: "Slow stock tied up cash, but deeper discounts could also destroy gross profit and leave store overhead uncovered.",
+    solution: "A temporary format tested markdown and assortment decisions against store results. Current stock-age and demand models could recommend markdown bands within approved price and cash floors.",
+    technology: "Store sales and P&L tracking, extended today with SKU age, landed cost, POS events and replenishment in one governed view.",
+    commercial: "The relevant measures are cash recovered and contribution after markdown, rent, labour and handling. Margin percentage alone is incomplete.",
+    operating: "Merchandising owns price tests, stores execute them and finance reviews the complete P&L. Automated recommendations remain inside approved policy.",
+    impact: "Pilot trading showed changing gross margins alongside uneven EBITDA, including a loss-making period. The pilot did not establish a lasting turnaround.", impactLabel: "Business Impact",
+    visual: ["Ageing stock", "Markdown test", "Cash recovered", "Full P&L"]
+  },
+  {
+    slug: "payments-embedded-finance-growth", title: "Payments and embedded-finance growth", sector: "Payments", geography: "GCC and MENAP", type: "Strategy blueprint",
+    summary: "A segment-led growth model for payment APIs, ledgers and enterprise financial operations.",
+    overview: "An anonymized strategy case for growing payments through treasury, bank and platform use cases with different economics and controls.",
+    problem: "Payment volume can rise while net revenue remains weak after partner share, losses, support and compliance cost.",
+    solution: "The model separates enterprise treasury, bank and multi-party platform needs. Each segment starts with a narrow integration and transaction-level economics.",
+    technology: "Permissioned payment APIs, virtual accounts, auditable ledgers, webhooks and settlement reporting. AI can triage reconciliation exceptions but cannot move funds or change risk rules on its own.",
+    commercial: "Net revenue is fee income after partner share, incentives, losses and service cost. Transaction volume is an activity measure, not the result.",
+    operating: "Commercial, product, finance, compliance and partners share a segment scorecard. Regulated actions remain with authorized people.",
+    impact: "A staged pilot would validate net revenue per transaction and client contribution before wider market expansion. No signed-client or revenue result is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Client workflow", "Payment rails", "Operational ledger", "Net revenue"]
+  },
+  {
+    slug: "warehouse-working-capital-3pl", title: "Warehouse, working capital and 3PL", sector: "Retail and logistics", geography: "Oman", type: "Strategy blueprint",
+    summary: "A capacity and cash case linking old stock, warehouse space and an external fulfilment service.",
+    overview: "An anonymized business case. It treats spare space as a cost until anchor demand and full service contribution are proven.",
+    problem: "Ageing stock consumed cash and warehouse capacity. Empty space suggested a 3PL service, but demand and contribution had not been proven.",
+    solution: "Release old stock, establish capacity that is genuinely spare and test one anchor-client fulfilment offer before adding fixed cost.",
+    technology: "Inventory and warehouse feeds, scan events, SKU-age analytics, route APIs and a service-cost dashboard. AI can forecast capacity and flag service exceptions.",
+    commercial: "A client fee must cover storage, pick, pack, delivery, failed attempts, claims and receivables. Rent already paid does not make the next order free.",
+    operating: "Retail stock and logistics owners share capacity planning. Finance checks client contribution and cash. Service promises remain human approved.",
+    impact: "The pilot case would compare stock cash release and external fulfilment contribution with a reconciled warehouse baseline. No profitable 3PL launch is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Stock release", "Verified capacity", "Anchor client", "3PL contribution"]
+  },
+  {
+    slug: "saudi-market-entry-distribution", title: "Saudi market entry and distribution", sector: "Consumer distribution", geography: "Oman to Saudi Arabia", type: "Strategy blueprint",
+    summary: "A market-entry model built around rights, landed cost, channels and local operating capacity.",
+    overview: "An anonymized regional growth case. Planning and partner work are evidenced; Saudi sales and profitability are not.",
+    problem: "Regional demand did not justify a local setup without product rights, landed cost and a credible route to customers.",
+    solution: "Secure representation and supplier rights, validate one channel and delay inventory or fixed commitments until the contribution case holds.",
+    technology: "Partner and product master data, CRM, landed-cost models, commerce APIs and supply-chain events. AI can compare demand scenarios but cannot certify rights or compliance.",
+    commercial: "Market contribution equals sales after product cost, import, channel, logistics, acquisition and local overhead. The case must survive slower sell-through.",
+    operating: "A local commercial owner manages partner terms. Procurement and finance control inventory and investment gates.",
+    impact: "A limited pilot would test channel contribution, cash needs and sell-through before a full operating setup. No Saudi rollout result is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Rights", "Landed cost", "Channel pilot", "Local scale"]
+  },
+  {
+    slug: "enterprise-software-marketplace", title: "Enterprise software marketplace", sector: "B2B software", geography: "GCC", type: "Strategy blueprint",
+    summary: "A verified-entitlement model for software licences, renewals, services and reseller distribution.",
+    overview: "An anonymized B2B marketplace case derived from software distribution and digital-transformation planning.",
+    problem: "Licence buying, renewals and implementation services are fragmented, while vendor rights and working capital constrain supply.",
+    solution: "A marketplace would combine approved Microsoft, Adobe and other software offers with service matching, renewal management and verified reseller storefronts.",
+    technology: "Multi-tenant commerce, licence and provisioning APIs, billing, identity, reseller CRM and entitlement records. AI can map requirements to approved products and draft quotes for human approval.",
+    commercial: "Licence margin, platform fees and service attachment must cover reseller support, provisioning errors, renewal work and working capital.",
+    operating: "Vendors and distributors control product rights. Resellers own customer relationships. The platform governs catalogue, commercial rules, fulfilment and audit.",
+    impact: "A reseller cohort and renewal pilot would test independent sales, provisioning accuracy and contribution. No live network, GMV or financing book is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Vendor rights", "Reseller storefront", "Customer order", "Entitlement and renewal"]
+  },
+  {
+    slug: "heritage-lifestyle-commerce", title: "Heritage lifestyle commerce", sector: "Retail property and local brands", geography: "Oman", type: "Strategy blueprint",
+    summary: "A commerce model for local design, heritage retail and experience-led tenant growth.",
+    overview: "A heritage retail concept for turning a landmark asset into a more relevant place to shop, discover local design and spend time.",
+    problem: "An established retail asset can lose relevance when leasing is managed around occupancy alone rather than customer demand and tenant sales.",
+    solution: "Curate heritage lifestyle, local brands, pop-ups and digital storefronts around a clear customer reason to visit. Start with small commercial pilots before major refurbishment.",
+    technology: "Tenant commerce feeds, footfall analytics, CRM, event tools and a local-product catalogue. AI can compare tenant mix and event scenarios, with landlord and tenant approval.",
+    commercial: "Tenant sales, repeat visits, rent yield and event or media income must cover programming and any physical investment.",
+    operating: "Asset management, leasing and tenants share a trading calendar and review customer and sales evidence together.",
+    impact: "A pilot would measure tenant sales and repeat visits before capital is committed. No implemented retail revival is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Local makers", "Curated place", "Digital storefront", "Tenant economics"]
+  },
+  {
+    slug: "digital-wedding-platform", title: "Digital wedding and event platform", sector: "Event technology", geography: "Qatar and GCC", type: "Strategy blueprint",
+    summary: "A premium invitation, RSVP and guest-operations model for complex events.",
+    overview: "An event-tech concept that treats service reliability and privacy as part of the product, not back-office details.",
+    problem: "Multi-day events create fragmented invitation, guest list, RSVP, reminder and check-in work.",
+    solution: "A host dashboard and concierge workflow would manage bilingual invitations, household-level guests, attendance changes and event-day check-in.",
+    technology: "Secure guest database, WhatsApp and SMS delivery, QR check-in, permissions and audit. AI can draft bilingual copy and reminder timing, while hosts approve every message.",
+    commercial: "Package contribution must cover messaging, design, concierge hours, service recovery and payment cost.",
+    operating: "A service lead owns each event. Hosts control guest data and approvals. Event staff work from one current attendance record.",
+    impact: "A paid pilot would test guest response, concierge effort, message cost and margin per event. No bookings or completed weddings are claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Host setup", "Guest message", "RSVP changes", "Event check-in"]
+  },
+  {
+    slug: "enterprise-ai-transformation-practice", title: "Enterprise AI transformation practice", sector: "Enterprise technology", geography: "Oman and Bahrain", type: "Strategy blueprint",
+    summary: "An asset-light model that links board-level business problems to specialist AI delivery.",
+    overview: "An anonymized practice design. It is a business case, not a launched advisory unit or client-result claim.",
+    problem: "Enterprise AI activity can remain a collection of pilots without clear economics, accountable process owners or delivery capacity.",
+    solution: "A small commercial core would define the business case, operating change and benefit measures, then bring in approved specialists after a mandate is signed.",
+    technology: "Microsoft cloud and AI services, approved client platforms, process maps and a value tracker. Agents can prepare diagnostics and evidence, with partner and client approval.",
+    commercial: "Fixed leadership cost must be covered by signed work and blended contribution. Specialist capacity stays variable until demand is proven.",
+    operating: "The practice lead owns origination, scope and value tracking. Specialists deliver under client security, data and independence controls.",
+    impact: "A small mandate pipeline and packaged diagnostic would test demand and contribution before a permanent bench is built. No launched practice or billing is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Board problem", "Value case", "Specialist delivery", "Measured result"]
+  },
+  {
+    slug: "aeofind", title: "AEOFind", sector: "AI search visibility", geography: "Global", type: "Product concept",
+    summary: "A diagnostic product for finding commercial gaps in AI answers and search visibility.",
+    overview: "A named product concept from Haris's work. It is presented as a designed diagnostic, without ranking or client-performance claims.",
+    problem: "Brands can generate content and traffic without knowing whether AI answers cite them correctly or send qualified demand.",
+    solution: "A monitored diagnostic would map commercial questions, sample answers, verify sources and prioritize technical, entity and content fixes.",
+    technology: "Crawl and index data, structured data, answer sampling, citation registry, analytics and CRM attribution. AI can classify gaps and draft grounded updates for editorial review.",
+    commercial: "A recurring monitoring model must improve qualified demand or assisted pipeline enough to cover research, content and platform cost.",
+    operating: "Researchers validate sources, editors approve claims and commercial owners measure downstream conversion by intent.",
+    impact: "The product concept would establish a fixed intent baseline and measure changes in qualified visibility. No deployed customer result is claimed.", impactLabel: "Modeled Business Impact",
+    visual: ["Commercial question", "AI answer and sources", "Content action", "Qualified demand"]
+  }
+];
+
+const aiProjects = [
+  {
+    slug: "ai-commerce-command-center", path: "/ai-commerce", title: "AI Commerce Command Center", sector: "Applied AI", geography: "Commerce operations", type: "In development",
+    summary: "A coordinated operating layer for catalogue, orders, care, sellers, inventory, pricing and finance.",
+    overview: "An in-development Haris project designed for lean commerce teams that need better coordination without handing material decisions to autonomous software.",
+    problem: "Commerce signals sit across different systems and teams. Decisions arrive late or without the full operating context.",
+    solution: "One operator view would bring those signals together. Agents prepare catalogue fixes, customer-care responses and exception summaries. People approve consequential actions.",
+    technology: "Live commerce APIs, event feeds, a governed data layer, policy retrieval and permissioned AI tools. Price, stock and orders come from authoritative systems.",
+    commercial: "The business case compares contribution, service cost and operator time with an agreed baseline.",
+    operating: "Commercial, fulfilment, care and finance owners retain decision rights. Every recommendation and approved action has an audit trail.",
+    impact: "The project is in development. Its effect on contribution, service cost and operator time remains to be tested.", impactLabel: "Modeled Business Impact",
+    visual: ["Operating signal", "Evidence and policy", "Human approval", "Audited action"]
+  },
+  {
+    slug: "career-runway-ai", path: "/career-runway", title: "Career Runway AI", sector: "Decision support", geography: "Global", type: "Live",
+    summary: "A personal decision tool that connects career choices to real financial runway.",
+    overview: "A live Haris project that combines structured career assessment with deterministic runway calculations and guarded AI explanation.",
+    problem: "Major career decisions are often made without a clear view of debt, dependents, cash runway and practical trade-offs.",
+    solution: "The product combines Career DNA with the user's own financial inputs. AI explains scenarios but does not alter the underlying calculations or make the decision.",
+    technology: "Consented personal inputs, a calculation engine, scenario rules and an LLM narrative layer with strict access and deletion controls.",
+    commercial: "The product is designed around trusted decision support. No revenue, placement or employment-outcome model is claimed.",
+    operating: "The user owns the decision. The product shows assumptions, uncertainty and trade-offs instead of recommending an employer or role.",
+    impact: "The product is live. No user-growth, revenue or career-outcome figure is published.", impactLabel: "Business Impact",
+    visual: ["Career DNA", "Financial facts", "Scenario engine", "User decision"]
+  }
+];
+
+const allUseCases = [...useCases, ...aiProjects];
+const usePath = item => item.path || `/use-cases/${item.slug}`;
+const useCard = item => card(usePath(item), item.type, item.title, item.summary, `${item.sector} · ${item.geography}`);
+const trackPath = item => `/track-record/${item.slug}`;
+const trackCard = item => card(trackPath(item), item.role, item.name, item.summary, `${item.geography} · ${item.period}`);
+
+const trackPage = item => ({
+  path: trackPath(item), type: "WebPage", kind: "track", title: `${item.name} | Track Record | Haris Aslam`,
+  description: `${item.summary} An operating record of mandate, economics, technology and relevance.`,
+  eyebrow: "Track record", h1: item.name, intro: item.summary,
+  body: `${tagRow([item.role, item.geography, item.period])}<div class="detail-layout"><div class="detail-main">${field("Role and mandate", item.mandate)}${field("What was built or fixed", item.built)}${field("Commercial contribution", item.commercial)}${field("Technology and operations", item.technology)}${field("Business relevance", item.relevance)}</div>${diagram("Operating view", item.visual, "Commercial and operating work viewed as one system.")}</div>${section("Related use cases", grid(allUseCases.filter(useCase => item.slug === "roumaan" ? useCase.slug.includes("commerce") : item.slug === "floward-oman" ? useCase.slug.includes("gifting") : item.slug === "upapp-factory" ? useCase.slug.includes("software") || useCase.slug.includes("enterprise-ai") : useCase.slug.includes("retail")).slice(0, 3).map(useCard)))}`
+});
+
+const useCasePage = item => ({
+  path: usePath(item), type: "WebPage", kind: "case", title: `${item.title} | Use Case | Haris Aslam`,
+  description: item.summary.length >= 80 ? item.summary : `${item.summary} A business use case covering solution, technology, commercial model, operations and impact.`,
+  eyebrow: `${item.type} · ${item.geography}`, h1: item.title, intro: item.summary,
+  project: item.slug === "ai-commerce-command-center" || item.slug === "career-runway-ai" ? { name: item.title, status: item.type, description: item.summary } : undefined,
+  body: `${tagRow([item.sector, item.geography, item.type])}<div class="detail-layout"><div class="detail-main">${field("Overview", item.overview)}${field("Business Problem", item.problem)}${field("Solution", item.solution)}${field("Technology", item.technology)}${field("Commercial Model", item.commercial)}${field("Operating Model", item.operating)}${field(item.impactLabel, item.impact)}</div>${diagram("Business system", item.visual, item.impactLabel === "Modeled Business Impact" ? "Designed model. Outcome remains to be validated." : "Operating evidence is stated without unverified figures.")}</div>${section("Continue exploring", grid([card("/use-cases", "Use cases", "More business problems", "Browse commerce, retail, fintech, enterprise technology and growth cases."), card("/ai-transformation", "Applied AI", "AI & Transformation", "See how AI fits inside commercial and operating workflows.")]))}`
 });
 
 const insights = [
-  { slug:"marketplace-gmv-revenue-contribution", title:"Marketplace GMV, revenue and contribution", lead:"GMV is demand. Revenue is the platform's share. Contribution is what remains after serving the transaction.",
-    paragraphs:[
-      "A marketplace can report rising GMV and still lose money on each order. GMV is the value of goods sold by merchants. It is not the platform's sales. Revenue starts with commission and any charged services.",
-      "Then subtract the costs the platform actually carries: seller onboarding, payment fees, support, returns, incentives and fulfilment. If that remainder is negative, growth scales the loss. First-party retail needs its own margin bridge; combining it with seller GMV makes both look better than they are.",
-      "The weekly question is simple: which seller and category cohorts generate completed orders with positive contribution? Build liquidity there before widening the catalogue."
-    ], related:"multi-category-digital-commerce"},
-  { slug:"seller-onboarding-economics", title:"Seller onboarding economics", lead:"A signed-up seller is not yet a useful source of supply.",
-    paragraphs:[
-      "The costly part of seller onboarding comes after registration. Product data has to be complete, stock has to be accurate and the seller needs to fulfil within the promise shown to the customer.",
-      "Track the funnel from verified seller to live offers, first completed order and repeat trading. Include catalogue support, service failures and returns in seller contribution. AI can clean attributes and flag missing information, but it cannot verify a merchant by guessing.",
-      "A small group of dependable sellers usually produces a better marketplace than a long list of inactive accounts."
-    ], related:"agent-led-social-commerce"},
-  { slug:"margin-to-cash-retail-turnaround", title:"Margin-to-cash retail turnaround", lead:"A margin improvement matters only if it releases stock cash and improves the full store P&L.",
-    paragraphs:[
-      "Retail turnarounds often begin with a gross-margin report. The report is useful, but it misses how much stock is ageing and how long cash remains trapped in it.",
-      "Set markdown decisions against SKU age, replenishment, rent, labour and handling. A clearance pilot can improve margin in one period while EBITDA remains unstable in another. That is why a pilot should be reported as a pilot.",
-      "The operator's review should connect margin to sell-through, cash recovered and store contribution. Automated alerts help find exceptions; price and procurement decisions still need an owner."
-    ], related:"retail-clearance-stock-profitability"},
-  { slug:"agent-led-social-commerce-economics", title:"Agent-led social-commerce economics", lead:"Merchant activity, agent trust and auditable payouts decide whether the network works.",
-    paragraphs:[
-      "Agent-led commerce has two supply problems. Merchants need active demand; agents need products they can credibly recommend and a commission they can trust.",
-      "Downloads and registrations can move quickly without creating completed orders. Measure active merchant-agent pairs, attributable sales, disputes, payout timing and order contribution. The attribution ledger is as important as the storefront.",
-      "AI can help prepare listings and suggest suitable agents. It should not quietly change commissions or settle contested claims."
-    ], related:"agent-led-social-commerce"},
-  { slug:"commerce-tasks-for-ai-agents", title:"Which commerce tasks AI agents should automate", lead:"Start with repetitive decisions that have reliable data and clear approval limits.",
-    paragraphs:[
-      "Catalogue gaps, order-status questions and inventory exceptions are good early agent tasks. They are frequent, measurable and can be checked against source systems.",
-      "Pricing, refunds, merchant admission and payouts carry more commercial or regulatory risk. Agents can assemble evidence and recommend an action, but the business needs explicit decision rights before those tools can act.",
-      "A useful pilot counts errors, override rates, response time and contribution, not just prompts handled."
-    ], related:"multi-category-digital-commerce"},
-  { slug:"rag-versus-live-operational-apis", title:"RAG versus live operational APIs", lead:"Policy answers and live transactions need different sources of truth.",
-    paragraphs:[
-      "Retrieval-augmented generation can help an assistant answer questions from approved policies, product documents and operating procedures. Those sources change less often and can be cited.",
-      "Stock, price, order status and payment settlement are different. The assistant should read them from authenticated operational APIs at the moment of the request. A document index is not a safe substitute for a live balance or delivery promise.",
-      "The strongest design combines grounded knowledge with permissioned tools, approval gates and an action log. The commercial owner still decides what the agent is allowed to do."
-    ], related:"app-studio-operating-model"},
-  { slug:"payment-volume-versus-net-revenue", title:"Payment volume versus net revenue", lead:"Transaction value is not the money a payment platform keeps.",
-    paragraphs:[
-      "Payment volume shows use of the rail. Net revenue depends on the fee actually earned after partner shares, incentives, losses and service cost.",
-      "A growth plan should separate bank, merchant and platform segments. Each has different implementation work, risk and settlement responsibilities. A blended volume forecast hides those differences.",
-      "Run a segment-level fee waterfall before adding new countries or partners. Automated reconciliation can shorten the review, but regulated fund movement needs approved controls."
-    ], related:"embedded-finance-growth-model"},
-  { slug:"warehouse-capacity-as-a-3pl-business", title:"When warehouse capacity can become a 3PL business", lead:"Spare space is only a business when external orders cover their full service cost.",
-    paragraphs:[
-      "A retailer may have spare space because inventory turns are poor. Selling that space as fulfilment capacity can help, but only after the underlying stock problem is understood.",
-      "Price pick, pack, storage, delivery, claims and client support. Test demand from an anchor customer and service levels before treating already-paid rent as free capacity.",
-      "The decision is a contribution and cash decision, not a property-utilisation slogan. Forecasting and route tools help once the service promise is real."
-    ], related:"warehouse-working-capital-transformation"}
+  { slug: "marketplace-gmv-revenue-contribution", title: "Marketplace GMV, revenue and contribution", lead: "GMV is demand. Revenue is the platform's share. Contribution is what remains after serving the transaction.", visual: ["GMV", "Platform revenue", "Service costs", "Contribution"], paragraphs: ["A marketplace can report rising GMV and still lose money on each order. GMV is the value of goods sold by merchants. It is not the platform's sales.", "Revenue starts with commission and charged services. Then subtract seller onboarding, payments, support, returns, incentives and fulfilment. If the remainder is negative, growth scales the loss.", "Review seller and category cohorts by completed orders and contribution. Build liquidity where both hold before widening the catalogue."] },
+  { slug: "seller-onboarding-economics", title: "Seller onboarding economics", lead: "A registered seller becomes useful only when its offers are accurate, available and fulfilable.", visual: ["Verified seller", "Trade-ready offers", "First completed order", "Repeat supply"], paragraphs: ["The expensive part of onboarding comes after registration. Product data must be complete, stock must be accurate and the seller must meet the service promise shown to the customer.", "Track the path from verification to live offers, first completed order and repeat trading. Include catalogue support, failures and returns in seller contribution.", "AI can clean attributes and flag missing information. It cannot verify a merchant or product by guessing."] },
+  { slug: "margin-to-cash-retail-turnaround", title: "Margin-to-cash retail turnaround", lead: "A margin improvement matters when it releases stock cash and improves the full store P&L.", visual: ["Gross margin", "Stock age", "Cash release", "Store contribution"], paragraphs: ["Retail turnarounds often start with a gross-margin report. The report is useful, but it misses how long cash remains trapped in stock.", "A practical bridge connects selling price and product cost to markdown, inventory age, occupancy, labour and supplier terms. The team can then see which actions improved both profit and cash.", "The weekly review should follow actual cash release and full store contribution, not one percentage in isolation."] },
+  { slug: "agent-led-social-commerce-economics", title: "Agent-led social-commerce economics", lead: "Merchant supply, agent trust and buyer fulfilment have to work in the same transaction.", visual: ["Merchant", "Sales agent", "Buyer", "Audited payout"], paragraphs: ["Agent-led commerce adds a human distribution layer to a marketplace. That layer can expand reach, but it also adds commission, attribution and trust obligations.", "Measure active merchant-agent pairs, completed attributable orders, repeat purchase and payout accuracy. Registrations and downloads are only early funnel signals.", "Every party should be able to see why an order was attributed and how a payout was calculated."] },
+  { slug: "commerce-tasks-for-ai-agents", title: "Which commerce tasks AI agents should automate", lead: "Start with reversible work over reliable data before giving software broader authority.", visual: ["Read evidence", "Draft action", "Human approval", "Audit outcome"], paragraphs: ["Catalogue cleanup, order-status summaries and exception routing are good early agent tasks because the source facts can be checked and mistakes can be reversed.", "Price changes, refunds, seller sanctions and payouts carry more consequence. They require explicit policy, permissions and human approval.", "Automation should earn wider scope through task accuracy, service quality, contribution and clean rollback evidence."] },
+  { slug: "rag-versus-live-operational-apis", title: "RAG versus live operational APIs", lead: "Use retrieval for approved knowledge and APIs for facts that change with the operation.", visual: ["Policy knowledge", "Live API fact", "Decision rule", "Approved action"], paragraphs: ["RAG is useful for policies, procedures and product guidance. It is a poor substitute for live stock, current price or the status of a specific order.", "An operating agent often needs both. It retrieves the relevant rule, then queries the source system for the current fact.", "Keeping those sources distinct makes errors easier to diagnose and gives operators a clearer evidence trail."] },
+  { slug: "payment-volume-versus-net-revenue", title: "Payment volume versus net revenue", lead: "Payment volume shows activity. It does not show what the provider keeps.", visual: ["Payment volume", "Gross fees", "Partner and loss cost", "Net revenue"], paragraphs: ["A payment plan can look large when it begins with transaction value. The provider receives only a small fee pool from that value.", "Partner share, incentives, fraud, compliance, support and settlement cost reduce the pool again. Recognized net revenue and gross profit are better operating measures.", "Model each segment separately. A bank workflow, merchant service and multi-party platform rarely have the same integration or risk cost."] },
+  { slug: "warehouse-capacity-as-a-3pl-business", title: "When warehouse capacity can become a 3PL business", lead: "Spare space becomes a business only after anchor demand covers the full service cost.", visual: ["Spare capacity", "Anchor demand", "Service cost", "Client contribution"], paragraphs: ["A retailer may see unused racks and assume it can sell fulfilment cheaply. The existing rent is only one part of the cost.", "Picking, packing, delivery, failed attempts, claims, receivables and service management must be included in the client P&L.", "Start with one anchor client and a limited service scope. Expand only when contracted volume, service quality and contribution hold together."] }
 ];
 
-const articlePath = item => `/insights/${item.slug}`;
-const articleCard = item => card(articlePath(item), "Insight", item.title, item.lead);
-const articlePage = item => ({
-  path: articlePath(item), type: "Article", kind: "article", h1: item.title,
-  title: `${item.title} | Haris Aslam`,
-  description: `${item.lead} A practical note on GCC business economics.`,
-  eyebrow: "Insight", intro: item.lead, datePublished: "2026-09-15",
-  body: `<article class="article-copy">${item.paragraphs.map(para).join("")}</article>
-    ${section("Related work", grid([caseCard(cases.find(c => c.slug === item.related))]))}
-    ${section("More insights", grid(insights.filter(other => other.slug !== item.slug).slice(0,3).map(articleCard)))}`
-});
+const articleCard = item => card(`/insights/${item.slug}`, "Insight", item.title, item.lead);
+const articlePage = item => ({ path: `/insights/${item.slug}`, type: "Article", kind: "article", datePublished: "2026-09-16", title: `${item.title} | Haris Aslam`, description: `${item.lead} A practical note on GCC business economics and operating decisions.`, eyebrow: "Insight", h1: item.title, intro: item.lead, body: `<div class="article-layout"><article class="article-copy">${item.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("")}</article>${diagram("Operating lens", item.visual)}</div>${section("Related work", grid([card("/use-cases", "Use cases", "See the models in practice", "Explore business problems, solutions, operating models and economics."), card("/ai-transformation", "Applied AI", "AI & Transformation", "See bounded automation inside real workflows.")]))}` });
 
 const home = {
-  path: "/", type: "ProfilePage", kind: "home", title: "Muhammad Haris Aslam | GCC Operator and Builder",
-  description: "Muhammad Haris Aslam is a GCC operator, business builder and transformation leader across digital commerce, retail, marketplaces, enterprise technology and AI.",
-  eyebrow: "Muhammad Haris Aslam", h1: "Build businesses. Fix economics. Scale what works.",
-  intro: "GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.",
-  heroAside: `<figure class="hero-portrait"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"><figcaption>Muhammad Haris Aslam</figcaption></figure>`,
-  body: `${section("Selected operating record", `<div class="record-grid"><p>Built and operated multi-category digital commerce in Oman.</p><p>Developed an agent-led merchant commerce platform with live apps and operational handover.</p><p>Worked on retail cash, margin, stock and store operating decisions.</p></div>`)}
-    ${section("Areas of work", `<div class="area-grid"><span>Commerce & marketplaces</span><span>Retail transformation</span><span>Enterprise technology</span><span>Payments & finance</span><span>GCC growth</span><span>AI in operations</span></div>`)}
-    ${section("Selected business problems", grid([cases[0],cases[1],cases[2],cases[6]].map(caseCard)) + link("/work", "View selected work"))}
-    ${section("AI & Transformation", `<div class="feature-row"><div><p>Applied AI belongs inside an operating workflow: accurate data, defined decisions and human accountability.</p>${link("/ai-transformation", "Explore AI & Transformation")}</div><div class="mini-flow"><span>Signal</span><span>Approved action</span><span>Business result</span></div></div>`)}
-    ${section("Insights", grid(insights.slice(0,3).map(articleCard)) + link("/insights", "Read all insights"))}
-    ${section("About", `<p class="section-intro">Haris works across the commercial and operating decisions that turn a business idea into a dependable business.</p>${link("/about", "More about Haris")}`)}
-    ${section("Contact", `<p class="section-intro">For a discussion about a business problem, partnership or operating model.</p>${link("/contact", "Get in touch", "button")}`, "contact-section")}`
+  path: "/", type: "WebPage", kind: "home", title: "Muhammad Haris Aslam | GCC Operator and Business Builder", description: "Muhammad Haris Aslam is a GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.", eyebrow: "Muhammad Haris Aslam", h1: "Build businesses. Fix economics. Scale what works.", intro: "GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.", heroAside: `<figure class="hero-portrait"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"><figcaption>Operator · Builder · Transformation leader</figcaption></figure>`,
+  body: `<div class="hero-actions">${link("/track-record", "View track record", "button")}${link("/use-cases", "Explore use cases", "button button-secondary")}</div>${section("Selected operating record", grid(trackRecords.slice(0, 4).map(trackCard)) + link("/track-record", "View full track record"))}${section("Areas of work", `<div class="area-grid"><span>Business building</span><span>Commerce and marketplaces</span><span>Retail economics</span><span>Enterprise technology</span><span>GCC growth</span><span>Applied AI</span></div>`)}${section("Selected use cases", grid([useCases[0], useCases[2], useCases[5], useCases[7], aiProjects[0], useCases[10]].map(useCard)) + link("/use-cases", "Browse all use cases"))}${section("AI & Transformation", `<div class="feature-split"><div><p>AI works when it is attached to an operating decision, reliable data and a person who owns the result.</p>${link("/ai-transformation", "Explore AI & Transformation")}</div>${diagram("Controlled automation", ["Signal", "Evidence", "Approval", "Action"])}</div>`)}${section("Insights", grid(insights.slice(0, 4).map(articleCard)) + link("/insights", "Read all insights"))}${section("About", `<div class="narrow-copy"><p>Haris works across the decisions that turn an idea into an operating business: proposition, economics, technology and execution.</p>${link("/about", "More about Haris")}</div>`)}${section("Contact", `<div class="narrow-copy"><p>For a discussion about business building, commerce, transformation or applied AI.</p>${link("/contact", "Get in touch", "button")}</div>`, "contact-section")}`
 };
 
-const work = {
-  path: "/work", type: "CollectionPage", kind: "work", title: "Selected Work | Commerce and Retail | Haris Aslam",
-  description: "Selected anonymized business use cases across digital commerce, retail transformation, marketplaces, enterprise technology, payments, logistics and Saudi market entry.",
-  eyebrow: "Work", h1: "Selected work", intro: "Operating cases and strategy blueprints from commerce, retail, enterprise technology and GCC growth.",
-  body: `${section("Operating cases", grid(cases.filter(c => c.type !== "Strategy blueprint").map(caseCard)))}
-    ${section("Strategy blueprints", `<p class="section-intro">These are designed models or proposals. Their business impact is modeled, not claimed as achieved.</p>${grid(cases.filter(c => c.type === "Strategy blueprint").map(caseCard))}`)}
-    ${section("Applied AI projects", grid([card("/ai-commerce","In development","AI Commerce Command Center","Coordinated AI for commerce operations under human approval."),card("/career-runway","Live","Career Runway AI","Career decisions grounded in personal financial runway.")]))}`
-};
+const trackIndex = { path: "/track-record", type: "CollectionPage", kind: "track-index", title: "Track Record | Muhammad Haris Aslam", description: "A selective operating track record across Roumaan, Floward Oman, Salman Corporation, Miraq, KSM, UpApp Factory and Vodafone Qatar.", eyebrow: "Track record", h1: "Operating experience, selectively told", intro: "Named ventures and roles where Haris held direct operating, building or transformation responsibility.", body: `${section("Selected record", grid(trackRecords.map(trackCard)))}${section("How to read this section", `<div class="feature-split"><p>Each page follows the mandate through the operating work, commercial logic, technology and business relevance.</p>${diagram("From mandate to value", ["Mandate", "Operating work", "Commercial effect", "Business relevance"])}</div>`)}` };
 
-const ai = {
-  path: "/ai-transformation", type: "CollectionPage", kind: "ai", title: "AI & Transformation | Haris Aslam",
-  description: "Applied AI projects and transformation work by Muhammad Haris Aslam, focused on commerce operations, trustworthy data, approved automation and measurable economics.",
-  eyebrow: "AI & Transformation", h1: "AI that fits the business", intro: "Useful automation starts with a real operating problem and a clear owner for the decision.",
-  body: `${section("AI Lab", grid([card("/ai-commerce","In development","AI Commerce Command Center","Coordinates catalogue, orders, care and other commerce signals under human approval."),card("/career-runway","Live","Career Runway AI","Grounds career decisions in personal financial runway and practical trade-offs.")]) + link("/ai-lab","View AI Lab"))}
-    ${section("Transformation work", grid([cases[2],cases[4],cases[6]].map(caseCard)))}
-    ${section("Decision rights", `<p class="section-intro">Agents can prepare evidence, clean product data and route exceptions. People remain responsible for pricing, payments, customer remedies and capital decisions.</p>`)}`
-};
+const useIndex = { path: "/use-cases", type: "CollectionPage", kind: "use-index", title: "Business Use Cases | Muhammad Haris Aslam", description: "Anonymized business use cases across banking, commerce, retail, payments, logistics, enterprise technology, AI and GCC market entry.", eyebrow: "Use cases", h1: "Business problems turned into operating models", intro: "Each case connects the problem to a solution, technology, commercial model, operating model and impact.", body: `${section("Implemented work and operating pilots", grid(allUseCases.filter(item => ["Operating case", "Operating pilot", "Live"].includes(item.type)).map(useCard)))}${section("Business cases and product concepts", `<p class="section-intro">These cases describe designed models. Their impact is explicitly modeled rather than presented as achieved.</p>${grid(allUseCases.filter(item => !["Operating case", "Operating pilot", "Live"].includes(item.type)).map(useCard))}`)}` };
 
-const aiLab = {
-  path: "/ai-lab", type: "CollectionPage", kind: "ai-lab", title: "AI Lab | Applied AI Projects | Haris Aslam",
-  description: "AI Lab presents AI Commerce Command Center and Career Runway AI, two applied projects built around commerce operations and grounded personal financial decisions.",
-  eyebrow: "AI Lab", h1: "AI Lab", intro: "Applied AI projects built around real operating problems.",
-  body: `${section("Projects", grid([card("/ai-commerce","In development","AI Commerce Command Center","A commerce control layer for catalogue, orders, care, sellers, inventory, pricing and finance."),card("/career-runway","Live","Career Runway AI","A decision tool that combines career assessment with a person's real financial runway.")]))}`
-};
+const aiPage = { path: "/ai-transformation", type: "CollectionPage", kind: "ai", title: "AI & Transformation | Muhammad Haris Aslam", description: "Applied AI projects and transformation cases focused on commerce operations, reliable data, bounded automation and measurable business economics.", eyebrow: "AI & Transformation", h1: "AI inside the operating model", intro: "Useful AI improves a real workflow, works from reliable facts and keeps consequential decisions accountable.", body: `${section("Projects", grid(aiProjects.map(useCard).concat([useCard(useCases.find(item => item.slug === "aeofind"))])))}${section("Transformation cases", grid([useCases[0], useCases[1], useCases[7], useCases[13]].map(useCard)))}${section("Operating principle", `<div class="feature-split"><div><p>Use retrieval for approved knowledge. Use live APIs for prices, stock, orders and money. Give agents narrow permissions and widen them only after accuracy, service and economics hold.</p>${link("/insights/commerce-tasks-for-ai-agents", "Read the automation note")}</div>${diagram("Agent control loop", ["Reliable signal", "Policy and evidence", "Human decision", "Audited action"])}</div>`)}` };
 
-const project = (path, name, status, description, problem, solution, technology, commercial, operating, impactText) => ({
-  path, type:"WebPage", kind:"project", title:`${name} | AI Lab | Haris Aslam`, h1:name,
-  description,
-  eyebrow:`AI Lab · ${status}`, intro:description,
-  project:{name, status, description},
-  body:`<div class="case-meta"><span>Applied AI project</span><span>${status}</span></div><div class="case-layout"><div class="case-fields">
-    ${[["Business Problem",problem],["Solution",solution],["Technology",technology],["Commercial Model",commercial],["Operating Model",operating]].map(([label,value])=>`<section class="case-field"><h2>${label}</h2>${para(value)}</section>`).join("")}
-    <div class="impact-note"><h2>${status === "In development" ? "Modeled Business Impact" : "Business Impact"}</h2>${para(impactText)}</div>
-    ${link("/ai-lab","Back to AI Lab")}</div></div>`
-});
+const insightsPage = { path: "/insights", type: "CollectionPage", kind: "insights", title: "Insights on Commerce and Transformation | Haris Aslam", description: "Eight practical articles on marketplace economics, retail cash, social commerce, AI operations, payments and warehouse contribution.", eyebrow: "Insights", h1: "Notes from operating work", intro: "Short reads on the economics and decisions that determine whether a model works.", body: `${section("Latest", grid(insights.map(articleCard)))}${section("Editorial focus", `<div class="feature-split"><p>The writing stays close to operating questions: how revenue is earned, where cost enters, who owns the decision and what evidence is needed before scale.</p>${diagram("Business lens", ["Problem", "Economics", "Operating choice", "Evidence"])}</div>`)}` };
 
-const aiCommerce = project("/ai-commerce","AI Commerce Command Center","In development",
-  "A full commerce operation, from catalogue and orders to care, sellers, inventory, pricing and finance, coordinated by AI agents with human approval.",
-  "Commerce teams work across disconnected systems and queues; decisions arrive late or without the full operating context.",
-  "Coordinate those signals in one operator view. Agents can prepare catalogue fixes, care responses and exception summaries, while people approve material actions.",
-  "Live commerce APIs, event feeds, a governed data layer and permissioned AI tools. Policy can be retrieved from approved knowledge; stock, price and orders come from source systems.",
-  "The business case measures contribution, service cost and operator time against an agreed baseline.",
-  "Commercial, fulfilment, care and finance owners retain their decision rights. Each AI recommendation has an audit trail.",
-  "The project is in development. Its impact on contribution, service cost and operator time remains to be tested.");
+const about = { path: "/about", type: "ProfilePage", kind: "about", title: "About Muhammad Haris Aslam | GCC Operator", description: "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.", eyebrow: "About", h1: "Muhammad Haris Aslam", intro: "Operator, business builder and transformation leader.", heroAside: `<figure class="hero-portrait compact"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"></figure>`, body: `${section("Operating background", `<div class="about-layout"><div class="article-copy"><p>Haris has built and operated digital-commerce ventures, launched a country operation, worked through retail margin and cash problems, and delivered enterprise technology.</p><p>His work starts with the business model. Where will value come from? What has to change in the operation? Which technology belongs in the solution, and which decisions still need an accountable person?</p><p>He is based in Doha and works across GCC commerce, retail, enterprise technology and applied AI.</p></div>${diagram("Working pattern", ["Find the problem", "Design the economics", "Build the operation", "Measure the result"])}</div>`)}${section("Selected track record", grid(trackRecords.slice(0, 3).map(trackCard)))}` };
 
-const careerRunway = project("/career-runway","Career Runway AI","Live",
-  "Helps professionals read their Career DNA and real financial runway, grounded in their own numbers, before making a major career move.",
-  "Major career decisions are often made without a clear picture of personal financial safety and practical trade-offs.",
-  "Combine a structured career assessment with deterministic financial-runway rules. AI can explain scenarios but does not change the underlying calculation.",
-  "A consented personal-data model, financial inputs, rule engine and LLM narrative layer. Sensitive inputs need strict access and deletion controls.",
-  "A personal decision-support product, measured by clarity of its scenarios rather than an assumed employment outcome.",
-  "The user owns the decision. The product presents assumptions and trade-offs rather than recommending an employer or role.",
-  "The product is live. No user-growth, revenue or decision-outcome figure is presented.");
+const contact = { path: "/contact", type: "ContactPage", kind: "contact", title: "Contact Muhammad Haris Aslam", description: "Contact Muhammad Haris Aslam about business building, digital commerce, retail transformation, enterprise technology, GCC growth and applied AI.", eyebrow: "Contact", h1: "Start with the business problem", intro: "A useful conversation begins with the market, the economics and the decision that needs to be made.", body: `${section("Contact", `<div class="contact-grid"><div><span>Email</span><a href="mailto:${site.email}">${site.email}</a></div><div><span>LinkedIn</span><a href="${site.linkedin}" rel="me noopener">Connect with Haris <span aria-hidden="true">↗</span></a></div></div><p class="contact-note">A short note on the problem and its operating context is enough.</p>`)}` };
 
-const insightsPage = {
-  path:"/insights", type:"CollectionPage", kind:"insights", title:"Insights on Commerce and Economics | Haris Aslam",
-  description:"Eight practical insights from Muhammad Haris Aslam on marketplaces, retail cash, agent-led commerce, AI workflows, payments and warehouse operating economics.",
-  eyebrow:"Insights", h1:"Operating notes", intro:"Short reads on the decisions that determine whether a model works.",
-  body:section("Latest insights",grid(insights.map(articleCard)))
-};
-const about = {
-  path:"/about", type:"ProfilePage", kind:"about", title:"About Muhammad Haris Aslam | GCC Operator",
-  description:"Muhammad Haris Aslam is a GCC operator and business builder with work across digital commerce, retail transformation, marketplaces, enterprise technology and applied AI.",
-  eyebrow:"About", h1:"Muhammad Haris Aslam", intro:"Operator, business builder and transformation leader.",
-  heroAside:`<figure class="hero-portrait"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"></figure>`,
-  body:`${section("Operating background",`<div class="about-copy"><p>Haris has worked on the commercial and operating sides of digital commerce, retail, marketplaces and technology in the GCC. The record includes building online commerce propositions, running merchant and agent operations, and working through retail margin and cash decisions.</p><p>His work connects the customer proposition to the economics underneath it: where revenue comes from, what the business must deliver, and how technology can help people make better decisions.</p></div>`)}
-    ${section("What I work on",`<div class="area-grid"><span>Business building</span><span>Retail economics</span><span>Marketplace operations</span><span>Enterprise delivery</span><span>GCC growth</span><span>Applied AI</span></div>`)}
-    ${section("Selected work",grid([cases[0],cases[1],cases[2]].map(caseCard)))}`
-};
-const contact = {
-  path:"/contact", type:"ContactPage", kind:"contact", title:"Contact Muhammad Haris Aslam | GCC Business",
-  description:"Contact Muhammad Haris Aslam to discuss business building, retail economics, marketplace operations, technology implementation, GCC growth or applied AI.",
-  eyebrow:"Contact", h1:"Get in touch", intro:"A good conversation starts with the business problem.",
-  body:`${section("Contact",`<div class="contact-grid"><div><span>Email</span><a href="mailto:${site.email}">${site.email}</a></div><div><span>LinkedIn</span><a href="${site.linkedin}" rel="me noopener">Connect with Haris <span aria-hidden="true">↗</span></a></div></div><p class="contact-note">A short note on the problem, market and decision is enough to begin.</p>`)}`
-};
-
-export const pages = [home,work,...cases.map(casePage),ai,aiLab,aiCommerce,careerRunway,insightsPage,...insights.map(articlePage),about,contact];
+export const pages = [home, trackIndex, ...trackRecords.map(trackPage), useIndex, ...useCases.map(useCasePage), ...aiProjects.map(useCasePage), aiPage, insightsPage, ...insights.map(articlePage), about, contact];
