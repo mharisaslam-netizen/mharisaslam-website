@@ -118,7 +118,7 @@ function schemaGraph(page, url, crumbs) {
     graph.push(software);
   }
   if (page.type === "Article") {
-    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, description:page.description, author:{"@id":person["@id"]}, mainEntityOfPage:{"@id":webpage["@id"]} };
+    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, description:page.description, image:{"@type":"ImageObject",url:`${site.origin}/assets/og-card.png`,width:1200,height:630}, author:{"@id":person["@id"]}, publisher:{"@id":person["@id"]}, mainEntityOfPage:{"@id":webpage["@id"]} };
     graph.push(article);
   }
   if (page.kind === "case" && !page.project) {
