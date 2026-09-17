@@ -18,8 +18,6 @@ const jobSignals = [
   /seeking (?:an?|the|my|selected)?\s*(?:ceo|executive|leadership|board|role|position|opportunit)/i,
   /ceo roles?/i,
   /board roles?/i,
-  /entrepreneur-in-residence/i,
-  /\bEIR\b/i,
   /selected opportunities/i
 ];
 const rejectedLanguage = [
@@ -97,33 +95,70 @@ for (const file of htmlFiles) {
   for (const regex of rejectedLanguage) if (regex.test(html)) errors.push(`${route}: rejected language ${regex}`);
   for (const regex of developmentNotes) if (regex.test(html)) errors.push(`${route}: public development note ${regex}`);
   if (currentEmployerNames.test(html)) errors.push(`${route}: current-employer name exposed`);
-  if (!["/", "/about", "/track-record"].includes(route) && html.includes(permittedRoleSentence)) errors.push(`${route}: current-role sentence appears outside approved pages`);
+  if (!["/", "/about", "/track-record", "/executive-profile"].includes(route) && html.includes(permittedRoleSentence)) errors.push(`${route}: current-role sentence appears outside approved pages`);
   if (/[—–]/.test(html)) errors.push(`${route}: em or en dash found`);
   if (html.includes("__bundler") || html.includes("Unpacking...")) errors.push(`${route}: unpacking shell`);
 }
 
-if (navigation.length !== 7) errors.push(`navigation must contain seven items, found ${navigation.length}`);
-for (const [index, expected] of ["Home", "Track Record", "Use Cases", "AI & Transformation", "Insights", "About", "Contact"].entries()) {
+if (navigation.length !== 6) errors.push(`navigation must contain six items, found ${navigation.length}`);
+for (const [index, expected] of ["Home", "Operating Record", "For Business Owners", "Executive Profile", "Operator Notes", "Contact"].entries()) {
   if (navigation[index]?.[0] !== expected) errors.push(`navigation position ${index + 1}: expected ${expected}`);
 }
 if (pages.filter(page => page.kind === "track").length !== 4) errors.push("release must have four track-record pages");
 if (pages.filter(page => page.kind === "case").length < expandedLibraryCases.length) errors.push(`release must have at least ${expandedLibraryCases.length} public use-case pages`);
 if (pages.filter(page => page.kind === "article").length !== 8) errors.push("release must have eight insight pages");
-if (pages.length < 95) errors.push(`release must have at least 95 indexable routes, found ${pages.length}`);
+if (pages.length < 100) errors.push(`release must have at least 100 indexable routes, found ${pages.length}`);
 
 const home = await readFile(join(root, "index.html"), "utf8");
 for (const sentence of [
-  "Building growth engines, fixing business economics and turning ideas into operating models.",
-  "GCC operator and business builder working across commerce, retail, marketplaces, enterprise technology, fintech and AI."
+  "GCC CEO &amp; Business Builder",
+  "Build the market.",
+  "Fix the economics.",
+  "Scale what works."
 ]) if (!home.includes(sentence)) errors.push(`home missing required copy: ${sentence}`);
-for (const heading of ["Build New Businesses", "Transform Existing Businesses", "Create New Revenue Pools", "Redesign for AI", "Selected business problems", "Operating evidence", "AI Commerce Command Center", "Insights"]) {
+for (const heading of ["For business owners", "For executive search", "View operating record", "Verified retail turnaround period", "Selected operating record", "How Haris works", "Strategy and operating library"]) {
   if (!home.includes(heading)) errors.push(`home missing section ${heading}`);
 }
-for (const marker of ["v3-home-hero", "v3-capability-system", "v3-sector-ribbon", "v3-case-editorial", "v3-value-band", "v3-evidence-band", "v3-ai-products", "v3-insight-ledger"]) {
+for (const marker of ["ep-home-hero", "ep-proof", "ep-fit-grid", "ep-record-list", "ep-decision-band", "ep-audience-grid", "ep-library-band"]) {
   if (!home.includes(marker)) errors.push(`home missing visual module ${marker}`);
 }
-for (const credential of ["17+ years", "GCC", "Founder", "Operator", "Transformation", "Venture Building"]) {
+for (const credential of ["17+ years", "Turnaround", "Growth", "Digital Commerce", "Venture Building"]) {
   if (!home.includes(credential)) errors.push(`home missing credential ${credential}`);
+}
+for (const metric of ["+24%", "+69%", "+92%", "-15%", "-22%", "-28%", "+36%"]) if (!home.includes(metric)) errors.push(`home missing turnaround metric ${metric}`);
+for (const ctaId of ["family_business_view", "executive_search_view", "operating_record_view", "contact_click"]) if (!home.includes(`data-cta-id="${ctaId}"`)) errors.push(`home missing CTA identifier ${ctaId}`);
+
+const operatingRecord = await pageHtml("/operating-record");
+for (const marker of ["Situation", "Mandate", "Actions", "Economic outcome", "What changed", "Verified operating-period results", "Evidence standard"]) {
+  if (!operatingRecord.includes(marker)) errors.push(`/operating-record: missing ${marker}`);
+}
+for (const metric of ["Net Sales", "Gross Profit Value", "Gross Margin", "EBITDA", "Net P/L improvement", "Operating Expenses", "Personnel Cost", "Finance Cost", "Inventory Turnover", "Inventory Holding"]) {
+  if (!operatingRecord.includes(metric)) errors.push(`/operating-record: missing turnaround metric ${metric}`);
+}
+
+const familyBusiness = await pageHtml("/family-business");
+for (const marker of ["When a good family business needs its next operating model.", "When I am most relevant", "Turnaround", "Growth", "Venture creation", "Digital commerce", "Owner and board view"]) {
+  if (!familyBusiness.includes(marker)) errors.push(`/family-business: missing ${marker}`);
+}
+
+const executiveProfile = await pageHtml("/executive-profile");
+for (const marker of ["GCC Operator | CEO / CCO", "Executive mandates", "Geographic experience", "Sector experience", "Operating environments", "Career timeline", "Public record"]) {
+  if (!executiveProfile.includes(marker)) errors.push(`/executive-profile: missing ${marker}`);
+}
+if (!executiveProfile.includes('"@type":"ProfilePage"')) errors.push(`/executive-profile: ProfilePage schema missing`);
+
+const executiveSearch = await pageHtml("/executive-search");
+for (const marker of ["Considering Haris for a mandate?", "Current leadership focus", "Geography", "Sector relevance", "Mandate environments", "Executive Brief · Coming Soon"]) {
+  if (!executiveSearch.includes(marker)) errors.push(`/executive-search: missing ${marker}`);
+}
+for (const ctaId of ["executive_profile_view", "operating_record_view", "linkedin_click", "contact_click", "executive_brief_download"]) {
+  if (!executiveSearch.includes(`data-cta-id="${ctaId}"`)) errors.push(`/executive-search: missing CTA identifier ${ctaId}`);
+}
+
+const operatorNotes = await pageHtml("/operator-notes");
+count(operatorNotes, /Operator Note · Pre-publication/g, 6, "/operator-notes", "planned Operator Notes");
+for (const title of ["The First 100 Days of a Family-Business Turnaround", "Why GCC Marketplaces Struggle to Reach Profitability", "The 12 Numbers I Would Look at Before Taking Over a Retail Business", "What GCC Family Businesses Should Expect from an Entrepreneur-in-Residence", "Saudi Expansion: What Smaller GCC Businesses Often Underestimate", "Building a Marketplace: GMV Is Not the Business Model"]) {
+  if (!operatorNotes.includes(title)) errors.push(`/operator-notes: missing planned note ${title}`);
 }
 
 const trackIndex = await pageHtml("/track-record");
@@ -267,6 +302,7 @@ const aboutPage = await pageHtml("/about");
 count(aboutPage, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/about", "permitted current-role sentence");
 count(home, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/", "permitted current-role sentence");
 count(trackIndex, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/track-record", "permitted current-role sentence");
+count(executiveProfile, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/executive-profile", "permitted current-role sentence");
 
 const insightsIndex = await pageHtml("/insights");
 count(insightsIndex, /class="v4-insight-card"/g, 8, "/insights", "editorial insight cards");
@@ -300,7 +336,7 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, ${expandedLibraryCases.length} fully clickable public use cases, ${aiOperatingCases.length} AI operating cases and 8 insights.`);
+console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, six executive navigation paths, five due-diligence pages, ${expandedLibraryCases.length} fully clickable public use cases, ${aiOperatingCases.length} AI operating cases and 8 published insights.`);
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
