@@ -1,7 +1,11 @@
-import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { navigation, pages, site } from "../src/v2-content.mjs";
+import { advisoryPage } from "../src/advisory-page.mjs";
+
+const allPages = [advisoryPage, ...pages];
+const primaryNavigation = [navigation[0], ["Advisory", advisoryPage.path], ...navigation.slice(1)];
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const out = join(root, "dist");
@@ -13,7 +17,7 @@ await cp(join(root, "src", "v4-expansion.css"), join(out, "assets", "v4-expansio
 await cp(join(root, "src", "pilot.css"), join(out, "assets", "pilot.css"));
 try { await cp(join(root, "public", "assets"), join(out, "assets"), { recursive: true }); } catch {}
 
-for (const page of pages) {
+for (const page of allPages) {
   const file = page.path === "/" ? join(out, "index.html") : join(out, page.path.slice(1), "index.html");
   await mkdir(dirname(file), { recursive: true });
   await writeFile(file, render(page), "utf8");
@@ -83,24 +87,24 @@ function render(page) {
 }
 
 function header(path) {
-  const links = navigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
+  const links = primaryNavigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
   return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
 }
 function footer() {
-  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
+  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation-advisory">Advisory</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
 }
 function render404() {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage, track record or use cases.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage, advisory, track record or use cases.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
   if (path === "/ai-commerce" || path === "/career-runway") {
-    const page = pages.find(item => item.path === path);
+    const page = allPages.find(item => item.path === path);
     return [["Home", "/"], ["Use Cases", "/use-cases"], [page.h1, path]];
   }
   const parts = path.split("/").filter(Boolean); let acc = "";
-  const hubLabels = { "/track-record":"Track Record", "/use-cases":"Use Cases", "/ai-transformation":"AI & Transformation", "/insights":"Insights" };
-  return [["Home","/"], ...parts.map(p => { acc += `/${p}`; const page = pages.find(item => item.path === acc); return page ? [page.path === path ? page.h1 : hubLabels[page.path] || page.h1, acc] : null; }).filter(Boolean)];
+  const hubLabels = { "/gcc-growth-transformation-advisory":"Advisory", "/track-record":"Track Record", "/use-cases":"Use Cases", "/ai-transformation":"AI & Transformation", "/insights":"Insights" };
+  return [["Home","/"], ...parts.map(p => { acc += `/${p}`; const page = allPages.find(item => item.path === acc); return page ? [page.path === path ? page.h1 : hubLabels[page.path] || page.h1, acc] : null; }).filter(Boolean)];
 }
 function breadcrumbs(items) {
   return `<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>${items.map(([name, href], i) => `<li>${i === items.length-1 ? `<span aria-current="page">${name}</span>` : `<a href="${href}">${name}</a>`}</li>`).join("")}</ol></nav>`;
@@ -112,6 +116,16 @@ function schemaGraph(page, url, crumbs) {
   if (page.type === "ProfilePage") webpage.mainEntity = {"@id":person["@id"]};
   const breadcrumb = { "@type":"BreadcrumbList", "@id":`${url}#breadcrumb`, itemListElement:crumbs.map(([name, href], index) => ({"@type":"ListItem",position:index+1,name,item:`${site.origin}${href === "/" ? "/" : href}`})) };
   const graph = [person, website, webpage, breadcrumb];
+  if (page.service) {
+    const service = { "@type":"Service", "@id":`${url}#service`, name:page.service.name, description:page.description, serviceType:page.service.serviceType, provider:{"@id":person["@id"]}, areaServed:page.service.areaServed.map(name => ({"@type":"Country",name})), url };
+    webpage.mainEntity = {"@id":service["@id"]};
+    graph.push(service);
+  }
+  if (page.faq?.length) {
+    const faq = { "@type":"FAQPage", "@id":`${url}#faq`, mainEntity:page.faq.map(item => ({"@type":"Question",name:item.question,acceptedAnswer:{"@type":"Answer",text:item.answer}})) };
+    webpage.hasPart = [...(webpage.hasPart || []), {"@id":faq["@id"]}];
+    graph.push(faq);
+  }
   if (page.project) {
     const software = { "@type":"SoftwareApplication", "@id":`${url}#software`, name:page.project.name, description:page.project.description, url, creativeWorkStatus:page.project.status, creator:{"@id":person["@id"]} };
     webpage.mainEntity = {"@id":software["@id"]};
@@ -130,11 +144,11 @@ function schemaGraph(page, url, crumbs) {
 }
 function sitemap() {
   const date = new Date().toISOString().slice(0,10);
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc><lastmod>${date}</lastmod></url>`).join("\n")}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc><lastmod>${date}</lastmod></url>`).join("\n")}\n</urlset>\n`;
 }
 function llmsTxt() {
-  const links = pages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
-  return `# ${site.name}\n\n> GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.\n\n## Public pages\n\n${links}\n`;
+  const links = allPages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
+  return `# ${site.name}\n\n> GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.\n\n## Advisory\n\n- [GCC Growth & Transformation Advisory](${site.origin}${advisoryPage.path}): ${advisoryPage.description}\n\n## Public pages\n\n${links}\n`;
 }
 function pageLabel(page) { return page.path === "/" ? "Home" : page.title.split("|")[0].trim(); }
 function current(path, href) { return path === href || (href !== "/" && path.startsWith(`${href}/`)) || (href === "/use-cases" && ["/ai-commerce","/career-runway"].includes(path)); }
