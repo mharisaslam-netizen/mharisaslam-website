@@ -77,7 +77,7 @@ export const advisoryPage = {
       <div class="section-heading"><h2>How a mandate typically works</h2></div>
       <div class="builder-system">
         <div class="builder-path"><span>Define the decision</span><span>Quantify the value pool</span><span>Design the operating model</span><span>Sequence technology and change</span><span>Measure the result</span></div>
-        <div class="builder-disciplines"><span>CEO / board special projects</span><span>6–12 week strategy-to-operating-model sprints</span><span>90-day transformation resets</span><span>Build-and-launch programmes</span><span>Operating-partner advisory</span><span>Commercial due diligence</span></div>
+        <div class="builder-disciplines"><span>CEO / board special projects</span><span>6-12 week strategy-to-operating-model sprints</span><span>90-day transformation resets</span><span>Build-and-launch programmes</span><span>Operating-partner advisory</span><span>Commercial due diligence</span></div>
       </div>
       <div class="report-prose">
         <p>The exact engagement shape depends on the decision and the evidence available. A short diagnostic can isolate the value pool and decision gates. A larger mandate can continue through operating-model design, commercial modelling, partner architecture, implementation planning, management cadence and launch support. Specialist legal, tax, regulatory, cybersecurity or technical delivery partners can be brought in where the mandate requires them.</p>
