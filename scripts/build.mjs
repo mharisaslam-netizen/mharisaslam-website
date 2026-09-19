@@ -17,6 +17,7 @@ await cp(join(root, "src", "v3-pilot.css"), join(out, "assets", "v3-pilot.css"))
 await cp(join(root, "src", "v4-expansion.css"), join(out, "assets", "v4-expansion.css"));
 await cp(join(root, "src", "pilot.css"), join(out, "assets", "pilot.css"));
 try { await cp(join(root, "public", "assets"), join(out, "assets"), { recursive: true }); } catch {}
+try { await cp(join(root, "public", "mharisaslam-indexnow-2026-7f3d9a4c2b8e6d1f.txt"), join(out, "mharisaslam-indexnow-2026-7f3d9a4c2b8e6d1f.txt")); } catch {}
 
 for (const page of allPages) {
   const file = page.path === "/" ? join(out, "index.html") : join(out, page.path.slice(1), "index.html");
