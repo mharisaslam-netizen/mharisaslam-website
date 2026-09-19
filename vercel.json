@@ -44,6 +44,7 @@
     { "source": "/ventures-eir", "destination": "/use-cases", "permanent": true },
     { "source": "/ventures-ai", "destination": "/ai-transformation", "permanent": true },
     { "source": "/ventures", "destination": "/use-cases", "permanent": true },
+    { "source": "/gcc-growth-transformation-advisory", "destination": "/gcc-growth-transformation", "permanent": true },
     { "source": "/advisory", "destination": "/use-cases", "permanent": true },
     { "source": "/retail-turnaround", "destination": "/use-cases/retail-group-transformation", "permanent": true },
     { "source": "/marketplace-strategy", "destination": "/use-cases/multi-category-digital-commerce", "permanent": true },
