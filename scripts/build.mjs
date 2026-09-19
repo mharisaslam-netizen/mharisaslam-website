@@ -5,7 +5,7 @@ import { navigation, pages, site } from "../src/v2-content.mjs";
 import { advisoryPage } from "../src/advisory-page.mjs";
 
 const allPages = [advisoryPage, ...pages];
-const primaryNavigation = [navigation[0], ["Advisory", advisoryPage.path], ...navigation.slice(1)];
+const primaryNavigation = [navigation[0], ["GCC Growth", advisoryPage.path], ...navigation.slice(1)];
 const commercialBridgePaths = new Set(["/", "/about", "/track-record", "/use-cases", "/ai-transformation", "/insights"]);
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -95,13 +95,13 @@ function header(path) {
 }
 function commercialBridge(path) {
   if (!commercialBridgePaths.has(path)) return "";
-  return `<section class="section" aria-labelledby="gcc-advisory-bridge"><div class="section-heading"><p class="eyebrow">GCC advisory</p><h2 id="gcc-advisory-bridge">Turn the idea into an executive mandate.</h2></div><div class="report-prose"><p>For CEOs, founders, family businesses, boards and investors across Saudi Arabia, the UAE and the wider GCC, the advisory work connects growth, turnaround, digital commerce, AI, marketplaces, fintech, enterprise technology and operating-model decisions to measurable commercial outcomes.</p></div><div class="hero-actions"><a class="button" href="/gcc-growth-transformation-advisory">Explore GCC growth & transformation advisory</a><a class="button button-secondary" href="/contact">Discuss a mandate</a></div></section>`;
+  return `<section class="section" aria-labelledby="gcc-growth-bridge"><div class="section-heading"><p class="eyebrow">GCC growth & transformation</p><h2 id="gcc-growth-bridge">How I think about complex growth and transformation.</h2></div><div class="report-prose"><p>A cross-functional operating lens covering growth, turnaround, digital commerce, AI, marketplaces, fintech, enterprise technology and market entry across the GCC.</p></div><div class="hero-actions"><a class="button" href="/gcc-growth-transformation">Explore the perspective</a><a class="button button-secondary" href="/track-record">View track record</a></div></section>`;
 }
 function footer() {
-  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation-advisory">Advisory</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
+  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation">GCC Growth</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
 }
 function render404() {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage, advisory, track record or use cases.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage, GCC growth perspective, track record or use cases.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
 }
 function breadcrumbItems(path) {
   if (path === "/") return [["Home", "/"]];
@@ -110,7 +110,7 @@ function breadcrumbItems(path) {
     return [["Home", "/"], ["Use Cases", "/use-cases"], [page.h1, path]];
   }
   const parts = path.split("/").filter(Boolean); let acc = "";
-  const hubLabels = { "/gcc-growth-transformation-advisory":"Advisory", "/track-record":"Track Record", "/use-cases":"Use Cases", "/ai-transformation":"AI & Transformation", "/insights":"Insights" };
+  const hubLabels = { "/gcc-growth-transformation":"GCC Growth & Transformation", "/track-record":"Track Record", "/use-cases":"Use Cases", "/ai-transformation":"AI & Transformation", "/insights":"Insights" };
   return [["Home","/"], ...parts.map(p => { acc += `/${p}`; const page = allPages.find(item => item.path === acc); return page ? [page.path === path ? page.h1 : hubLabels[page.path] || page.h1, acc] : null; }).filter(Boolean)];
 }
 function breadcrumbs(items) {
@@ -155,7 +155,7 @@ function sitemap() {
 }
 function llmsTxt() {
   const links = allPages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
-  return `# ${site.name}\n\n> GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.\n\n## Advisory\n\n- [GCC Growth & Transformation Advisory](${site.origin}${advisoryPage.path}): ${advisoryPage.description}\n\n## Public pages\n\n${links}\n`;
+  return `# ${site.name}\n\n> GCC operator, business builder and transformation leader across commerce, retail, marketplaces, enterprise technology and AI.\n\n## GCC Growth & Transformation\n\n- [GCC Growth & Transformation](${site.origin}${advisoryPage.path}): ${advisoryPage.description}\n\n## Public pages\n\n${links}\n`;
 }
 function pageLabel(page) { return page.path === "/" ? "Home" : page.title.split("|")[0].trim(); }
 function current(path, href) { return path === href || (href !== "/" && path.startsWith(`${href}/`)) || (href === "/use-cases" && ["/ai-commerce","/career-runway"].includes(path)); }
