@@ -159,7 +159,7 @@ export const deepInsights = [
       "Order contribution",
       "Cash after obligations"
     ],
-    "operatingLens": "If GMV doubles, which costs, liabilities and service obligations also double—and what is left after serving the transaction?",
+    "operatingLens": "If GMV doubles, which costs, liabilities and service obligations also double,and what is left after serving the transaction?",
     "sections": [
       {
         "heading": "GMV is activity, not the platform's revenue",
@@ -278,7 +278,7 @@ export const deepInsights = [
         "url": "https://www.ifrs.org/news-and-events/updates/ifric/2022/ifric-update-april-2022/"
       },
       {
-        "title": "Post-implementation Review of IFRS 15 – Principal versus agent considerations",
+        "title": "Post-implementation Review of IFRS 15 - Principal versus agent considerations",
         "publisher": "IFRS Foundation",
         "url": "https://www.ifrs.org/content/dam/ifrs/project/pir-ifrs-15/rfi-iasb-2023-4-pir-ifrs-15.pdf"
       },
