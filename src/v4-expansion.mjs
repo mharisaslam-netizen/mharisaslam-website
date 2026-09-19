@@ -306,6 +306,9 @@ export function expansionPages(existingPaths = []) {
 }
 
 const insightVisual = slug => {
+  if (slug.includes("omnichannel")) return `<div class="v4-insight-architecture"><span>Inventory truth</span><i>+</i><span>Commercial rules</span><i>→</i><strong>Profitable fulfilment</strong></div>`;
+  if (slug.includes("marketplace-economics")) return `<div class="v4-insight-waterfall"><span style="--w:100%">GMV</span><span style="--w:34%">Revenue</span><i>less transaction cost</i><strong style="--w:16%">Contribution</strong></div>`;
+  if (slug.includes("ai-transformation-gcc")) return `<div class="v4-insight-ladder"><span>Workflow</span><span>Evidence</span><span>Bounded action</span><strong>Measured outcome</strong></div>`;
   if (slug.includes("gmv")) return `<div class="v4-insight-waterfall"><span style="--w:100%">GMV</span><span style="--w:38%">Revenue</span><i>less service cost</i><strong style="--w:19%">Contribution</strong></div>`;
   if (slug.includes("seller")) return `<div class="v4-insight-funnel"><span>Registered sellers</span><span>Verified</span><span>Trade-ready offers</span><strong>Repeat contribution</strong></div>`;
   if (slug.includes("margin")) return `<div class="v4-insight-bridge"><span>Margin</span><i>→</i><span>Stock age</span><i>→</i><strong>Cash</strong></div>`;
@@ -317,8 +320,8 @@ const insightVisual = slug => {
 };
 
 export function v4Insights(items) {
-  const categories = ["Marketplace economics", "Marketplace operations", "Retail turnaround", "Commerce models", "Applied AI", "AI architecture", "Payments economics", "Logistics ventures"];
-  return `<section class="v4-insights-hero"><div class="v3-shell"><span class="v3-label">Insights</span><h1>Operating ideas with an economic spine.</h1><p>Eight practical notes on the measures, workflows and decisions that determine whether a business model can scale.</p></div></section><section class="v4-insights-grid"><div class="v3-shell">${items.map((item,index)=>`<a class="v4-insight-card" href="/insights/${item.slug}"><div class="copy"><span>${esc(categories[index] || "Operating model")} · ${index < 4 ? "5" : "6"} min read</span><h2>${esc(item.title)}</h2><p>${esc(item.lead)}</p><b>Read insight <i aria-hidden="true">↗</i></b></div><figure aria-label="Visual summary for ${esc(item.title)}">${insightVisual(item.slug)}</figure></a>`).join("")}</div></section><section class="v4-insight-method"><div class="v3-shell"><span class="v3-label">Editorial lens</span><h2>Problem, economics, operating choice, evidence.</h2><p>The writing stays close to how value is created, what it costs to deliver, who owns the decision and what must be measured before scale.</p></div></section>`;
+  const legacyCategories = ["Marketplace economics", "Marketplace operations", "Retail turnaround", "Commerce models", "Applied AI", "AI architecture", "Payments economics", "Logistics ventures"];
+  return `<section class="v4-insights-hero"><div class="v3-shell"><span class="v3-label">Insights</span><h1>Operating ideas with an economic spine.</h1><p>Long-form research and practical notes on the measures, workflows and decisions that determine whether a business model can scale.</p></div></section><section class="v4-insights-grid"><div class="v3-shell">${items.map((item,index)=>`<a class="v4-insight-card" href="/insights/${item.slug}"><div class="copy"><span>${esc(item.category || legacyCategories[Math.max(0,index-3)] || "Operating model")} · ${item.readMinutes || (index < 7 ? 5 : 6)} min read</span><h2>${esc(item.title)}</h2><p>${esc(item.lead)}</p><b>Read insight <i aria-hidden="true">↗</i></b></div><figure aria-label="Visual summary for ${esc(item.title)}">${insightVisual(item.slug)}</figure></a>`).join("")}</div></section><section class="v4-insight-method"><div class="v3-shell"><span class="v3-label">Editorial lens</span><h2>Problem, economics, operating choice, evidence.</h2><p>The writing stays close to how value is created, what it costs to deliver, who owns the decision and what must be measured before scale. Long-form pieces include public sources and further reading.</p></div></section>`;
 }
 
 export function v4AiFamily() {
