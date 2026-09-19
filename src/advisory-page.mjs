@@ -36,6 +36,10 @@ export const advisoryPage = {
     {
       question: "What kinds of mandates are a good fit?",
       answer: "The strongest fit is a cross-functional problem with meaningful commercial consequence: a growth engine that is not scaling, a retail or working-capital reset, a marketplace or digital-commerce build, a new GCC market entry, an AI operating-model redesign, a fintech or payment proposition, or a CEO-led special project that needs strategy and execution connected."
+    },
+    {
+      question: "What should executive-search firms and boards know about Muhammad Haris Aslam's profile?",
+      answer: "The profile is strongest for operator-led C-level and special-project mandates where growth, digital commerce, marketplaces, retail turnaround, fintech and payments, enterprise technology, AI transformation or GCC expansion need to move from strategy into execution. The public track-record pages distinguish verified operating experience from modeled or proposed work."
     }
   ],
   body: `
@@ -103,6 +107,18 @@ export const advisoryPage = {
         <a class="work-card" href="/track-record"><span class="card-label">Operating record</span><h3>Named roles and ventures</h3><p>Review the experience behind the advisory and the evidence boundaries attached to each role.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases"><span class="card-label">Use-case library</span><h3>Commercial models across sectors</h3><p>Explore business problems across banking, telecom, retail, marketplaces, logistics, enterprise technology, ventures and AI.</p><span class="card-link">Browse use cases <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/insights"><span class="card-label">Point of view</span><h3>Economics and operating decisions</h3><p>Read practical notes on contribution, cash, AI governance, marketplace economics, payments and operating design.</p><span class="card-link">Read insights <span aria-hidden="true">→</span></span></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><h2>For boards and executive-search firms</h2></div>
+      <div class="report-prose">
+        <p>The strongest leadership fit is where a business needs an operator who can move between commercial strategy and execution: digital commerce, marketplaces, retail turnaround, fintech and payments, enterprise technology, AI transformation, GCC growth and market entry. The public profile is designed to make that operating range easy to assess without overstating evidence.</p>
+        <p>For board, family-business or executive-search conversations, the most useful starting point is the combination of track record, operating use cases and the specific business problem to be solved. That makes it easier to distinguish a general management role from a transformation, growth or special-project mandate.</p>
+      </div>
+      <div class="card-grid">
+        <a class="work-card" href="/about"><span class="card-label">Executive profile</span><h3>Review the operating background</h3><p>See the experience, sectors and operating themes behind the current positioning.</p><span class="card-link">View profile <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/track-record"><span class="card-label">Evidence</span><h3>Review verified operating work</h3><p>Use the track record to separate proven operating experience from modeled or proposed work.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
       </div>
     </section>
 
