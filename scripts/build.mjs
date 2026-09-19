@@ -6,6 +6,7 @@ import { advisoryPage } from "../src/advisory-page.mjs";
 
 const allPages = [advisoryPage, ...pages];
 const primaryNavigation = [navigation[0], ["Advisory", advisoryPage.path], ...navigation.slice(1)];
+const commercialBridgePaths = new Set(["/", "/about", "/track-record", "/use-cases", "/ai-transformation", "/insights"]);
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const out = join(root, "dist");
@@ -81,6 +82,7 @@ function render(page) {
     </header>
     ${page.body}`}
   </main>
+  ${commercialBridge(page.path)}
   ${footer()}
 </body>
 </html>`;
@@ -89,6 +91,10 @@ function render(page) {
 function header(path) {
   const links = primaryNavigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
   return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
+}
+function commercialBridge(path) {
+  if (!commercialBridgePaths.has(path)) return "";
+  return `<section class="section" aria-labelledby="gcc-advisory-bridge"><div class="section-heading"><p class="eyebrow">GCC advisory</p><h2 id="gcc-advisory-bridge">Turn the idea into an executive mandate.</h2></div><div class="report-prose"><p>For CEOs, founders, family businesses, boards and investors across Saudi Arabia, the UAE and the wider GCC, the advisory work connects growth, turnaround, digital commerce, AI, marketplaces, fintech, enterprise technology and operating-model decisions to measurable commercial outcomes.</p></div><div class="hero-actions"><a class="button" href="/gcc-growth-transformation-advisory">Explore GCC growth & transformation advisory</a><a class="button button-secondary" href="/contact">Discuss a mandate</a></div></section>`;
 }
 function footer() {
   return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation-advisory">Advisory</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
