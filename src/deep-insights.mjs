@@ -143,7 +143,8 @@ export const deepInsights = [
         "publisher": "Official Platform of the UAE Government",
         "url": "https://u.ae/en/information-and-services/business/ecommerce/"
       }
-    ]
+    ],
+    "seoTitle": "GCC Omnichannel Retail Operating Model | Haris Aslam"
   },
   {
     "slug": "marketplace-economics-gmv-revenue-contribution-gcc",
@@ -297,7 +298,8 @@ export const deepInsights = [
         "publisher": "OECD",
         "url": "https://www.oecd.org/en/publications/unpacking-e-commerce_23561431-en/full-report/component-7.html"
       }
-    ]
+    ],
+    "seoTitle": "GCC Marketplace Economics | Haris Aslam"
   },
   {
     "slug": "ai-transformation-gcc-enterprise-operating-model",
@@ -449,6 +451,7 @@ export const deepInsights = [
         "publisher": "Official Platform of the UAE Government",
         "url": "https://u.ae/en/about-the-uae/strategies-initiatives-and-awards/policies/Ai/The-UAE-Charter-for-the-Development-and-Use-of-Artificial-Intelligence"
       }
-    ]
+    ],
+    "seoTitle": "GCC Enterprise AI Operating Model | Haris Aslam"
   }
 ];
