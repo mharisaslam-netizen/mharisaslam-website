@@ -949,7 +949,7 @@ const articlePage = item => {
     type: "Article",
     kind: "article",
     datePublished: item.datePublished || "2026-09-16",
-    title: `${item.title} | Haris Aslam`,
+    title: item.seoTitle || `${item.title} | Haris Aslam`,
     description: item.metaDescription || `${item.lead} A practical note on GCC business economics and operating decisions.`,
     eyebrow: item.category ? `${item.category} · ${item.readMinutes || 8} min read` : "Insight",
     h1: item.title,
