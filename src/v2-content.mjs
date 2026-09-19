@@ -1,6 +1,7 @@
 import { v3Ai, v3Home, v3Saudi, v3UseLibrary } from "./v3-pilot.mjs";
 import { pilotTrack } from "./pilot.mjs";
 import { aiOperatingCases, expandedLibraryCases, expansionPages, v4AiFamily, v4Insights } from "./v4-expansion.mjs";
+import { deepInsights } from "./deep-insights.mjs";
 
 export const site = {
   name: "Muhammad Haris Aslam",
@@ -917,7 +918,7 @@ const useCasePage = item => ({
   body: item.slug === "leading-saudi-bank-commerce-ecosystem" ? saudiBankBody(item) : supportingCaseBody(item)
 });
 
-const insights = [
+const shortInsights = [
   { slug: "marketplace-gmv-revenue-contribution", title: "Marketplace GMV, revenue and contribution", lead: "GMV is demand. Revenue is the platform's share. Contribution is what remains after serving the transaction.", visual: ["GMV", "Platform revenue", "Service costs", "Contribution"], paragraphs: ["A marketplace can report rising GMV and still lose money on each order. GMV is the value of goods sold by merchants. It is not the platform's sales.", "Revenue starts with commission and charged services. Then subtract seller onboarding, payments, support, returns, incentives and fulfilment. If the remainder is negative, growth scales the loss.", "Review seller and category cohorts by completed orders and contribution. Build liquidity where both hold before widening the catalogue."] },
   { slug: "seller-onboarding-economics", title: "Seller onboarding economics", lead: "A registered seller becomes useful only when its offers are accurate, available and fulfilable.", visual: ["Verified seller", "Trade-ready offers", "First completed order", "Repeat supply"], paragraphs: ["The expensive part of onboarding comes after registration. Product data must be complete, stock must be accurate and the seller must meet the service promise shown to the customer.", "Track the path from verification to live offers, first completed order and repeat trading. Include catalogue support, failures and returns in seller contribution.", "AI can clean attributes and flag missing information. It cannot verify a merchant or product by guessing."] },
   { slug: "margin-to-cash-retail-turnaround", title: "Margin-to-cash retail turnaround", lead: "A margin improvement matters when it releases stock cash and improves the full store P&L.", visual: ["Gross margin", "Stock age", "Cash release", "Store contribution"], paragraphs: ["Retail turnarounds often start with a gross-margin report. The report is useful, but it misses how long cash remains trapped in stock.", "A practical bridge connects selling price and product cost to markdown, inventory age, occupancy, labour and supplier terms. The team can then see which actions improved both profit and cash.", "The weekly review should follow actual cash release and full store contribution, not one percentage in isolation."] },
@@ -928,8 +929,35 @@ const insights = [
   { slug: "warehouse-capacity-as-a-3pl-business", title: "When warehouse capacity can become a 3PL business", lead: "Spare space becomes a business only after anchor demand covers the full service cost.", visual: ["Spare capacity", "Anchor demand", "Service cost", "Client contribution"], paragraphs: ["A retailer may see unused racks and assume it can sell fulfilment cheaply. The existing rent is only one part of the cost.", "Picking, packing, delivery, failed attempts, claims, receivables and service management must be included in the client P&L.", "Start with one anchor client and a limited service scope. Expand only when contracted volume, service quality and contribution hold together."] }
 ];
 
-const articleCard = item => `<a class="insight-card" href="/insights/${item.slug}"><div><span class="card-label">Insight</span><h3>${esc(item.title)}</h3><p>${esc(item.lead)}</p></div>${articleVisual(item, true)}<span class="card-link">Read insight <span aria-hidden="true">→</span></span></a>`;
-const articlePage = item => ({ path: `/insights/${item.slug}`, type: "Article", kind: "article", datePublished: "2026-09-16", title: `${item.title} | Haris Aslam`, description: `${item.lead} A practical note on GCC business economics and operating decisions.`, eyebrow: "Insight", h1: item.title, intro: item.lead, body: `<div class="article-visual-stage">${articleVisual(item)}</div><div class="article-layout"><article class="article-copy">${item.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("")}</article><aside class="article-lens"><span>Operating question</span><p>What changes in the economics, decision rights and evidence before this model can scale?</p></aside></div>${section("Related work", `<div class="continue-grid">${card("/use-cases", "Use cases", "See the models in practice", "Explore business problems, solutions, operating models and economics.")}${card("/ai-transformation", "Applied AI", "AI & Transformation", "See bounded automation inside real workflows.")}</div>`)}` });
+const insights = [...deepInsights, ...shortInsights];
+
+const articleCard = item => `<a class="insight-card" href="/insights/${item.slug}"><div><span class="card-label">${esc(item.category || "Insight")}</span><h3>${esc(item.title)}</h3><p>${esc(item.lead)}</p></div>${articleVisual(item, true)}<span class="card-link">Read insight <span aria-hidden="true">→</span></span></a>`;
+
+const deepArticleContent = item => {
+  const sections = item.sections.map(sectionItem => `<section class="deep-insight-section"><h2>${esc(sectionItem.heading)}</h2>${sectionItem.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("")}${sectionItem.bullets?.length ? `<ul>${sectionItem.bullets.map(point => `<li>${esc(point)}</li>`).join("")}</ul>` : ""}</section>`).join("");
+  const takeaways = item.takeaways?.length ? `<section class="deep-insight-section insight-takeaways"><h2>Key takeaways</h2><ul>${item.takeaways.map(point => `<li>${esc(point)}</li>`).join("")}</ul></section>` : "";
+  const faq = item.faq?.length ? `<section class="deep-insight-section"><h2>Frequently asked questions</h2>${item.faq.map(entry => `<h3>${esc(entry.question)}</h3><p>${esc(entry.answer)}</p>`).join("")}</section>` : "";
+  const sources = item.sources?.length ? `<section class="deep-insight-section insight-sources"><h2>Sources and further reading</h2><ol>${item.sources.map(source => `<li><a href="${esc(source.url)}" rel="noopener noreferrer">${esc(source.title)}</a><span>${esc(source.publisher)}</span></li>`).join("")}</ol><p class="source-note">Sources support the external facts and frameworks referenced above. The operating interpretation and recommendations are Muhammad Haris Aslam's.</p></section>` : "";
+  return `${sections}${takeaways}${faq}${sources}`;
+};
+
+const articlePage = item => {
+  const isDeep = Array.isArray(item.sections) && item.sections.length > 0;
+  const articleCopy = isDeep ? deepArticleContent(item) : item.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("");
+  return {
+    path: `/insights/${item.slug}`,
+    type: "Article",
+    kind: "article",
+    datePublished: item.datePublished || "2026-09-16",
+    title: `${item.title} | Haris Aslam`,
+    description: item.metaDescription || `${item.lead} A practical note on GCC business economics and operating decisions.`,
+    eyebrow: item.category ? `${item.category} · ${item.readMinutes || 8} min read` : "Insight",
+    h1: item.title,
+    intro: item.lead,
+    faq: item.faq,
+    body: `<div class="article-visual-stage">${articleVisual(item)}</div><div class="article-layout${isDeep ? " deep-article-layout" : ""}"><article class="article-copy${isDeep ? " deep-article-copy" : ""}">${articleCopy}</article><aside class="article-lens"><span>Operating question</span><p>${esc(item.operatingLens || "What changes in the economics, decision rights and evidence before this model can scale?")}</p></aside></div>${section("Related work", `<div class="continue-grid">${card("/use-cases", "Use cases", "See the models in practice", "Explore business problems, solutions, operating models and economics.")}${card("/gcc-growth-transformation", "GCC growth", "Growth & Transformation", "Explore the operating perspective across GCC growth, turnaround and transformation.")}</div>`)}`
+  };
+};
 
 const home = {
   path: "/", type: "WebPage", kind: "home", title: "Muhammad Haris Aslam | GCC Operator and Business Builder", description: "Muhammad Haris Aslam builds growth engines, fixes business economics and turns ideas into operating models across the GCC.", eyebrow: "Muhammad Haris Aslam", h1: "Building growth engines, fixing business economics and turning ideas into operating models.", intro: "GCC operator and business builder working across commerce, retail, marketplaces, enterprise technology, fintech and AI.",
@@ -944,7 +972,7 @@ const useIndex = { path: "/use-cases", type: "CollectionPage", kind: "use-index"
 
 const aiPage = { path: "/ai-transformation", type: "CollectionPage", kind: "ai", title: "AI & Transformation | Muhammad Haris Aslam", description: "Applied AI products and enterprise workflows built around reliable data, bounded authority and measurable business economics.", eyebrow: "AI & Transformation", h1: "Operational AI, under control", intro: "Products and enterprise workflows built around reliable facts, bounded authority and measurable business economics.", v3: true, v3Body: `${v3Ai()}${v4AiFamily()}`, body: "" };
 
-const insightsPage = { path: "/insights", type: "CollectionPage", kind: "insights", title: "Insights on Commerce and Transformation | Haris Aslam", description: "Eight practical articles on marketplace economics, retail cash, social commerce, AI operations, payments and warehouse contribution.", eyebrow: "Insights", h1: "Notes from operating work", intro: "Short reads on the economics and decisions that determine whether a model works.", v3: true, v3Body: v4Insights(insights), body: "" };
+const insightsPage = { path: "/insights", type: "CollectionPage", kind: "insights", title: "Insights on GCC Growth, Commerce and Transformation | Haris Aslam", description: "Long-form and practical operating insights on GCC retail, marketplaces, AI transformation, payments, working capital and digital commerce.", eyebrow: "Insights", h1: "Notes from operating work", intro: "Practical writing on the economics and decisions that determine whether a model works.", v3: true, v3Body: v4Insights(insights), body: "" };
 
 const about = { path: "/about", type: "ProfilePage", kind: "about", title: "About Muhammad Haris Aslam | GCC Operator", description: "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.", eyebrow: "About", h1: "Muhammad Haris Aslam", intro: "Operator, business builder and transformation leader.", heroAside: `<figure class="hero-portrait compact"><img src="/assets/haris-aslam.webp" alt="Portrait of Muhammad Haris Aslam" width="717" height="960"></figure>`, body: `${section("Operating background", `<div class="about-layout"><div class="article-copy"><p>Haris has built and operated digital-commerce ventures, launched a country operation, worked through retail margin and cash problems, and delivered enterprise technology.</p><p>His work starts with the business model. Where will value come from? What has to change in the operation? Which technology belongs in the solution, and which decisions still need an accountable person?</p><p>He works across GCC commerce, retail, enterprise technology and applied AI.</p><p><strong>Current mandate: Strategic Digital Commerce - Major Telecom Operator, Qatar.</strong> Currently working on strategic digital-commerce, marketplace and operating-model transformation within a major telecom operator in Qatar.</p></div>${diagram("Working pattern", ["Find the problem", "Design the economics", "Build the operation", "Measure the result"])}</div>`)}${section("Selected track record", grid(trackRecords.slice(0, 3).map(trackCard)))}` };
 
