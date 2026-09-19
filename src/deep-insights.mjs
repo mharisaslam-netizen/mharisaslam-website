@@ -160,7 +160,7 @@ export const deepInsights = [
       "Order contribution",
       "Cash after obligations"
     ],
-    "operatingLens": "If GMV doubles, which costs, liabilities and service obligations also double,and what is left after serving the transaction?",
+    "operatingLens": "If GMV doubles, which costs, liabilities and service obligations also double, and what is left after serving the transaction?",
     "sections": [
       {
         "heading": "GMV is activity, not the platform's revenue",
