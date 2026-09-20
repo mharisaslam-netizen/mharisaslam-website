@@ -37,7 +37,7 @@ console.log("LinkedIn Article Studio runtime check passed.");
 
 const websiteArticle = await readFile(new URL("../dist/insights/fintech-agentic-commerce-ai-agents-moving-money/index.html", import.meta.url), "utf8");
 for (const required of [
-  "Fintech &amp; Agentic Commerce: When AI Agents Start Moving Money",
+  "Fintech & Agentic Commerce: When AI Agents Start Moving Money",
   "The agentic payment stack needs five capabilities",
   "The first 90 days should be an evidence programme",
   "Sources and further reading"
