@@ -4,74 +4,371 @@
   "outputDirectory": "dist",
   "trailingSlash": false,
   "redirects": [
-    { "source": "/index.dc.html", "destination": "/", "permanent": true },
-    { "source": "/advisory.dc.html", "destination": "/use-cases", "permanent": true },
-    { "source": "/ai-lab.dc.html", "destination": "/ai-transformation", "permanent": true },
-    { "source": "/contact.dc.html", "destination": "/contact", "permanent": true },
-    { "source": "/insights.dc.html", "destination": "/insights", "permanent": true },
-    { "source": "/markets.dc.html", "destination": "/use-cases", "permanent": true },
-    { "source": "/markets-qatar.dc.html", "destination": "/track-record", "permanent": true },
-    { "source": "/markets-oman.dc.html", "destination": "/track-record", "permanent": true },
-    { "source": "/markets-ksa.dc.html", "destination": "/use-cases/saudi-market-entry-distribution", "permanent": true },
-    { "source": "/markets-uae.dc.html", "destination": "/use-cases", "permanent": true },
-    { "source": "/ventures.dc.html", "destination": "/use-cases", "permanent": true },
-    { "source": "/ai-commerce.dc.html", "destination": "/ai-commerce", "permanent": true },
-    { "source": "/career-runway.dc.html", "destination": "/career-runway", "permanent": true },
-    { "source": "/insight-agentic-commerce.dc.html", "destination": "/insights/commerce-tasks-for-ai-agents", "permanent": true },
-    { "source": "/insight-delivery-layer.dc.html", "destination": "/insights/warehouse-capacity-as-a-3pl-business", "permanent": true },
-    { "source": "/insight-digital-commerce-strategy.dc.html", "destination": "/insights/marketplace-gmv-revenue-contribution", "permanent": true },
-    { "source": "/insight-ecommerce-profitability.dc.html", "destination": "/insights/margin-to-cash-retail-turnaround", "permanent": true },
-    { "source": "/work", "destination": "/use-cases", "permanent": true },
-    { "source": "/work/cases", "destination": "/use-cases", "permanent": true },
-    { "source": "/work/blueprints", "destination": "/use-cases", "permanent": true },
-    { "source": "/work/cases/oman-multi-category-commerce-platform", "destination": "/use-cases/multi-category-digital-commerce", "permanent": true },
-    { "source": "/work/cases/agent-led-social-commerce-platform", "destination": "/use-cases/agent-led-social-commerce", "permanent": true },
-    { "source": "/work/cases/family-retail-group-transformation", "destination": "/use-cases/retail-group-transformation", "permanent": true },
-    { "source": "/work/cases/retail-clearance-pilot", "destination": "/use-cases/retail-clearance-stock-profitability", "permanent": true },
-    { "source": "/work/cases/app-studio-operating-model", "destination": "/track-record/upapp-factory", "permanent": true },
-    { "source": "/work/cases/90-day-retail-performance-sprint", "destination": "/use-cases/retail-group-transformation", "permanent": true },
-    { "source": "/work/blueprints/multi-party-payments-growth-blueprint", "destination": "/use-cases/payments-embedded-finance-growth", "permanent": true },
-    { "source": "/work/cases/saudi-distribution-and-e-commerce-entry", "destination": "/use-cases/saudi-market-entry-distribution", "permanent": true },
-    { "source": "/work/cases/warehouse-and-working-capital-reset", "destination": "/use-cases/warehouse-working-capital-3pl", "permanent": true },
-    { "source": "/work/commerce-marketplaces", "destination": "/use-cases", "permanent": true },
-    { "source": "/work/retail-transformation-turnaround", "destination": "/use-cases/retail-group-transformation", "permanent": true },
-    { "source": "/work/ai-automation", "destination": "/ai-transformation", "permanent": true },
-    { "source": "/work/fintech-payments-loyalty", "destination": "/use-cases/payments-embedded-finance-growth", "permanent": true },
-    { "source": "/work/enterprise-digital-transformation", "destination": "/use-cases/enterprise-software-marketplace", "permanent": true },
-    { "source": "/work/growth-market-entry", "destination": "/use-cases/saudi-market-entry-distribution", "permanent": true },
-    { "source": "/work/logistics-operations", "destination": "/use-cases/warehouse-working-capital-3pl", "permanent": true },
-    { "source": "/work/venture-building", "destination": "/track-record", "permanent": true },
-    { "source": "/ventures-eir", "destination": "/use-cases", "permanent": true },
-    { "source": "/ventures-ai", "destination": "/ai-transformation", "permanent": true },
-    { "source": "/ventures", "destination": "/use-cases", "permanent": true },
-    { "source": "/gcc-growth-transformation-advisory", "destination": "/gcc-growth-transformation", "permanent": true },
-    { "source": "/advisory", "destination": "/use-cases", "permanent": true },
-    { "source": "/retail-turnaround", "destination": "/use-cases/retail-group-transformation", "permanent": true },
-    { "source": "/marketplace-strategy", "destination": "/use-cases/multi-category-digital-commerce", "permanent": true },
-    { "source": "/ecommerce-transformation", "destination": "/track-record/floward-oman", "permanent": true },
-    { "source": "/ai-lab", "destination": "/ai-transformation", "permanent": true },
-    { "source": "/markets", "destination": "/use-cases", "permanent": true },
-    { "source": "/markets/qatar", "destination": "/track-record", "permanent": true },
-    { "source": "/markets/oman", "destination": "/track-record", "permanent": true },
-    { "source": "/markets/saudi-arabia", "destination": "/use-cases/saudi-market-entry-distribution", "permanent": true },
-    { "source": "/markets/uae", "destination": "/use-cases", "permanent": true },
-    { "source": "/markets/ksa", "destination": "/use-cases/saudi-market-entry-distribution", "permanent": true },
-    { "source": "/insights/the-moment-an-online-retailer-becomes-a-marketplace", "destination": "/insights/marketplace-gmv-revenue-contribution", "permanent": true },
-    { "source": "/insights/the-three-sided-economics-of-agent-led-social-commerce", "destination": "/insights/agent-led-social-commerce-economics", "permanent": true },
-    { "source": "/insights/why-seller-onboarding-is-an-operating-cost", "destination": "/insights/seller-onboarding-economics", "permanent": true },
-    { "source": "/insights/marketplace-gmv-net-revenue-and-contribution-are-different-numbers", "destination": "/insights/marketplace-gmv-revenue-contribution", "permanent": true },
-    { "source": "/insights/why-gross-margin-percentage-can-mislead-a-clearance-pilot", "destination": "/insights/margin-to-cash-retail-turnaround", "permanent": true },
-    { "source": "/insights/the-margin-to-cash-bridge-in-retail-turnaround", "destination": "/insights/margin-to-cash-retail-turnaround", "permanent": true },
-    { "source": "/insights/which-commerce-actions-can-ai-agents-safely-take", "destination": "/insights/commerce-tasks-for-ai-agents", "permanent": true },
-    { "source": "/insights/rag-policies-versus-live-operational-apis", "destination": "/insights/rag-versus-live-operational-apis", "permanent": true },
-    { "source": "/insights/payment-volume-is-not-fintech-net-revenue", "destination": "/insights/payment-volume-versus-net-revenue", "permanent": true },
-    { "source": "/insights/when-spare-warehouse-capacity-can-become-a-3pl-business", "destination": "/insights/warehouse-capacity-as-a-3pl-business", "permanent": true },
-    { "source": "/insights/saudi-market-entry-begins-with-landed-contribution", "destination": "/use-cases/saudi-market-entry-distribution", "permanent": true },
-    { "source": "/insights/from-ai-use-case-to-fundable-transformation-scope", "destination": "/ai-transformation", "permanent": true },
-    { "source": "/insights/australia-ecommerce-growth", "destination": "/insights", "permanent": true }
+    {
+      "source": "/index.dc.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/advisory.dc.html",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/ai-lab.dc.html",
+      "destination": "/ai-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/contact.dc.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/insights.dc.html",
+      "destination": "/insights",
+      "permanent": true
+    },
+    {
+      "source": "/markets.dc.html",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/markets-qatar.dc.html",
+      "destination": "/track-record",
+      "permanent": true
+    },
+    {
+      "source": "/markets-oman.dc.html",
+      "destination": "/track-record",
+      "permanent": true
+    },
+    {
+      "source": "/markets-ksa.dc.html",
+      "destination": "/use-cases/saudi-market-entry-distribution",
+      "permanent": true
+    },
+    {
+      "source": "/markets-uae.dc.html",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/ventures.dc.html",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/ai-commerce.dc.html",
+      "destination": "/ai-commerce",
+      "permanent": true
+    },
+    {
+      "source": "/career-runway.dc.html",
+      "destination": "/career-runway",
+      "permanent": true
+    },
+    {
+      "source": "/insight-agentic-commerce.dc.html",
+      "destination": "/insights/commerce-tasks-for-ai-agents",
+      "permanent": true
+    },
+    {
+      "source": "/insight-delivery-layer.dc.html",
+      "destination": "/insights/warehouse-capacity-as-a-3pl-business",
+      "permanent": true
+    },
+    {
+      "source": "/insight-digital-commerce-strategy.dc.html",
+      "destination": "/insights/marketplace-gmv-revenue-contribution",
+      "permanent": true
+    },
+    {
+      "source": "/insight-ecommerce-profitability.dc.html",
+      "destination": "/insights/margin-to-cash-retail-turnaround",
+      "permanent": true
+    },
+    {
+      "source": "/work",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/work/blueprints",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/oman-multi-category-commerce-platform",
+      "destination": "/use-cases/multi-category-digital-commerce",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/agent-led-social-commerce-platform",
+      "destination": "/use-cases/agent-led-social-commerce",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/family-retail-group-transformation",
+      "destination": "/use-cases/retail-group-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/retail-clearance-pilot",
+      "destination": "/use-cases/retail-clearance-stock-profitability",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/app-studio-operating-model",
+      "destination": "/track-record/upapp-factory",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/90-day-retail-performance-sprint",
+      "destination": "/use-cases/retail-group-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/work/blueprints/multi-party-payments-growth-blueprint",
+      "destination": "/use-cases/payments-embedded-finance-growth",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/saudi-distribution-and-e-commerce-entry",
+      "destination": "/use-cases/saudi-market-entry-distribution",
+      "permanent": true
+    },
+    {
+      "source": "/work/cases/warehouse-and-working-capital-reset",
+      "destination": "/use-cases/warehouse-working-capital-3pl",
+      "permanent": true
+    },
+    {
+      "source": "/work/commerce-marketplaces",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/work/retail-transformation-turnaround",
+      "destination": "/use-cases/retail-group-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/work/ai-automation",
+      "destination": "/ai-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/work/fintech-payments-loyalty",
+      "destination": "/use-cases/payments-embedded-finance-growth",
+      "permanent": true
+    },
+    {
+      "source": "/work/enterprise-digital-transformation",
+      "destination": "/use-cases/enterprise-software-marketplace",
+      "permanent": true
+    },
+    {
+      "source": "/work/growth-market-entry",
+      "destination": "/use-cases/saudi-market-entry-distribution",
+      "permanent": true
+    },
+    {
+      "source": "/work/logistics-operations",
+      "destination": "/use-cases/warehouse-working-capital-3pl",
+      "permanent": true
+    },
+    {
+      "source": "/work/venture-building",
+      "destination": "/track-record",
+      "permanent": true
+    },
+    {
+      "source": "/ventures-eir",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/ventures-ai",
+      "destination": "/ai-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/ventures",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/gcc-growth-transformation-advisory",
+      "destination": "/gcc-growth-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/advisory",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/retail-turnaround",
+      "destination": "/use-cases/retail-group-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/marketplace-strategy",
+      "destination": "/use-cases/multi-category-digital-commerce",
+      "permanent": true
+    },
+    {
+      "source": "/ecommerce-transformation",
+      "destination": "/track-record/floward-oman",
+      "permanent": true
+    },
+    {
+      "source": "/ai-lab",
+      "destination": "/ai-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/markets",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/markets/qatar",
+      "destination": "/track-record",
+      "permanent": true
+    },
+    {
+      "source": "/markets/oman",
+      "destination": "/track-record",
+      "permanent": true
+    },
+    {
+      "source": "/markets/saudi-arabia",
+      "destination": "/use-cases/saudi-market-entry-distribution",
+      "permanent": true
+    },
+    {
+      "source": "/markets/uae",
+      "destination": "/use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/markets/ksa",
+      "destination": "/use-cases/saudi-market-entry-distribution",
+      "permanent": true
+    },
+    {
+      "source": "/insights/the-moment-an-online-retailer-becomes-a-marketplace",
+      "destination": "/insights/marketplace-gmv-revenue-contribution",
+      "permanent": true
+    },
+    {
+      "source": "/insights/the-three-sided-economics-of-agent-led-social-commerce",
+      "destination": "/insights/agent-led-social-commerce-economics",
+      "permanent": true
+    },
+    {
+      "source": "/insights/why-seller-onboarding-is-an-operating-cost",
+      "destination": "/insights/seller-onboarding-economics",
+      "permanent": true
+    },
+    {
+      "source": "/insights/marketplace-gmv-net-revenue-and-contribution-are-different-numbers",
+      "destination": "/insights/marketplace-gmv-revenue-contribution",
+      "permanent": true
+    },
+    {
+      "source": "/insights/why-gross-margin-percentage-can-mislead-a-clearance-pilot",
+      "destination": "/insights/margin-to-cash-retail-turnaround",
+      "permanent": true
+    },
+    {
+      "source": "/insights/the-margin-to-cash-bridge-in-retail-turnaround",
+      "destination": "/insights/margin-to-cash-retail-turnaround",
+      "permanent": true
+    },
+    {
+      "source": "/insights/which-commerce-actions-can-ai-agents-safely-take",
+      "destination": "/insights/commerce-tasks-for-ai-agents",
+      "permanent": true
+    },
+    {
+      "source": "/insights/rag-policies-versus-live-operational-apis",
+      "destination": "/insights/rag-versus-live-operational-apis",
+      "permanent": true
+    },
+    {
+      "source": "/insights/payment-volume-is-not-fintech-net-revenue",
+      "destination": "/insights/payment-volume-versus-net-revenue",
+      "permanent": true
+    },
+    {
+      "source": "/insights/when-spare-warehouse-capacity-can-become-a-3pl-business",
+      "destination": "/insights/warehouse-capacity-as-a-3pl-business",
+      "permanent": true
+    },
+    {
+      "source": "/insights/saudi-market-entry-begins-with-landed-contribution",
+      "destination": "/use-cases/saudi-market-entry-distribution",
+      "permanent": true
+    },
+    {
+      "source": "/insights/from-ai-use-case-to-fundable-transformation-scope",
+      "destination": "/ai-transformation",
+      "permanent": true
+    },
+    {
+      "source": "/insights/australia-ecommerce-growth",
+      "destination": "/insights",
+      "permanent": true
+    }
   ],
   "headers": [
-    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
-    { "source": "/(.*)", "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }, { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }, { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }] }
+    {
+      "source": "/api/linkedin/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
   ]
 }
