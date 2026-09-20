@@ -2,6 +2,7 @@ import { v3Ai, v3Home, v3Saudi, v3UseLibrary } from "./v3-pilot.mjs";
 import { pilotTrack } from "./pilot.mjs";
 import { aiOperatingCases, expandedLibraryCases, expansionPages, v4AiFamily, v4Insights } from "./v4-expansion.mjs";
 import { deepInsights } from "./deep-insights.mjs";
+import { agenticCommerceArticle } from "../lib/linkedin-articles.js";
 
 export const site = {
   name: "Muhammad Haris Aslam",
@@ -817,6 +818,7 @@ const commercialCaseVisual = item => item.slug === "leading-saudi-bank-commerce-
 
 const articleVisual = (item, compact = false) => {
   switch (item.slug) {
+    case "fintech-agentic-commerce-ai-agents-moving-money": return journeyVisual("Agentic transaction chain", ["Intent", "Delegated authority", "Trusted agent identity", "Payment orchestration", "Settlement", "Reconciliation"], "The agent executes only inside an explicit mandate; every step remains attributable and auditable.", compact);
     case "marketplace-gmv-revenue-contribution": return bridgeVisual("GMV to contribution", ["GMV", "Platform revenue", "Service costs", "Contribution"], "Conceptual waterfall, not to scale.", compact);
     case "seller-onboarding-economics": return journeyVisual("Seller activation funnel", ["Verified seller", "Trade-ready offer", "First order", "Repeat supply"], "Registration is the beginning, not the result.", compact);
     case "margin-to-cash-retail-turnaround": return bridgeVisual("Margin-to-cash bridge", ["Gross margin", "Stock age", "Cash release", "Store contribution"], "One operating bridge across profit and working capital.", compact);
@@ -929,7 +931,7 @@ const shortInsights = [
   { slug: "warehouse-capacity-as-a-3pl-business", title: "When warehouse capacity can become a 3PL business", lead: "Spare space becomes a business only after anchor demand covers the full service cost.", visual: ["Spare capacity", "Anchor demand", "Service cost", "Client contribution"], paragraphs: ["A retailer may see unused racks and assume it can sell fulfilment cheaply. The existing rent is only one part of the cost.", "Picking, packing, delivery, failed attempts, claims, receivables and service management must be included in the client P&L.", "Start with one anchor client and a limited service scope. Expand only when contracted volume, service quality and contribution hold together."] }
 ];
 
-const insights = [...deepInsights, ...shortInsights];
+const insights = [agenticCommerceArticle, ...deepInsights, ...shortInsights];
 
 const articleCard = item => `<a class="insight-card" href="/insights/${item.slug}"><div><span class="card-label">${esc(item.category || "Insight")}</span><h3>${esc(item.title)}</h3><p>${esc(item.lead)}</p></div>${articleVisual(item, true)}<span class="card-link">Read insight <span aria-hidden="true">→</span></span></a>`;
 
