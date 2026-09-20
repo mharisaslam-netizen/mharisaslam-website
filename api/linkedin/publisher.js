@@ -53,7 +53,7 @@ button:disabled{opacity:.45;cursor:not-allowed}.note{font-size:12px;color:var(--
 <body>
 <main>
   <div class="top">
-    <div><div class="eyebrow">Private publishing workspace</div><h1>Haris Content Publisher</h1><p class="sub">Review the exact final copy, edit anything you want, and publish only after explicit approval.</p></div>
+    <div><div class="eyebrow">Private daily-post workspace</div><h1>Haris Content Publisher</h1><p class="sub">Review today’s exact post, visual and source. Edit freely. Nothing publishes until you explicitly approve the final version.</p><p style="margin:10px 0 0"><a href="/api/linkedin/article-studio" style="color:var(--teal);font-weight:700;text-decoration:none">Open Article Studio →</a></p></div>
     <div class="status"><strong>LinkedIn connected</strong><br>${esc(session.name || "Muhammad Haris Aslam")}<br>Authorization expires ${esc(expiry)} Qatar time.</div>
   </div>
   <div class="grid">
