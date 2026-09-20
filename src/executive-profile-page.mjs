@@ -2,7 +2,7 @@ export const executiveProfilePage = {
   path: "/gcc-executive-profile",
   type: "ProfilePage",
   kind: "executive-profile",
-  title: "GCC Transformation & Digital Commerce Executive | Muhammad Haris Aslam",
+  title: "GCC Transformation & Digital Commerce Executive | Haris Aslam",
   description: "Executive profile for search firms, boards and investors assessing GCC leadership across transformation, digital commerce, marketplaces, retail, AI, fintech and venture building.",
   eyebrow: "Executive search profile",
   h1: "GCC transformation, digital commerce and growth executive.",
