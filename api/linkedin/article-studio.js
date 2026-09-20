@@ -10,12 +10,16 @@ const esc = value => String(value ?? "")
   .replaceAll("'", "&#39;");
 
 function articleHtml(item) {
-  const sections = (item.sections || []).map(section => {
+  const sections = (item.sections || []).map((section, index) => {
     const paragraphs = (section.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("");
     const bullets = section.bullets?.length
       ? `<ul>${section.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`
       : "";
-    return `<h2>${esc(section.heading)}</h2>${paragraphs}${bullets}`;
+    const images = (item.inlineImages || [])
+      .filter(image => image.afterSection === index + 1)
+      .map(image => `<figure class="inline-visual"><img src="${esc(image.src)}" alt="${esc(image.alt)}"><figcaption>${esc(image.caption || "")}</figcaption></figure>`)
+      .join("");
+    return `<h2>${esc(section.heading)}</h2>${paragraphs}${bullets}${images}`;
   }).join("");
 
   const takeaways = item.takeaways?.length
@@ -76,6 +80,8 @@ function normalize(item, overrides = {}) {
     sourceUrl: overrides.sourceUrl || `https://www.mharisaslam.com/insights/${item.slug}`,
     heroImage: overrides.heroImage || item.heroImage || "",
     heroAlt: overrides.heroAlt || item.heroAlt || item.title,
+    heroCaption: item.heroCaption || "",
+    inlineImages: item.inlineImages || [],
     html: articleHtml(item),
     plain,
     wordCount: plain.split(/\s+/).filter(Boolean).length,
@@ -133,7 +139,13 @@ button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;fon
 .guide{background:var(--warn);border:1px solid #ead69d;padding:15px;font-size:13px;line-height:1.55;margin-top:18px}
 .guide strong{color:var(--navy)}
 .article{background:#fff;border:1px solid var(--line);padding:0 46px 44px;line-height:1.75;overflow:hidden}
-.hero{width:calc(100% + 92px);margin-left:-46px;height:auto;max-height:470px;object-fit:cover;display:block;margin-bottom:38px}
+.hero{width:calc(100% + 92px);margin-left:-46px;height:auto;max-height:470px;object-fit:cover;display:block;margin-bottom:12px}
+.hero-caption{margin:0 0 34px;color:var(--muted);font-size:12px;line-height:1.5}
+.inline-visual{margin:30px 0 34px;border:1px solid var(--line);background:#fafafa}
+.inline-visual img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.inline-visual figcaption{padding:10px 12px;color:var(--muted);font-size:12px;line-height:1.5}
+.article-approval{display:flex;gap:9px;align-items:flex-start;margin:18px 0 10px;padding:13px;background:var(--warn);border:1px solid #ead69d;font-size:12px;line-height:1.5}
+.linkbtn.disabled{opacity:.42;pointer-events:none;cursor:not-allowed}
 .article h2{font-size:24px;line-height:1.25;color:var(--navy);margin:36px 0 12px}
 .article h3{font-size:18px;color:var(--navy);margin:26px 0 8px}
 .article p{margin:0 0 16px}.article li{margin:7px 0}.article a{color:var(--teal);word-break:break-word}
@@ -184,12 +196,14 @@ button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;fon
     <textarea id="articlePlain" class="copybox" aria-hidden="true">${esc(selected.title + "\n\n" + selected.plain)}</textarea>
     <div class="actions">
       <button type="button" onclick="copyField('articlePlain','Full article')">Copy full article</button>
-      <a class="linkbtn secondary" href="https://www.linkedin.com/article/new/" target="_blank" rel="noopener noreferrer">Open LinkedIn</a>
+      <button type="button" onclick="copyField('heroImage','Cover image URL')">Copy cover image</button>
     </div>
+    <label class="article-approval"><input type="checkbox" id="articleApprove"> <span>I approve this exact article and its visual assets for final native LinkedIn Article publishing.</span></label>
+    <a id="openLinkedInArticle" class="linkbtn secondary disabled" href="https://www.linkedin.com/article/new/" target="_blank" rel="noopener noreferrer" aria-disabled="true">Open LinkedIn Article Editor</a>
 
     <div class="guide">
       <strong>Publishing workflow</strong><br>
-      Native LinkedIn Articles still require LinkedIn's Article editor. This page prepares the complete article and assets; nothing publishes from Article Studio.
+      Native LinkedIn Articles still require LinkedIn's Article editor. This Studio is the review and approval gate. Nothing publishes from here. After approval, the native editor is used for the final article, and no separate promotional feed post is created unless you explicitly request one.
     </div>
     <p class="notice" id="copyStatus">Nothing is published from this page.</p>
   </section>
@@ -197,7 +211,7 @@ button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;fon
   <section>
     <div class="toolbar"><span>${selected.wordCount.toLocaleString()} words · ${selected.readMinutes} min read</span><span>${esc(selected.label)}</span></div>
     <article class="article">
-      ${selected.heroImage ? `<img class="hero" src="${esc(selected.heroImage)}" alt="${esc(selected.heroAlt)}">` : ""}
+      ${selected.heroImage ? `<img class="hero" src="${esc(selected.heroImage)}" alt="${esc(selected.heroAlt)}"><p class="hero-caption">${esc(selected.heroCaption || "")}</p>` : ""}
       <h1 class="article-title">${esc(selected.title)}</h1>
       ${selected.html}
     </article>
@@ -205,6 +219,16 @@ button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;fon
 </div>
 </main>
 <script>
+const articleApprove=document.getElementById("articleApprove");
+const openArticle=document.getElementById("openLinkedInArticle");
+articleApprove?.addEventListener("change",()=>{
+  const approved=articleApprove.checked;
+  openArticle.classList.toggle("disabled",!approved);
+  openArticle.setAttribute("aria-disabled",approved?"false":"true");
+  document.getElementById("copyStatus").textContent=approved
+    ? "Article approved for final native LinkedIn publishing."
+    : "Article approval reset. Nothing will be published.";
+});
 async function copyField(id,label){
   const el=document.getElementById(id);
   try{await navigator.clipboard.writeText(el.value);document.getElementById("copyStatus").textContent=label+" copied";}
