@@ -1,3 +1,4 @@
+// LinkedIn publisher connection status
 import { SESSION_COOKIE, decryptSession, parseCookies } from "../../lib/linkedin-session.js";
 
 export default function handler(req, res) {
