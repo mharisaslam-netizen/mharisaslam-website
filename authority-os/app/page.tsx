@@ -17,7 +17,7 @@ export default function Home() {
   const [mode, setMode] = useState("CEO MODE");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState("Ready.");
-  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);\n  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/integrations")
