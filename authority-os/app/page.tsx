@@ -17,7 +17,8 @@ export default function Home() {
   const [mode, setMode] = useState("CEO MODE");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState("Ready.");
-  const [integrations, setIntegrations] = useState<Integration[]>([]);\n  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/integrations")
@@ -26,18 +27,61 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (!sessionId) return;
+
+    let cancelled = false;
+    const terminal = new Set(["completed", "failed", "cancelled", "canceled"]);
+
+    async function poll() {
+      try {
+        const response = await fetch("/api/session/" + sessionId, { cache: "no-store" });
+        const data = await response.json();
+        if (cancelled) return;
+
+        const messagePreview = JSON.stringify(data.messages || [], null, 2);
+        setResult(
+          "Campaign session: " + sessionId +
+          "\nStatus: " + (data.status || "running") +
+          (data.error ? "\nError: " + data.error : "") +
+          "\n\nRecent CEO activity:\n" + messagePreview
+        );
+
+        if (!terminal.has(String(data.status || "").toLowerCase())) {
+          window.setTimeout(poll, 5000);
+        }
+      } catch {
+        if (!cancelled) window.setTimeout(poll, 7000);
+      }
+    }
+
+    poll();
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId]);
+
   async function runCampaign() {
     setBusy(true);
+    setSessionId(null);
     setResult("CEO Agent is opening the campaign...");
+
     try {
       const response = await fetch("/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic, market, objective, mode })
       });
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Campaign could not start.");
-      setResult("Campaign session: " + data.session_id + "\nStatus: " + (data.status || "started") + "\n\nThe CEO Agent has begun research and delegation.");
+
+      setSessionId(data.session_id);
+      setResult(
+        "Campaign session: " + data.session_id +
+        "\nStatus: " + (data.status || "started") +
+        "\n\nThe CEO Agent has begun research and delegation."
+      );
     } catch (error) {
       setResult(error instanceof Error ? error.message : "Unexpected error.");
     } finally {
@@ -78,6 +122,7 @@ export default function Home() {
                 <option>Global</option>
               </select>
             </div>
+
             <div>
               <label>Objective</label>
               <select value={objective} onChange={(e) => setObjective(e.target.value)}>
@@ -88,6 +133,7 @@ export default function Home() {
                 <option>Fintech positioning</option>
               </select>
             </div>
+
             <div>
               <label>Mode</label>
               <select value={mode} onChange={(e) => setMode(e.target.value)}>
@@ -117,6 +163,7 @@ export default function Home() {
         <aside className="card">
           <h2>Integration control room</h2>
           <p>Green means the runtime has what it needs. Amber means setup is still required.</p>
+
           <div className="intlist">
             {integrations
               .filter((x) => !["reddit", "youtube", "clay"].includes(x.id))
