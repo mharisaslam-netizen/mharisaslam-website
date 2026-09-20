@@ -108,7 +108,8 @@ for (const [index, expected] of ["Home", "Track Record", "Use Cases", "AI & Tran
 }
 if (pages.filter(page => page.kind === "track").length !== 4) errors.push("release must have four track-record pages");
 if (pages.filter(page => page.kind === "case").length < expandedLibraryCases.length) errors.push(`release must have at least ${expandedLibraryCases.length} public use-case pages`);
-if (pages.filter(page => page.kind === "article").length !== 11) errors.push("release must have eleven insight pages");
+const insightPageCount = pages.filter(page => page.kind === "article").length;
+if (insightPageCount < 12) errors.push(`release must have at least 12 insight pages, found ${insightPageCount}`);
 if (pages.length < 95) errors.push(`release must have at least 95 indexable routes, found ${pages.length}`);
 
 const home = await readFile(join(root, "index.html"), "utf8");
@@ -269,7 +270,7 @@ count(home, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$
 count(trackIndex, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/track-record", "permitted current-role sentence");
 
 const insightsIndex = await pageHtml("/insights");
-count(insightsIndex, /class="v4-insight-card"/g, 11, "/insights", "editorial insight cards");
+count(insightsIndex, /class="v4-insight-card"/g, insightPageCount, "/insights", "editorial insight cards");
 for (const marker of ["min read", "Read insight", "v4-insight-waterfall", "v4-insight-funnel", "v4-insight-bridge", "v4-insight-ladder", "v4-insight-architecture"]) {
   if (!insightsIndex.includes(marker)) errors.push(`/insights: missing editorial teaser element ${marker}`);
 }
@@ -300,7 +301,7 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, ${expandedLibraryCases.length} fully clickable public use cases, ${aiOperatingCases.length} AI operating cases and 11 insights.`);
+console.log(`Checks passed: ${htmlFiles.length} HTML files, ${routes.size - 1} indexable routes, 0 broken internal links, ${expandedLibraryCases.length} fully clickable public use cases, ${aiOperatingCases.length} AI operating cases and ${insightPageCount} insights.`);
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
