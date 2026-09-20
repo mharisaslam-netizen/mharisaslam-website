@@ -961,6 +961,8 @@ const articlePage = item => {
     h1: item.title,
     intro: item.lead,
     faq: item.faq,
+    ogImage: item.heroImage || "",
+    ogImageAlt: item.heroAlt || item.title,
     body: `${item.heroImage ? `<figure class="article-photo article-hero-photo"><img src="${esc(item.heroImage)}" alt="${esc(item.heroAlt || item.title)}" width="800" height="450"><figcaption>${esc(item.heroCaption || "")}</figcaption></figure>` : ""}<div class="article-visual-stage">${articleVisual(item)}</div><div class="article-layout${isDeep ? " deep-article-layout" : ""}"><article class="article-copy${isDeep ? " deep-article-copy" : ""}">${articleCopy}</article><aside class="article-lens"><span>Operating question</span><p>${esc(item.operatingLens || "What changes in the economics, decision rights and evidence before this model can scale?")}</p></aside></div>${section("Related work", `<div class="continue-grid">${card("/use-cases", "Use cases", "See the models in practice", "Explore business problems, solutions, operating models and economics.")}${card("/gcc-growth-transformation", "GCC growth", "Growth & Transformation", "Explore the operating perspective across GCC growth, turnaround and transformation.")}</div>`)}`
   };
 };
