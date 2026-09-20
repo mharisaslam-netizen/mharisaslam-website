@@ -45,7 +45,7 @@ const publisherHtml = await publisherResponse.text();
 for (const required of [
   "Fintech × Agentic Commerce",
   "Fintech &amp; Agentic Commerce: When AI Agents Move Money",
-  "fintech-agentic-commerce-hero.jpg",
+  "fintech-agentic-commerce-hero-v2.jpg",
   "fintech-agentic-commerce-ai-agents-moving-money"
 ]) {
   if (!publisherHtml.includes(required)) throw new Error(`Publisher runtime check is missing: ${required}`);
@@ -58,8 +58,8 @@ for (const required of [
   "The agentic payment stack needs five capabilities",
   "The first 90 days should be an evidence programme",
   "Sources and further reading",
-  "fintech-agentic-commerce-hero.jpg",
-  "agentic-commerce-embedded.jpg"
+  "fintech-agentic-commerce-hero-v2.jpg",
+  "agentic-commerce-embedded-v2.jpg"
 ]) {
   if (!websiteArticle.includes(required)) throw new Error(`Deep website article is missing: ${required}`);
 }
