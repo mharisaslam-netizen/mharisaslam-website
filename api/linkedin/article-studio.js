@@ -92,10 +92,7 @@ function buildArticles() {
   ];
 
   if (marketplace) {
-    articles.push(normalize(marketplace, {
-      heroImage: "https://www.mharisaslam.com/assets/linkedin/marketplace-agentic-commerce-hero.jpg",
-      heroAlt: "GCC executive reviewing connected digital commerce, marketplace, payment and logistics flows."
-    }));
+    articles.push(normalize(marketplace));
   }
 
   return articles;
