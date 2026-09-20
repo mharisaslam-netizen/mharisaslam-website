@@ -35,6 +35,8 @@ function render(page) {
   const url = `${site.origin}${page.path === "/" ? "/" : page.path}`;
   const crumbs = breadcrumbItems(page.path);
   const schema = schemaGraph(page, url, crumbs);
+  const socialImage = page.ogImage || `${site.origin}/assets/og-card.png`;
+  const socialImageAlt = page.ogImageAlt || "Muhammad Haris Aslam, operator, builder and transformation leader";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -57,14 +59,14 @@ function render(page) {
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
   <meta property="og:url" content="${url}">
-  <meta property="og:image" content="${site.origin}/assets/og-card.png">
+  <meta property="og:image" content="${socialImage}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Muhammad Haris Aslam, operator, builder and transformation leader">
+  <meta property="og:image:alt" content="${escapeHtml(socialImageAlt)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
-  <meta name="twitter:image" content="${site.origin}/assets/og-card.png">
+  <meta name="twitter:image" content="${socialImage}">
   <meta name="theme-color" content="${page.v3 ? "#f4f0e7" : page.pilot ? "#071821" : "#ffffff"}">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="stylesheet" href="/assets/v3-pilot.css">
@@ -150,7 +152,7 @@ function schemaGraph(page, url, crumbs) {
     graph.push(software);
   }
   if (page.type === "Article") {
-    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, description:page.description, image:{"@type":"ImageObject",url:`${site.origin}/assets/og-card.png`,width:1200,height:630}, author:{"@id":person["@id"]}, publisher:{"@id":person["@id"]}, mainEntityOfPage:{"@id":webpage["@id"]} };
+    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, description:page.description, image:{"@type":"ImageObject",url:page.ogImage || `${site.origin}/assets/og-card.png`,width:1200,height:675}, author:{"@id":person["@id"]}, publisher:{"@id":person["@id"]}, mainEntityOfPage:{"@id":webpage["@id"]} };
     graph.push(article);
   }
   if (page.kind === "case" && !page.project) {
