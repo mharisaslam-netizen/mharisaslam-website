@@ -101,7 +101,8 @@ const previewDescription=document.getElementById("previewDescription");
 const previewUrl=document.getElementById("previewUrl");
 const approve=document.getElementById("approve");
 const button=document.getElementById("publishButton");
-for(const draft of drafts){const option=document.createElement("option");option.value=draft.id;option.textContent=draft.label;select.appendChild(option)}\nselect.value="marketplace-economics";
+for(const draft of drafts){const option=document.createElement("option");option.value=draft.id;option.textContent=draft.label;select.appendChild(option)}
+select.value="marketplace-economics";
 function render(){count.textContent=text.value.length;preview.textContent=text.value;previewTitle.textContent=title.value;previewDescription.textContent=description.value;previewUrl.textContent=url.value;visualPreview.src=visualUrl.value||"";visualPreview.alt=visualAlt.value||"LinkedIn post visual";visualPreview.style.display=visualUrl.value?"block":"none"}
 select.addEventListener("change",()=>{const d=drafts.find(x=>x.id===select.value);if(!d)return;text.value=d.text;url.value=d.url;title.value=d.title;description.value=d.description;visualUrl.value=d.visualUrl||"";visualAlt.value=d.visualAlt||"";visualTitle.value=d.visualTitle||"";approve.checked=false;button.disabled=true;render()});
 for(const el of [text,url,title,description,visibility]) el.addEventListener("input",()=>{approve.checked=false;button.disabled=true;render()});
