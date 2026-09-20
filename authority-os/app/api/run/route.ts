@@ -21,12 +21,30 @@ export async function POST(request: Request) {
 
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+  const tools: any[] = [{ type: "web_search" }];
+  const mcpBase = process.env.AUTHORITY_OS_BASE_URL?.replace(/\/$/, "");
+  const mcpToken = process.env.AUTHORITY_OS_MCP_TOKEN;
+
+  if (mcpBase && mcpToken) {
+    tools.push({
+      type: "mcp",
+      server_label: "authority_ops",
+      transport: {
+        type: "http",
+        server_url: mcpBase + "/api/mcp",
+        authorization: "Bearer " + mcpToken
+      },
+      connection_origin: "service",
+      required: true
+    });
+  }
+
   try {
     const session = await (client as any).beta.agents.sessions.create({
       agent: {
         model: "gpt-6-astra",
         instructions: ceoInstructions,
-        tools: [{ type: "web_search" }],
+        tools,
         multi_agent: {
           enabled: true,
           max_concurrent_subagents: 6
