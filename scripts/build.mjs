@@ -84,6 +84,7 @@ function render(page) {
     ${page.body}`}
   </main>
   ${commercialBridge(page.path)}
+  ${advisoryConversion(page)}
   ${footer()}
 </body>
 </html>`;
@@ -95,7 +96,11 @@ function header(path) {
 }
 function commercialBridge(path) {
   if (!commercialBridgePaths.has(path)) return "";
-  return `<section class="section" aria-labelledby="gcc-growth-bridge"><div class="section-heading"><p class="eyebrow">GCC growth & transformation</p><h2 id="gcc-growth-bridge">How I think about complex growth and transformation.</h2></div><div class="report-prose"><p>A cross-functional operating lens covering growth, turnaround, digital commerce, AI, marketplaces, fintech, enterprise technology and market entry across the GCC.</p></div><div class="hero-actions"><a class="button" href="/gcc-growth-transformation">Explore the perspective</a><a class="button button-secondary" href="/track-record">View track record</a></div></section>`;
+  return `<section class="section" aria-labelledby="gcc-growth-bridge"><div class="section-heading"><p class="eyebrow">GCC growth & transformation</p><h2 id="gcc-growth-bridge">Turn a complex growth problem into an executable mandate.</h2></div><div class="report-prose"><p>For CEOs, founders, family businesses, boards and investors across Saudi Arabia, the UAE and the wider GCC, the operating lens connects growth, turnaround, digital commerce, AI, marketplaces, fintech, enterprise technology and market entry to commercial economics, ownership and execution.</p><p><strong>Priority operating models:</strong> <a href="/use-cases/saudi-market-entry-distribution">Saudi market entry</a> · <a href="/use-cases/payments-embedded-finance-growth">payments and embedded finance</a> · <a href="/use-cases/retail-group-transformation">retail transformation</a> · <a href="/use-cases/enterprise-ai-transformation-practice">enterprise AI transformation</a>.</p></div><div class="hero-actions"><a class="button" href="/gcc-growth-transformation">Explore GCC growth & transformation</a><a class="button button-secondary" href="/contact">Discuss a mandate</a></div></section>`;
+}
+function advisoryConversion(page) {
+  if (page.kind !== "advisory") return "";
+  return `<section class="section" aria-labelledby="advisory-contact"><div class="section-heading"><p class="eyebrow">Executive engagement</p><h2 id="advisory-contact">Discuss a high-consequence growth or transformation mandate.</h2></div><div class="report-prose"><p>The strongest fit is a cross-functional problem where commercial economics, operating ownership, technology and execution need to move together. Initial discussion can focus on the decision, value pool, evidence available and the operating questions that need to be resolved.</p></div><div class="hero-actions"><a class="button" href="/contact">Start a conversation</a><a class="button button-secondary" href="/track-record">Review operating evidence</a></div></section>`;
 }
 function footer() {
   return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation">GCC Growth</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
@@ -123,6 +128,11 @@ function schemaGraph(page, url, crumbs) {
   if (page.type === "ProfilePage") webpage.mainEntity = {"@id":person["@id"]};
   const breadcrumb = { "@type":"BreadcrumbList", "@id":`${url}#breadcrumb`, itemListElement:crumbs.map(([name, href], index) => ({"@type":"ListItem",position:index+1,name,item:`${site.origin}${href === "/" ? "/" : href}`})) };
   const graph = [person, website, webpage, breadcrumb];
+  if (page.kind === "advisory") {
+    const service = { "@type":"Service", "@id":`${url}#service`, name:"GCC Growth & Transformation Advisory", description:page.description, serviceType:"Growth, transformation and operating-model advisory", provider:{"@id":person["@id"]}, areaServed:["Saudi Arabia","United Arab Emirates","Qatar","Oman","Kuwait","Bahrain"].map(name => ({"@type":"Country",name})), url };
+    webpage.mainEntity = {"@id":service["@id"]};
+    graph.push(service);
+  }
   if (page.service) {
     const service = { "@type":"Service", "@id":`${url}#service`, name:page.service.name, description:page.description, serviceType:page.service.serviceType, provider:{"@id":person["@id"]}, areaServed:page.service.areaServed.map(name => ({"@type":"Country",name})), url };
     webpage.mainEntity = {"@id":service["@id"]};
