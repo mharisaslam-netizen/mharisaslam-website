@@ -5,6 +5,7 @@ import { publishMainSiteArticle } from "../../../lib/connectors/github";
 import { publishWordPressPost } from "../../../lib/connectors/wordpress";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
 import { verifyLiveUrl } from "../../../lib/connectors/verify";
+import { ga4Report, searchConsolePerformance } from "../../../lib/connectors/google";
 
 const handler = createMcpHandler(
   (server) => {
@@ -15,6 +16,38 @@ const handler = createMcpHandler(
       async () => ({
         content: [{ type: "text", text: JSON.stringify(integrationSnapshot(), null, 2) }]
       })
+    );
+
+    server.tool(
+      "search_console_performance",
+      "Read Google Search Console performance data for the canonical website. Use for topic selection, geography, query discovery and post-publication learning.",
+      {
+        startDate: z.string(),
+        endDate: z.string(),
+        dimensions: z.array(z.string()).optional(),
+        rowLimit: z.number().int().min(1).max(25000).optional(),
+        startRow: z.number().int().min(0).optional()
+      },
+      async (input) => {
+        const result = await searchConsolePerformance(input);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      }
+    );
+
+    server.tool(
+      "ga4_report",
+      "Read GA4 traffic, geography and acquisition data for campaign performance analysis.",
+      {
+        startDate: z.string(),
+        endDate: z.string(),
+        dimensions: z.array(z.string()).optional(),
+        metrics: z.array(z.string()).optional(),
+        limit: z.number().int().min(1).max(10000).optional()
+      },
+      async (input) => {
+        const result = await ga4Report(input);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      }
     );
 
     server.tool(
