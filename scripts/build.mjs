@@ -27,7 +27,7 @@ for (const page of allPages) {
 }
 
 await writeFile(join(out, "404.html"), render404(), "utf8");
-await writeFile(join(out, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`, "utf8");
+await writeFile(join(out, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/linkedin/\n\nSitemap: ${site.origin}/sitemap.xml\n`, "utf8");
 await writeFile(join(out, "sitemap.xml"), sitemap(), "utf8");
 await writeFile(join(out, "llms.txt"), llmsTxt(), "utf8");
 
