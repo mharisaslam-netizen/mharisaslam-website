@@ -7,10 +7,6 @@ const esc = value => String(value ?? "")
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;");
 
-function jsonForScript(value) {
-  return JSON.stringify(value).replaceAll("<", "\\u003c");
-}
-
 function articleHtml(item) {
   const sections = item.sections.map(section => {
     const paragraphs = section.paragraphs.map(p => `<p>${esc(p)}</p>`).join("");
@@ -37,42 +33,47 @@ function articleHtml(item) {
 
 function plainFromHtml(html) {
   return html
-    .replace(/<h2>(.*?)<\/h2>/g, "\n\n$1\n")
-    .replace(/<h3>(.*?)<\/h3>/g, "\n\n$1\n")
-    .replace(/<li>(.*?)<\/li>/g, "• $1\n")
-    .replace(/<p>(.*?)<\/p>/g, "$1\n\n")
+    .replace(/<h2>(.*?)<\\/h2>/g, "\\n\\n$1\\n")
+    .replace(/<h3>(.*?)<\\/h3>/g, "\\n\\n$1\\n")
+    .replace(/<li>(.*?)<\\/li>/g, "• $1\\n")
+    .replace(/<p>(.*?)<\\/p>/g, "$1\\n\\n")
     .replace(/<[^>]+>/g, "")
     .replaceAll("&amp;", "&")
     .replaceAll("&lt;", "<")
     .replaceAll("&gt;", ">")
     .replaceAll("&quot;", '"')
     .replaceAll("&#39;", "'")
-    .replace(/\n{3,}/g, "\n\n")
+    .replace(/\\n{3,}/g, "\\n\\n")
     .trim();
 }
 
-const articles = deepInsights.slice(0, 3).map(item => {
-  const html = articleHtml(item);
-  const plain = plainFromHtml(html);
-  return {
-    id: item.slug,
-    label: item.category,
-    title: item.title,
-    seoTitle: item.seoTitle || item.title,
-    seoDescription: item.metaDescription,
-    slug: item.slug,
-    sourceUrl: `https://www.mharisaslam.com/insights/${item.slug}`,
-    html,
-    plain,
-    wordCount: plain.split(/\s+/).filter(Boolean).length,
-    readMinutes: item.readMinutes || Math.max(6, Math.round(plain.split(/\s+/).length / 200))
-  };
-});
+function buildArticles() {
+  return deepInsights.slice(0, 3).map(item => {
+    const html = articleHtml(item);
+    const plain = plainFromHtml(html);
+    return {
+      id: item.slug,
+      label: item.category,
+      title: item.title,
+      seoTitle: item.seoTitle || item.title,
+      seoDescription: item.metaDescription,
+      slug: item.slug,
+      sourceUrl: `https://www.mharisaslam.com/insights/${item.slug}`,
+      html,
+      plain,
+      wordCount: plain.split(/\\s+/).filter(Boolean).length,
+      readMinutes: item.readMinutes || Math.max(6, Math.round(plain.split(/\\s+/).length / 200))
+    };
+  });
+}
 
-function page(session) {
-  const data = jsonForScript(articles);
-  const first = articles[0];
-  const expiry = new Date(session.expiresAt).toLocaleString("en-GB", { timeZone: "Asia/Qatar", dateStyle: "medium", timeStyle: "short" });
+function page(session, articles, selected) {
+  const expiry = new Date(session.expiresAt).toLocaleString("en-GB", {
+    timeZone: "Asia/Qatar",
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+  const options = articles.map(a => `<option value="${esc(a.id)}"${a.id === selected.id ? " selected" : ""}>${esc(a.label)} — ${esc(a.title)}</option>`).join("");
 
   return `<!doctype html>
 <html lang="en">
@@ -107,125 +108,67 @@ button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;fon
 .article-title{font-size:36px;line-height:1.15;color:var(--navy);margin:0 0 18px}
 .toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;color:var(--muted);font-size:12px}
 .notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
+.copybox{position:absolute;left:-9999px;top:auto}
 @media(max-width:900px){.grid{grid-template-columns:1fr}.top{display:block}.status{margin-top:16px}.article{padding:24px}.article-title{font-size:30px}}
 </style>
 </head>
 <body>
 <main>
 <div class="top">
-  <div><div class="eyebrow">Private native-article workspace</div><h1>Haris LinkedIn Article Studio</h1><p class="sub">Prepare full LinkedIn Articles for your Articles area. This workspace does not publish feed posts.</p></div>
+  <div><div class="eyebrow">Private native-article workspace</div><h1>Haris LinkedIn Article Studio</h1><p class="sub">Full long-form LinkedIn Articles, SEO fields and source-grounded copy. The article is rendered on the page even if JavaScript is blocked.</p></div>
   <div class="status"><strong>LinkedIn identity verified</strong><br>${esc(session.name || "Muhammad Haris Aslam")}<br>Connection expires ${esc(expiry)} Qatar time.</div>
 </div>
 
 <div class="grid">
   <section class="card">
-    <div class="field"><label for="articlePicker">Article</label><select id="articlePicker"></select></div>
+    <form method="get" action="/api/linkedin/publisher" class="field">
+      <label for="articlePicker">Article</label>
+      <div class="row"><select id="articlePicker" name="article">${options}</select><button type="submit">Load</button></div>
+    </form>
 
     <div class="field">
       <label>LinkedIn article title</label>
-      <div class="row"><input id="title" readonly><button type="button" data-copy="title">Copy</button></div>
+      <div class="row"><input id="title" value="${esc(selected.title)}" readonly><button type="button" onclick="copyField('title','Title')">Copy</button></div>
     </div>
-
     <div class="field">
       <label>Suggested LinkedIn article URL</label>
-      <div class="row"><input id="slug" readonly><button type="button" data-copy="slug">Copy</button></div>
-      <div class="meta">Set this inside LinkedIn: Manage → Settings → Article URL.</div>
+      <div class="row"><input id="slug" value="${esc(selected.slug)}" readonly><button type="button" onclick="copyField('slug','Article URL')">Copy</button></div>
+      <div class="meta">LinkedIn: Manage → Settings → Article URL.</div>
     </div>
-
     <div class="field">
       <label>SEO title</label>
-      <div class="row"><input id="seoTitle" readonly><button type="button" data-copy="seoTitle">Copy</button></div>
+      <div class="row"><input id="seoTitle" value="${esc(selected.seoTitle)}" readonly><button type="button" onclick="copyField('seoTitle','SEO title')">Copy</button></div>
     </div>
-
     <div class="field">
       <label>SEO description</label>
-      <div class="row"><textarea id="seoDescription" rows="4" readonly></textarea><button type="button" data-copy="seoDescription">Copy</button></div>
+      <div class="row"><textarea id="seoDescription" rows="4" readonly>${esc(selected.seoDescription)}</textarea><button type="button" onclick="copyField('seoDescription','SEO description')">Copy</button></div>
     </div>
 
+    <textarea id="articlePlain" class="copybox" aria-hidden="true">${esc(selected.title + "\n\n" + selected.plain)}</textarea>
     <div class="actions">
-      <button type="button" id="copyArticle">Copy full article</button>
+      <button type="button" onclick="copyField('articlePlain','Full article')">Copy full article</button>
       <a class="linkbtn secondary" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">Open LinkedIn</a>
     </div>
 
     <div class="guide">
-      <strong>Publishing flow</strong><br>
-      1. Open LinkedIn on desktop and click <b>Write article</b>.<br>
-      2. Publish as <b>yourself</b> and choose <b>Individual article</b>.<br>
-      3. Add the cover image, paste the title, then paste the full article.<br>
-      4. Open <b>Manage → Settings</b> and paste the Article URL, SEO title and SEO description from here.<br>
-      5. Click <b>Next</b>. Leave “Tell your network what your article is about” blank if you do not want a separate commentary post.<br>
-      6. Publish the article.
+      <strong>Current reality</strong><br>
+      LinkedIn does not expose native long-form Article creation through the member posting API. This studio prepares the complete article. For true end-to-end browser automation, use ChatGPT <b>Work</b> mode so it can operate LinkedIn's Article editor after your approval.
     </div>
-    <p class="notice">LinkedIn may still distribute the article itself in Activity or feed recommendations. This workflow avoids creating a separate feed post/commentary.</p>
+    <p class="notice" id="copyStatus">Nothing is published from this page.</p>
   </section>
 
   <section>
-    <div class="toolbar"><span id="stats"></span><span id="copyStatus"></span></div>
-    <article class="article"><h1 class="article-title" id="previewTitle"></h1><div id="articleBody"></div></article>
+    <div class="toolbar"><span>${selected.wordCount.toLocaleString()} words · ${selected.readMinutes} min read</span><span>Source: ${esc(selected.sourceUrl)}</span></div>
+    <article class="article"><h1 class="article-title">${esc(selected.title)}</h1>${selected.html}</article>
   </section>
 </div>
 </main>
-
 <script>
-const articles=${data};
-const picker=document.getElementById("articlePicker");
-const title=document.getElementById("title");
-const slug=document.getElementById("slug");
-const seoTitle=document.getElementById("seoTitle");
-const seoDescription=document.getElementById("seoDescription");
-const previewTitle=document.getElementById("previewTitle");
-const articleBody=document.getElementById("articleBody");
-const stats=document.getElementById("stats");
-const copyStatus=document.getElementById("copyStatus");
-
-for(const article of articles){
-  const o=document.createElement("option");
-  o.value=article.id;
-  o.textContent=article.label+" — "+article.title;
-  picker.appendChild(o);
+async function copyField(id,label){
+  const el=document.getElementById(id);
+  try{await navigator.clipboard.writeText(el.value);document.getElementById('copyStatus').textContent=label+' copied';}
+  catch{el.focus();el.select();document.execCommand('copy');document.getElementById('copyStatus').textContent=label+' copied';}
 }
-
-function current(){return articles.find(x=>x.id===picker.value)||articles[0]}
-function render(){
-  const a=current();
-  title.value=a.title;
-  slug.value=a.slug;
-  seoTitle.value=a.seoTitle;
-  seoDescription.value=a.seoDescription;
-  previewTitle.textContent=a.title;
-  articleBody.innerHTML=a.html;
-  stats.textContent=a.wordCount.toLocaleString()+" words · "+a.readMinutes+" min read";
-  copyStatus.textContent="";
-}
-async function copyText(value,label){
-  await navigator.clipboard.writeText(value);
-  copyStatus.textContent=label+" copied";
-}
-document.querySelectorAll("[data-copy]").forEach(btn=>btn.addEventListener("click",()=> {
-  const id=btn.dataset.copy;
-  copyText(document.getElementById(id).value, btn.closest(".field").querySelector("label").textContent);
-}));
-document.getElementById("copyArticle").addEventListener("click",async()=>{
-  const a=current();
-  try{
-    if(window.ClipboardItem){
-      const rich="<h1>"+a.title.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")+"</h1>"+a.html;
-      const item=new ClipboardItem({
-        "text/html":new Blob([rich],{type:"text/html"}),
-        "text/plain":new Blob([a.title+"\n\n"+a.plain],{type:"text/plain"})
-      });
-      await navigator.clipboard.write([item]);
-    }else{
-      await navigator.clipboard.writeText(a.title+"\n\n"+a.plain);
-    }
-    copyStatus.textContent="Full article copied";
-  }catch{
-    await navigator.clipboard.writeText(a.title+"\n\n"+a.plain);
-    copyStatus.textContent="Article copied as text";
-  }
-});
-picker.addEventListener("change",render);
-render();
 </script>
 </body></html>`;
 }
@@ -247,7 +190,11 @@ export function GET(request) {
     });
   }
 
-  return new Response(page(session), {
+  const articles = buildArticles();
+  const requestedId = new URL(request.url).searchParams.get("article");
+  const selected = articles.find(a => a.id === requestedId) || articles[0];
+
+  return new Response(page(session, articles, selected), {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
