@@ -1,5 +1,10 @@
-import { deepInsights } from "../../src/deep-insights.mjs";
-import { SESSION_COOKIE, decryptSession, parseCookies } from "../../lib/linkedin-session.js";
+import { linkedinDrafts } from "../../lib/linkedin-drafts.js";
+import {
+  SESSION_COOKIE,
+  createApprovalToken,
+  decryptSession,
+  parseCookies
+} from "../../lib/linkedin-session.js";
 
 const esc = value => String(value ?? "")
   .replaceAll("&", "&amp;")
@@ -7,168 +12,102 @@ const esc = value => String(value ?? "")
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;");
 
-function articleHtml(item) {
-  const sections = item.sections.map(section => {
-    const paragraphs = section.paragraphs.map(p => `<p>${esc(p)}</p>`).join("");
-    const bullets = section.bullets?.length
-      ? `<ul>${section.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`
-      : "";
-    return `<h2>${esc(section.heading)}</h2>${paragraphs}${bullets}`;
-  }).join("");
-
-  const takeaways = item.takeaways?.length
-    ? `<h2>Key takeaways</h2><ul>${item.takeaways.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`
-    : "";
-
-  const faq = item.faq?.length
-    ? `<h2>Frequently asked questions</h2>${item.faq.map(x => `<h3>${esc(x.question)}</h3><p>${esc(x.answer)}</p>`).join("")}`
-    : "";
-
-  const sources = item.sources?.length
-    ? `<h2>Sources and further reading</h2><ol>${item.sources.map(x => `<li><a href="${esc(x.url)}">${esc(x.title)}</a> — ${esc(x.publisher)}</li>`).join("")}</ol>`
-    : "";
-
-  return `<p><em>${esc(item.lead)}</em></p>${sections}${takeaways}${faq}${sources}`;
+function jsonForScript(value) {
+  return JSON.stringify(value).replaceAll("<", "\\u003c");
 }
 
-function plainFromHtml(html) {
-  return html
-    .replace(/<h2>(.*?)<\\/h2>/g, "\\n\\n$1\\n")
-    .replace(/<h3>(.*?)<\\/h3>/g, "\\n\\n$1\\n")
-    .replace(/<li>(.*?)<\\/li>/g, "• $1\\n")
-    .replace(/<p>(.*?)<\\/p>/g, "$1\\n\\n")
-    .replace(/<[^>]+>/g, "")
-    .replaceAll("&amp;", "&")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'")
-    .replace(/\\n{3,}/g, "\\n\\n")
-    .trim();
-}
-
-function buildArticles() {
-  return deepInsights.slice(0, 3).map(item => {
-    const html = articleHtml(item);
-    const plain = plainFromHtml(html);
-    return {
-      id: item.slug,
-      label: item.category,
-      title: item.title,
-      seoTitle: item.seoTitle || item.title,
-      seoDescription: item.metaDescription,
-      slug: item.slug,
-      sourceUrl: `https://www.mharisaslam.com/insights/${item.slug}`,
-      html,
-      plain,
-      wordCount: plain.split(/\\s+/).filter(Boolean).length,
-      readMinutes: item.readMinutes || Math.max(6, Math.round(plain.split(/\\s+/).length / 200))
-    };
-  });
-}
-
-function page(session, articles, selected) {
-  const expiry = new Date(session.expiresAt).toLocaleString("en-GB", {
-    timeZone: "Asia/Qatar",
-    dateStyle: "medium",
-    timeStyle: "short"
-  });
-  const options = articles.map(a => `<option value="${esc(a.id)}"${a.id === selected.id ? " selected" : ""}>${esc(a.label)} — ${esc(a.title)}</option>`).join("");
-
+function page(session, csrfToken) {
+  const draftsJson = jsonForScript(linkedinDrafts);
+  const first = linkedinDrafts.find(x => x.id === "marketplace-economics") || linkedinDrafts[0];
+  const expiry = new Date(session.expiresAt).toLocaleString("en-GB", { timeZone: "Asia/Qatar", dateStyle: "medium", timeStyle: "short" });
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Haris LinkedIn Article Studio</title>
+<title>Haris Content Publisher</title>
 <style>
-:root{--navy:#0c2630;--ink:#173039;--teal:#0b857d;--line:#d7dfdc;--paper:#f4f0e7;--white:#fff;--muted:#63777d;--wash:#e7f2ef;--warn:#fff6dc}
+:root{--navy:#0c2630;--ink:#173039;--teal:#0b857d;--line:#d7dfdc;--paper:#f4f0e7;--white:#fff;--muted:#63777d}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-main{width:min(1180px,calc(100% - 32px));margin:34px auto 64px}
+main{width:min(1120px,calc(100% - 32px));margin:36px auto 64px}
 .top{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:24px}
 .eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
 h1{margin:8px 0 8px;font-size:34px;line-height:1.1;color:var(--navy)}.sub{margin:0;color:var(--muted);line-height:1.55}
-.status{background:var(--wash);border-left:4px solid var(--teal);padding:14px 16px;min-width:290px;font-size:13px;line-height:1.5}
-.grid{display:grid;grid-template-columns:390px minmax(0,1fr);gap:24px;align-items:start}
-.card{background:var(--white);border:1px solid var(--line);padding:22px}
-label{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0 0 7px;color:var(--navy)}
-select,input,textarea{width:100%;border:1px solid #bfcac7;background:#fff;color:var(--ink);padding:11px;font:inherit}
-.field{margin-bottom:16px}.meta{font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
-.row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
-button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;font-weight:800;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
-.secondary{background:#fff;color:var(--navy);border:1px solid #aebbb7}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
-.guide{background:var(--warn);border:1px solid #ead69d;padding:15px;font-size:13px;line-height:1.55;margin-top:18px}
-.guide strong{color:var(--navy)}
-.article{background:#fff;border:1px solid var(--line);padding:38px 44px;line-height:1.75}
-.article h2{font-size:24px;line-height:1.25;color:var(--navy);margin:34px 0 12px}
-.article h3{font-size:18px;color:var(--navy);margin:26px 0 8px}
-.article p{margin:0 0 16px}.article li{margin:7px 0}.article a{color:var(--teal)}
-.article-title{font-size:36px;line-height:1.15;color:var(--navy);margin:0 0 18px}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px;color:var(--muted);font-size:12px}
-.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
-.copybox{position:absolute;left:-9999px;top:auto}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.top{display:block}.status{margin-top:16px}.article{padding:24px}.article-title{font-size:30px}}
+.status{background:#e4f2ef;border-left:4px solid var(--teal);padding:14px 16px;min-width:280px;font-size:13px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.card{background:var(--white);border:1px solid var(--line);padding:24px}
+label{display:block;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin:0 0 8px;color:var(--navy)}
+select,input[type=text],textarea{width:100%;border:1px solid #bfcac7;background:#fff;color:var(--ink);padding:12px;font:inherit}
+textarea{min-height:420px;resize:vertical;line-height:1.55}
+.field{margin-bottom:18px}.counter{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}
+.preview{white-space:pre-wrap;line-height:1.55;font-size:15px}.preview-card{border:1px solid var(--line);margin-top:16px;padding:16px;background:#fafafa}
+.preview-card strong{display:block;color:var(--navy);margin-bottom:6px}.preview-card span{color:var(--muted);font-size:13px;line-height:1.45}
+.approval{display:flex;gap:10px;align-items:flex-start;margin:20px 0 14px;padding:14px;background:#fff7dd;border:1px solid #ead69d;font-size:13px;line-height:1.45}
+button{width:100%;border:0;background:var(--navy);color:white;padding:14px 18px;font-weight:800;font-size:15px;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
+.back{display:inline-block;margin-top:20px;color:var(--teal);font-weight:700;text-decoration:none}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.top{display:block}.status{margin-top:16px}.card{padding:18px}}
 </style>
 </head>
 <body>
 <main>
-<div class="top">
-  <div><div class="eyebrow">Private native-article workspace</div><h1>Haris LinkedIn Article Studio</h1><p class="sub">Full long-form LinkedIn Articles, SEO fields and source-grounded copy. The article is rendered on the page even if JavaScript is blocked.</p></div>
-  <div class="status"><strong>LinkedIn identity verified</strong><br>${esc(session.name || "Muhammad Haris Aslam")}<br>Connection expires ${esc(expiry)} Qatar time.</div>
-</div>
-
-<div class="grid">
-  <section class="card">
-    <form method="get" action="/api/linkedin/publisher" class="field">
-      <label for="articlePicker">Article</label>
-      <div class="row"><select id="articlePicker" name="article">${options}</select><button type="submit">Load</button></div>
+  <div class="top">
+    <div><div class="eyebrow">Private publishing workspace</div><h1>Haris Content Publisher</h1><p class="sub">Review the exact final copy, edit anything you want, and publish only after explicit approval.</p></div>
+    <div class="status"><strong>LinkedIn connected</strong><br>${esc(session.name || "Muhammad Haris Aslam")}<br>Authorization expires ${esc(expiry)} Qatar time.</div>
+  </div>
+  <div class="grid">
+    <form class="card" method="post" action="/api/linkedin/publish" id="publisherForm">
+      <input type="hidden" name="csrf" value="${esc(csrfToken)}">
+      <input type="hidden" name="visualUrl" id="visualUrl" value="${esc(first.visualUrl || "")}">
+      <input type="hidden" name="visualAlt" id="visualAlt" value="${esc(first.visualAlt || "")}">
+      <input type="hidden" name="visualTitle" id="visualTitle" value="${esc(first.visualTitle || "")}">
+      <div class="field"><label for="draft">Suggested post</label><select id="draft"></select></div>
+      <div class="field"><label for="text">Final LinkedIn copy</label><textarea id="text" name="text" maxlength="3000" required>${esc(first.text)}</textarea><div class="counter"><span>Edit freely before publishing.</span><span><b id="count">0</b>/3000</span></div></div>
+      <div class="field"><label for="articleUrl">Insight / source URL</label><input type="text" id="articleUrl" name="articleUrl" value="${esc(first.url)}" required></div>
+      <div class="field"><label for="articleTitle">Article title</label><input type="text" id="articleTitle" name="articleTitle" value="${esc(first.title)}" maxlength="200"></div>
+      <div class="field"><label for="articleDescription">Article description</label><input type="text" id="articleDescription" name="articleDescription" value="${esc(first.description)}" maxlength="300"></div>
+      <div class="field"><label for="visibility">Visibility</label><select name="visibility" id="visibility"><option value="PUBLIC" selected>Public</option><option value="CONNECTIONS">Connections only</option></select></div>
+      <label class="approval"><input type="checkbox" id="approve" name="approve" value="yes"> <span>I approve publishing this exact post to my personal LinkedIn profile now.</span></label>
+      <button id="publishButton" type="submit" disabled>Approve &amp; publish now</button>
+      <p class="note">There is no automatic posting from this page. The button remains disabled until you approve the exact final copy above.</p>
     </form>
-
-    <div class="field">
-      <label>LinkedIn article title</label>
-      <div class="row"><input id="title" value="${esc(selected.title)}" readonly><button type="button" onclick="copyField('title','Title')">Copy</button></div>
-    </div>
-    <div class="field">
-      <label>Suggested LinkedIn article URL</label>
-      <div class="row"><input id="slug" value="${esc(selected.slug)}" readonly><button type="button" onclick="copyField('slug','Article URL')">Copy</button></div>
-      <div class="meta">LinkedIn: Manage → Settings → Article URL.</div>
-    </div>
-    <div class="field">
-      <label>SEO title</label>
-      <div class="row"><input id="seoTitle" value="${esc(selected.seoTitle)}" readonly><button type="button" onclick="copyField('seoTitle','SEO title')">Copy</button></div>
-    </div>
-    <div class="field">
-      <label>SEO description</label>
-      <div class="row"><textarea id="seoDescription" rows="4" readonly>${esc(selected.seoDescription)}</textarea><button type="button" onclick="copyField('seoDescription','SEO description')">Copy</button></div>
-    </div>
-
-    <textarea id="articlePlain" class="copybox" aria-hidden="true">${esc(selected.title + "\n\n" + selected.plain)}</textarea>
-    <div class="actions">
-      <button type="button" onclick="copyField('articlePlain','Full article')">Copy full article</button>
-      <a class="linkbtn secondary" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">Open LinkedIn</a>
-    </div>
-
-    <div class="guide">
-      <strong>Current reality</strong><br>
-      LinkedIn does not expose native long-form Article creation through the member posting API. This studio prepares the complete article. For true end-to-end browser automation, use ChatGPT <b>Work</b> mode so it can operate LinkedIn's Article editor after your approval.
-    </div>
-    <p class="notice" id="copyStatus">Nothing is published from this page.</p>
-  </section>
-
-  <section>
-    <div class="toolbar"><span>${selected.wordCount.toLocaleString()} words · ${selected.readMinutes} min read</span><span>Source: ${esc(selected.sourceUrl)}</span></div>
-    <article class="article"><h1 class="article-title">${esc(selected.title)}</h1>${selected.html}</article>
-  </section>
-</div>
+    <aside class="card">
+      <label>Post visual</label>
+      <img id="visualPreview" src="${esc(first.visualUrl || "")}" alt="${esc(first.visualAlt || "LinkedIn post visual")}" style="width:100%;height:auto;border:1px solid var(--line);margin:0 0 18px;display:${first.visualUrl ? "block" : "none"}">
+      <label>LinkedIn preview</label>
+      <div class="preview" id="preview"></div>
+      <div class="preview-card"><strong id="previewTitle"></strong><span id="previewDescription"></span><br><span id="previewUrl"></span></div>
+    </aside>
+  </div>
+  <a class="back" href="/">Return to mharisaslam.com</a>
 </main>
 <script>
-async function copyField(id,label){
-  const el=document.getElementById(id);
-  try{await navigator.clipboard.writeText(el.value);document.getElementById('copyStatus').textContent=label+' copied';}
-  catch{el.focus();el.select();document.execCommand('copy');document.getElementById('copyStatus').textContent=label+' copied';}
-}
+const drafts=${draftsJson};
+const select=document.getElementById("draft");
+const text=document.getElementById("text");
+const url=document.getElementById("articleUrl");
+const title=document.getElementById("articleTitle");
+const description=document.getElementById("articleDescription");
+const visibility=document.getElementById("visibility");
+const visualUrl=document.getElementById("visualUrl");
+const visualAlt=document.getElementById("visualAlt");
+const visualTitle=document.getElementById("visualTitle");
+const visualPreview=document.getElementById("visualPreview");
+const count=document.getElementById("count");
+const preview=document.getElementById("preview");
+const previewTitle=document.getElementById("previewTitle");
+const previewDescription=document.getElementById("previewDescription");
+const previewUrl=document.getElementById("previewUrl");
+const approve=document.getElementById("approve");
+const button=document.getElementById("publishButton");
+for(const draft of drafts){const option=document.createElement("option");option.value=draft.id;option.textContent=draft.label;select.appendChild(option)}\nselect.value="marketplace-economics";
+function render(){count.textContent=text.value.length;preview.textContent=text.value;previewTitle.textContent=title.value;previewDescription.textContent=description.value;previewUrl.textContent=url.value;visualPreview.src=visualUrl.value||"";visualPreview.alt=visualAlt.value||"LinkedIn post visual";visualPreview.style.display=visualUrl.value?"block":"none"}
+select.addEventListener("change",()=>{const d=drafts.find(x=>x.id===select.value);if(!d)return;text.value=d.text;url.value=d.url;title.value=d.title;description.value=d.description;visualUrl.value=d.visualUrl||"";visualAlt.value=d.visualAlt||"";visualTitle.value=d.visualTitle||"";approve.checked=false;button.disabled=true;render()});
+for(const el of [text,url,title,description,visibility]) el.addEventListener("input",()=>{approve.checked=false;button.disabled=true;render()});
+approve.addEventListener("change",()=>button.disabled=!approve.checked);
+document.getElementById("publisherForm").addEventListener("submit",()=>{button.disabled=true;button.textContent="Publishing..."});
+render();
 </script>
 </body></html>`;
 }
@@ -180,21 +119,11 @@ export function GET(request) {
   const connected = Boolean(session?.accessToken && session?.expiresAt > Date.now());
 
   if (!connected) {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/api/linkedin/connect",
-        "Cache-Control": "no-store",
-        "X-Robots-Tag": "noindex, nofollow, noarchive"
-      }
-    });
+    return new Response(null, { status: 302, headers: { Location: "/api/linkedin/connect", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow, noarchive" } });
   }
 
-  const articles = buildArticles();
-  const requestedId = new URL(request.url).searchParams.get("article");
-  const selected = articles.find(a => a.id === requestedId) || articles[0];
-
-  return new Response(page(session, articles, selected), {
+  const csrfToken = createApprovalToken(session, secret);
+  return new Response(page(session, csrfToken), {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
