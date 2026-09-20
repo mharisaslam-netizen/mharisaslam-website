@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs && node scripts/check.mjs && node --check api/linkedin/connect.js && node --check api/linkedin/callback.js && node --check api/linkedin/status.js && node --check api/linkedin/publisher.js && node --check api/linkedin/publish.js && node --check api/linkedin/article-studio.js && node --check lib/linkedin-articles.js",
-    "check": "node scripts/check.mjs && node --check api/linkedin/publisher.js && node --check api/linkedin/publish.js && node --check api/linkedin/article-studio.js && node --check lib/linkedin-articles.js"
+    "build": "node scripts/build.mjs && node scripts/check.mjs && node --check api/linkedin/connect.js && node --check api/linkedin/callback.js && node --check api/linkedin/status.js && node --check api/linkedin/publisher.js && node --check api/linkedin/publish.js && node --check api/linkedin/article-studio.js && node --check lib/linkedin-articles.js && node scripts/check-linkedin-runtime.mjs",
+    "check": "node scripts/check.mjs && node --check api/linkedin/publisher.js && node --check api/linkedin/publish.js && node --check api/linkedin/article-studio.js && node --check lib/linkedin-articles.js && node scripts/check-linkedin-runtime.mjs"
   }
 }
