@@ -9,10 +9,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "latest",
+    "next": "16.3.3",
     "openai": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "mcp-handler": "latest",
     "zod": "latest"
   },
