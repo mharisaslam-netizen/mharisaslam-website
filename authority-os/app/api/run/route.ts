@@ -42,7 +42,7 @@ export async function POST(request: Request) {
   try {
     const session = await (client as any).beta.agents.sessions.create({
       agent: {
-        model: "gpt-6-astra",
+        model: "gpt-5.6-sol",
         instructions: ceoInstructions,
         tools,
         multi_agent: {
