@@ -3,6 +3,7 @@ import { pilotTrack } from "./pilot.mjs";
 import { aiOperatingCases, expandedLibraryCases, expansionPages, v4AiFamily, v4Insights } from "./v4-expansion.mjs";
 import { deepInsights } from "./deep-insights.mjs";
 import { agenticCommerceArticle } from "../lib/linkedin-articles.js";
+import { authorityArticles } from "../lib/authority-articles.js";
 
 export const site = {
   name: "Muhammad Haris Aslam",
@@ -931,7 +932,7 @@ const shortInsights = [
   { slug: "warehouse-capacity-as-a-3pl-business", title: "When warehouse capacity can become a 3PL business", lead: "Spare space becomes a business only after anchor demand covers the full service cost.", visual: ["Spare capacity", "Anchor demand", "Service cost", "Client contribution"], paragraphs: ["A retailer may see unused racks and assume it can sell fulfilment cheaply. The existing rent is only one part of the cost.", "Picking, packing, delivery, failed attempts, claims, receivables and service management must be included in the client P&L.", "Start with one anchor client and a limited service scope. Expand only when contracted volume, service quality and contribution hold together."] }
 ];
 
-const insights = [agenticCommerceArticle, ...deepInsights, ...shortInsights];
+const insights = [agenticCommerceArticle, ...authorityArticles, ...deepInsights, ...shortInsights];
 
 const articleCard = item => `<a class="insight-card" href="/insights/${item.slug}"><div><span class="card-label">${esc(item.category || "Insight")}</span><h3>${esc(item.title)}</h3><p>${esc(item.lead)}</p></div>${articleVisual(item, true)}<span class="card-link">Read insight <span aria-hidden="true">→</span></span></a>`;
 
