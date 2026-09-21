@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react";
 
 type Integration = {
   id: string;
@@ -10,28 +10,144 @@ type Integration = {
   status: string;
 };
 
+type Activity = {
+  id: string;
+  phase: string | null;
+  text: string;
+};
+
+type CampaignState = {
+  status: string;
+  raw_status?: string;
+  terminal?: boolean;
+  error?: string | null;
+  final_answer?: string | null;
+  activity?: Activity[];
+  tool_call_count?: number;
+};
+
+type ReportSection = {
+  title: string;
+  body: string;
+};
+
+function parseReport(text: string): ReportSection[] {
+  const lines = text.split("\n");
+  const sections: ReportSection[] = [];
+  let title = "CEO Recommendation";
+  let body: string[] = [];
+
+  const push = () => {
+    const content = body.join("\n").trim();
+    if (content) sections.push({ title, body: content });
+    body = [];
+  };
+
+  for (const line of lines) {
+    const match = line.match(/^#{2,3}\s+(.+)$/);
+    if (match) {
+      push();
+      title = match[1].trim();
+    } else {
+      body.push(line);
+    }
+  }
+  push();
+  return sections;
+}
+
+function renderInline(text: string): ReactNode[] {
+  const tokenPattern = /(\*\*[^*]+\*\*|\`[^\`]+\`|\[[^\]]+\]\(https?:\/\/[^)]+\))/g;
+  const parts = text.split(tokenPattern).filter(Boolean);
+
+  return parts.map((part, index) => {
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
+    if (link) {
+      return (
+        <a key={index} href={link[2]} target="_blank" rel="noreferrer">
+          {link[1]}
+        </a>
+      );
+    }
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={index}>{part.slice(1, -1)}</code>;
+    }
+    return <Fragment key={index}>{part}</Fragment>;
+  });
+}
+
+function ReportBody({ body }: { body: string }) {
+  return (
+    <div className="report-body">
+      {body.split("\n").map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div className="report-spacer" key={index} />;
+
+        if (trimmed.startsWith(">")) {
+          return (
+            <blockquote key={index}>{renderInline(trimmed.replace(/^>\s?/, ""))}</blockquote>
+          );
+        }
+
+        if (trimmed.startsWith("- ")) {
+          return (
+            <div className="report-list-item" key={index}>
+              <span>•</span>
+              <div>{renderInline(trimmed.slice(2))}</div>
+            </div>
+          );
+        }
+
+        const numbered = trimmed.match(/^(\d+)\.\s+(.*)$/);
+        if (numbered) {
+          return (
+            <div className="report-list-item numbered" key={index}>
+              <span>{numbered[1]}.</span>
+              <div>{renderInline(numbered[2])}</div>
+            </div>
+          );
+        }
+
+        return <p key={index}>{renderInline(trimmed)}</p>;
+      })}
+    </div>
+  );
+}
+
 export default function Home() {
   const [topic, setTopic] = useState("Choose the strongest authority topic for today.");
   const [market, setMarket] = useState("GCC + Europe");
   const [objective, setObjective] = useState("Authority + advisory leads");
   const [mode, setMode] = useState("CEO MODE");
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState("Ready.");
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [campaign, setCampaign] = useState<CampaignState | null>(null);
+  const [decision, setDecision] = useState<"approved" | "revision" | "rejected" | null>(null);
 
   useEffect(() => {
     fetch("/api/integrations")
       .then((r) => r.json())
       .then((d) => setIntegrations(d.integrations || []))
       .catch(() => {});
+
+    const savedSession = window.localStorage.getItem("authority-os-active-session");
+    if (savedSession) setSessionId(savedSession);
   }, []);
 
   useEffect(() => {
     if (!sessionId) return;
 
+    const savedDecision = window.localStorage.getItem("authority-os-decision-" + sessionId);
+    if (savedDecision === "approved" || savedDecision === "revision" || savedDecision === "rejected") {
+      setDecision(savedDecision);
+    }
+
     let cancelled = false;
-    const terminal = new Set(["completed", "failed", "cancelled", "canceled"]);
+    let timer: number | undefined;
 
     async function poll() {
       try {
@@ -39,32 +155,53 @@ export default function Home() {
         const data = await response.json();
         if (cancelled) return;
 
-        const messagePreview = JSON.stringify(data.messages || [], null, 2);
-        setResult(
-          "Campaign session: " + sessionId +
-          "\nStatus: " + (data.status || "running") +
-          (data.error ? "\nError: " + data.error : "") +
-          "\n\nRecent CEO activity:\n" + messagePreview
-        );
+        if (!response.ok) throw new Error(data.error || "Campaign status could not be loaded.");
 
-        if (!terminal.has(String(data.status || "").toLowerCase())) {
-          window.setTimeout(poll, 5000);
+        setCampaign(data);
+
+        if (data.final_answer) {
+          window.localStorage.setItem("authority-os-report-" + sessionId, data.final_answer);
         }
-      } catch {
-        if (!cancelled) window.setTimeout(poll, 7000);
+
+        if (data.terminal) {
+          window.localStorage.removeItem("authority-os-active-session");
+          return;
+        }
+
+        timer = window.setTimeout(poll, 5000);
+      } catch (error) {
+        if (cancelled) return;
+        setCampaign({
+          status: "error",
+          terminal: true,
+          error: error instanceof Error ? error.message : "Campaign status could not be loaded."
+        });
+        window.localStorage.removeItem("authority-os-active-session");
       }
     }
 
     poll();
     return () => {
       cancelled = true;
+      if (timer) window.clearTimeout(timer);
     };
   }, [sessionId]);
 
+  const sections = useMemo(
+    () => (campaign?.final_answer ? parseReport(campaign.final_answer) : []),
+    [campaign?.final_answer]
+  );
+
+  const running = busy || Boolean(sessionId && !campaign?.terminal);
+  const completed = Boolean(campaign?.final_answer);
+
   async function runCampaign() {
+    if (running) return;
+
     setBusy(true);
+    setCampaign({ status: "starting" });
+    setDecision(null);
     setSessionId(null);
-    setResult("CEO Agent is opening the campaign...");
 
     try {
       const response = await fetch("/api/run", {
@@ -77,16 +214,34 @@ export default function Home() {
       if (!response.ok) throw new Error(data.error || "Campaign could not start.");
 
       setSessionId(data.session_id);
-      setResult(
-        "Campaign session: " + data.session_id +
-        "\nStatus: " + (data.status || "started") +
-        "\n\nThe CEO Agent has begun research and delegation."
-      );
+      window.localStorage.setItem("authority-os-active-session", data.session_id);
+      setCampaign({ status: data.status || "started", terminal: false });
     } catch (error) {
-      setResult(error instanceof Error ? error.message : "Unexpected error.");
+      setCampaign({
+        status: "error",
+        terminal: true,
+        error: error instanceof Error ? error.message : "Unexpected error."
+      });
     } finally {
       setBusy(false);
     }
+  }
+
+  function downloadReport() {
+    if (!campaign?.final_answer || !sessionId) return;
+    const blob = new Blob([campaign.final_answer], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "haris-authority-os-" + sessionId.slice(-8) + ".md";
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function recordDecision(next: "approved" | "revision" | "rejected") {
+    if (!sessionId) return;
+    setDecision(next);
+    window.localStorage.setItem("authority-os-decision-" + sessionId, next);
   }
 
   return (
@@ -104,7 +259,7 @@ export default function Home() {
       </div>
 
       <section className="grid">
-        <div className="card">
+        <div className="card command-card">
           <h2>Morning command</h2>
           <p>Tell the CEO what you want to talk about — or let it choose the strongest topic from the data.</p>
 
@@ -144,17 +299,78 @@ export default function Home() {
             </div>
           </div>
 
-          <button className="run" onClick={runCampaign} disabled={busy}>
-            {busy ? "CEO AGENT WORKING…" : "RUN AUTHORITY ENGINE"}
+          <button className="run" onClick={runCampaign} disabled={running}>
+            {running ? "CEO AGENT WORKING…" : "RUN AUTHORITY ENGINE"}
           </button>
 
-          <div className="status">{result}</div>
+          <div className={"campaign-state " + (completed ? "done" : running ? "working" : "")}>
+            <div className="state-dot" />
+            <div>
+              <strong>{completed ? "COMPLETED" : running ? "IN PROGRESS" : campaign?.error ? "ERROR" : "READY"}</strong>
+              <span>
+                {completed
+                  ? "CEO recommendation is ready for your review."
+                  : running
+                    ? "Research, challenge and synthesis are running."
+                    : campaign?.error || "Waiting for your command."}
+              </span>
+            </div>
+          </div>
+
+          {campaign?.error && <div className="error-box">{campaign.error}</div>}
+
+          {completed && campaign?.final_answer && (
+            <section className="report">
+              <div className="report-head">
+                <div>
+                  <div className="eyebrow">CEO recommendation</div>
+                  <h2>Campaign decision pack</h2>
+                </div>
+                <button className="secondary" onClick={downloadReport}>Download report</button>
+              </div>
+
+              <div className="report-sections">
+                {sections.map((section, index) => (
+                  <article className={"report-section " + (index === 0 ? "hero-section" : "")} key={section.title + index}>
+                    <h3>{section.title}</h3>
+                    <ReportBody body={section.body} />
+                  </article>
+                ))}
+              </div>
+
+              <div className="decision-panel">
+                <div>
+                  <strong>Your decision</strong>
+                  <span>These controls record your review only. Publishing remains disabled until live connectors are enabled.</span>
+                </div>
+                <div className="decision-actions">
+                  <button className={decision === "approved" ? "selected" : ""} onClick={() => recordDecision("approved")}>Approve package</button>
+                  <button className={decision === "revision" ? "selected" : ""} onClick={() => recordDecision("revision")}>Request revision</button>
+                  <button className={decision === "rejected" ? "selected danger" : ""} onClick={() => recordDecision("rejected")}>Reject</button>
+                </div>
+                {decision && <div className="decision-note">Decision recorded: <b>{decision}</b>. No external action was triggered.</div>}
+              </div>
+            </section>
+          )}
+
+          {(campaign?.activity?.length || campaign?.tool_call_count) ? (
+            <details className="activity">
+              <summary>Agent activity</summary>
+              <div className="activity-meta">
+                {campaign?.tool_call_count ? <span>{campaign.tool_call_count} tool calls observed</span> : null}
+                {sessionId ? <span>Session {sessionId.slice(-12)}</span> : null}
+              </div>
+              {(campaign?.activity || []).map((item) => (
+                <div className="activity-item" key={item.id}>{item.text}</div>
+              ))}
+            </details>
+          ) : null}
 
           <div className="flow">
             {["Research", "Strategy", "Create", "Publish", "Verify"].map((step) => (
               <div className="step" key={step}>
                 <b>{step}</b>
-                <span>CEO delegates and controls</span>
+                <span>{step === "Publish" ? "CEO-controlled gate" : "CEO delegates and controls"}</span>
               </div>
             ))}
           </div>
