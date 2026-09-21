@@ -11,7 +11,7 @@ export type Integration = {
 
 export const integrations: Integration[] = [
   { id: "openai", name: "OpenAI Agents API", role: "CEO orchestration, research, subagents and long-running work", env: ["OPENAI_API_KEY"], mode: "api", phase: 1 },
-  { id: "github", name: "GitHub", role: "Main-site source, version control and controlled publishing", env: ["GITHUB_TOKEN", "GITHUB_REPO"], mode: "api", phase: 1 },
+  { id: "github", name: "GitHub", role: "Main-site source, version control and draft-PR publishing gate", env: ["GITHUB_TOKEN", "GITHUB_REPO"], mode: "api", phase: 1 },
   { id: "wordpress", name: "WordPress.com", role: "Derivative authority article and Jetpack distribution trigger", env: ["WORDPRESS_ACCESS_TOKEN", "WORDPRESS_SITE"], mode: "api", phase: 1 },
   { id: "jetpack", name: "Jetpack Social", role: "Threads, Tumblr, Bluesky and Mastodon distribution", env: [], mode: "jetpack", phase: 1 },
   { id: "linkedin", name: "LinkedIn Publisher", role: "Existing dedicated LinkedIn automation", env: ["LINKEDIN_PUBLISHER_URL", "LINKEDIN_PUBLISHER_SECRET"], mode: "existing-workflow", phase: 1 },
