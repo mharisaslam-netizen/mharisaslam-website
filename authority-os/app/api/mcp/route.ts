@@ -60,7 +60,7 @@ const handler = createMcpHandler((server) => {
     "publish_main_site",
     {
       description:
-        "Publish or update a validated authority article in the canonical mharisaslam.com insight registry. Use only after strategy, evidence and final copy are complete.",
+        "Stage a validated authority article as a draft GitHub pull request for mharisaslam.com. Nothing becomes live until the pull request is reviewed and merged.",
       inputSchema: z.object({ article: z.any() })
     },
     async ({ article }) => {
