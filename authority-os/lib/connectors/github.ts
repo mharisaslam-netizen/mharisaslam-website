@@ -30,28 +30,42 @@ function authHeaders(token: string) {
   };
 }
 
+function safeSlug(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 70);
+}
+
 export async function publishMainSiteArticle(article: AuthorityArticle) {
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPO;
-  const branch = process.env.GITHUB_DEFAULT_BRANCH || "main";
+  const baseBranch = process.env.GITHUB_DEFAULT_BRANCH || "main";
 
   if (!token || !repo) throw new Error("GitHub publishing is not configured.");
   if (!article.slug || !article.title || !article.lead || !article.sections?.length) {
     throw new Error("Article is missing required fields.");
   }
 
-  const endpoint = "https://api.github.com/repos/" + repo + "/contents/" + registryPath;
-  const currentResponse = await fetch(endpoint + "?ref=" + encodeURIComponent(branch), {
+  const api = "https://api.github.com/repos/" + repo;
+  const endpoint = api + "/contents/" + registryPath;
+  const currentResponse = await fetch(endpoint + "?ref=" + encodeURIComponent(baseBranch), {
     headers: authHeaders(token),
     cache: "no-store"
   });
 
   if (!currentResponse.ok) {
-    throw new Error("Could not read main-site article registry (" + currentResponse.status + ").");
+    throw new Error(
+      "Could not read main-site article registry (" + currentResponse.status + ")."
+    );
   }
 
   const current = await currentResponse.json();
-  const source = Buffer.from(String(current.content || "").replace(/\n/g, ""), "base64").toString("utf8");
+  const source = Buffer.from(
+    String(current.content || "").replace(/\n/g, ""),
+    "base64"
+  ).toString("utf8");
   const match = source.match(/export const authorityArticles = ([\s\S]*);\s*$/);
 
   if (!match) throw new Error("Article registry format is invalid.");
@@ -65,28 +79,113 @@ export async function publishMainSiteArticle(article: AuthorityArticle) {
   const nextSource =
     "// Generated and maintained by Haris Authority OS.\n" +
     "// Keep this file machine-safe: JSON-compatible objects only.\n" +
-    "export const authorityArticles = " + JSON.stringify(articles, null, 2) + ";\n";
+    "export const authorityArticles = " +
+    JSON.stringify(articles, null, 2) +
+    ";\n";
+
+  const baseCommitResponse = await fetch(
+    api + "/commits/" + encodeURIComponent(baseBranch),
+    {
+      headers: authHeaders(token),
+      cache: "no-store"
+    }
+  );
+
+  if (!baseCommitResponse.ok) {
+    throw new Error(
+      "Could not resolve GitHub base branch (" + baseCommitResponse.status + ")."
+    );
+  }
+
+  const baseCommit = await baseCommitResponse.json();
+  const draftBranch =
+    "authority-os/" +
+    safeSlug(article.slug) +
+    "-" +
+    Date.now().toString(36);
+
+  const branchResponse = await fetch(api + "/git/refs", {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({
+      ref: "refs/heads/" + draftBranch,
+      sha: baseCommit.sha
+    })
+  });
+
+  const branchResult = await branchResponse.json().catch(() => ({}));
+  if (!branchResponse.ok) {
+    throw new Error(
+      "Could not create Authority OS draft branch (" +
+        branchResponse.status +
+        "): " +
+        JSON.stringify(branchResult).slice(0, 800)
+    );
+  }
 
   const updateResponse = await fetch(endpoint, {
     method: "PUT",
     headers: authHeaders(token),
     body: JSON.stringify({
-      message: (existingIndex >= 0 ? "Update" : "Publish") + " authority article: " + article.title,
+      message:
+        (existingIndex >= 0 ? "Update" : "Stage") +
+        " authority article: " +
+        article.title,
       content: Buffer.from(nextSource, "utf8").toString("base64"),
       sha: current.sha,
-      branch
+      branch: draftBranch
     })
   });
 
   const updated = await updateResponse.json().catch(() => ({}));
   if (!updateResponse.ok) {
-    throw new Error("GitHub article publish failed (" + updateResponse.status + "): " + JSON.stringify(updated).slice(0, 800));
+    throw new Error(
+      "GitHub article staging failed (" +
+        updateResponse.status +
+        "): " +
+        JSON.stringify(updated).slice(0, 800)
+    );
   }
 
+  const prResponse = await fetch(api + "/pulls", {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({
+      title:
+        (existingIndex >= 0 ? "Update" : "Draft") +
+        " authority article: " +
+        article.title,
+      head: draftBranch,
+      base: baseBranch,
+      draft: true,
+      body:
+        "Created by Haris Authority OS.\n\n" +
+        "Expected canonical URL after approval and merge:\n" +
+        "https://www.mharisaslam.com/insights/" +
+        article.slug +
+        "\n\n" +
+        "This pull request is intentionally created as a draft. Nothing is published until it is reviewed and merged."
+    })
+  });
+
+  const prResult = await prResponse.json().catch(() => ({}));
+
   return {
+    mode: "draft_pr",
     slug: article.slug,
+    draftBranch,
     commitSha: updated?.commit?.sha || null,
     commitUrl: updated?.commit?.html_url || null,
-    expectedUrl: "https://www.mharisaslam.com/insights/" + article.slug
+    prCreated: prResponse.ok,
+    prUrl: prResponse.ok ? prResult?.html_url || null : null,
+    prNumber: prResponse.ok ? prResult?.number || null : null,
+    prError: prResponse.ok
+      ? null
+      : "PR creation failed (" +
+        prResponse.status +
+        "): " +
+        JSON.stringify(prResult).slice(0, 800),
+    expectedUrl: "https://www.mharisaslam.com/insights/" + article.slug,
+    published: false
   };
 }
