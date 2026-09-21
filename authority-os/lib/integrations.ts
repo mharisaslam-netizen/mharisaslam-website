@@ -12,7 +12,7 @@ export type Integration = {
 export const integrations: Integration[] = [
   { id: "openai", name: "OpenAI Agents API", role: "CEO orchestration, research, subagents and long-running work", env: ["OPENAI_API_KEY"], mode: "api", phase: 1 },
   { id: "github", name: "GitHub", role: "Main-site source, version control and draft-PR publishing gate", env: ["GITHUB_TOKEN", "GITHUB_REPO"], mode: "api", phase: 1 },
-  { id: "wordpress", name: "WordPress.com", role: "Derivative authority article and Jetpack distribution trigger", env: ["WORDPRESS_ACCESS_TOKEN", "WORDPRESS_SITE"], mode: "api", phase: 1 },
+  { id: "wordpress", name: "WordPress.com", role: "Derivative authority article and Jetpack distribution trigger", env: ["WORDPRESS_SITE"], mode: "api", phase: 1 },
   { id: "jetpack", name: "Jetpack Social", role: "Threads, Tumblr, Bluesky and Mastodon distribution", env: [], mode: "jetpack", phase: 1 },
   { id: "linkedin", name: "LinkedIn Publisher", role: "Existing dedicated LinkedIn automation", env: ["LINKEDIN_PUBLISHER_URL", "LINKEDIN_PUBLISHER_SECRET"], mode: "existing-workflow", phase: 1 },
   { id: "gsc", name: "Google Search Console", role: "Search queries, pages, countries, impressions, clicks and indexing feedback", env: ["GOOGLE_SEARCH_CONSOLE_CLIENT_ID", "GOOGLE_SEARCH_CONSOLE_CLIENT_SECRET", "GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN"], mode: "api", phase: 2 },
@@ -28,7 +28,14 @@ export const integrations: Integration[] = [
 
 export function integrationSnapshot() {
   return integrations.map((item) => {
-    const configured = item.env.length === 0 ? item.id === "jetpack" : item.env.every((key) => Boolean(process.env[key]));
+    const configured =
+      item.id === "wordpress"
+        ? Boolean(process.env.WORDPRESS_SITE) &&
+          (Boolean(process.env.WORDPRESS_ACCESS_TOKEN) ||
+            (Boolean(process.env.WORDPRESS_USERNAME) && Boolean(process.env.WORDPRESS_APP_PASSWORD)))
+        : item.env.length === 0
+          ? item.id === "jetpack"
+          : item.env.every((key) => Boolean(process.env[key]));
     return {
       ...item,
       configured,
