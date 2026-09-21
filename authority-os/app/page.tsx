@@ -134,8 +134,14 @@ export default function Home() {
       .then((d) => setIntegrations(d.integrations || []))
       .catch(() => {});
 
+    const urlSession = new URLSearchParams(window.location.search).get("session");
     const savedSession = window.localStorage.getItem("authority-os-active-session");
-    if (savedSession) setSessionId(savedSession);
+    const sessionToResume = urlSession || savedSession;
+
+    if (sessionToResume) {
+      setSessionId(sessionToResume);
+      window.localStorage.setItem("authority-os-active-session", sessionToResume);
+    }
   }, []);
 
   useEffect(() => {
@@ -215,6 +221,9 @@ export default function Home() {
 
       setSessionId(data.session_id);
       window.localStorage.setItem("authority-os-active-session", data.session_id);
+      const url = new URL(window.location.href);
+      url.searchParams.set("session", data.session_id);
+      window.history.replaceState({}, "", url.toString());
       setCampaign({ status: data.status || "started", terminal: false });
     } catch (error) {
       setCampaign({
