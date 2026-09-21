@@ -20,13 +20,13 @@ function cleanFinalAnswer(text: string) {
   return text
     .replace(/\\\(/g, "(")
     .replace(/\\\)/g, ")")
-    .replace(/^(\\d+)\\\\\.[ \\t]*\\n(?:[ \\t]*\\n)*[ \\t]*(.+)$/gm, "$1. $2")
-    .replace(/^•[ \\t]*\\n(?:[ \\t]*\\n)*[ \\t]*(.+)$/gm, "- $1")
+    .replace(/^(\d+)\\\.[ \t]*\n(?:[ \t]*\n)*[ \t]*(.+)$/gm, "$1. $2")
+    .replace(/^•[ \t]*\n(?:[ \t]*\n)*[ \t]*(.+)$/gm, "- $1")
     .replace(
-      /\\n*The complete evidence-backed campaign package is available here:\\s*\\n+\\[Download[^\\]]*\\]\\(\\/workspace\\/outputs\\/[^)]+\\)\\s*$/i,
+      /\n*The complete evidence-backed campaign package is available here:\s*\n+\[Download[^\]]*\]\(\/workspace\/outputs\/[^)]+\)\s*$/i,
       ""
     )
-    .replace(/\\n{3,}/g, "\\n\\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
