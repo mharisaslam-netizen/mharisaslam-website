@@ -26,8 +26,8 @@ export async function GET(request: Request) {
     return html("WordPress connection failed", "<p>Security state check failed. Restart the WordPress connection flow.</p>");
   }
 
-  const clientId = process.env.WORDPRESS_CLIENT_ID;
-  const clientSecret = process.env.WORDPRESS_CLIENT_SECRET;
+  const clientId = process.env.WORDPRESS_CLIENT_ID?.trim();
+  const clientSecret = process.env.WORDPRESS_CLIENT_SECRET?.trim();
   const base = process.env.AUTHORITY_OS_BASE_URL?.replace(/\/$/, "");
 
   if (!clientId || !clientSecret || !base) {
@@ -54,7 +54,10 @@ export async function GET(request: Request) {
   if (!tokenResponse.ok || !token?.access_token) {
     return html(
       "WordPress connection failed",
-      `<p>Token exchange failed.</p><pre><code>${JSON.stringify(token, null, 2).replace(/</g, "&lt;")}</code></pre>`
+      `<p>Token exchange failed.</p>
+       <p>Client ID used by Authority OS: <code>${clientId}</code></p>
+       <p>Redirect URI used: <code>${redirectUri}</code></p>
+       <pre><code>${JSON.stringify(token, null, 2).replace(/</g, "&lt;")}</code></pre>`
     );
   }
 
