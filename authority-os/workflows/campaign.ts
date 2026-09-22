@@ -36,7 +36,7 @@ export async function runAuthorityCampaign(input: CampaignInput) {
   ]);
 
   const verification = await verificationStep(decision, article);
-  const staged = await stageCampaignStep(input, article, channels, verification);
+  const staged = await stageCampaignStep(input, article, channels, visual, verification);
 
   return finalPackStep(
     input,
