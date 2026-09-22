@@ -6,7 +6,7 @@ export const executiveProfilePage = {
   description: "Executive and advisory profile for GCC search firms, CEOs, boards and investors assessing transformation, digital commerce, growth, AI, fintech and market-entry leadership.",
   eyebrow: "Executive search & advisory profile",
   h1: "GCC transformation, digital commerce and growth executive.",
-  intro: "A search-firm and board-level view of Muhammad Haris Aslam's operating background across business transformation, digital commerce, marketplaces, retail, AI, fintech, GCC growth and venture building — with a clear distinction between proven operating record and strategy-led use cases.",
+  intro: "A search-firm and board-level view of Muhammad Haris Aslam's operating background across business transformation, digital commerce, marketplaces, retail, AI, fintech, GCC growth and venture building; with a clear distinction between proven operating record and strategy-led use cases.",
   faq: [
     {
       question: "How can executive search firms classify Muhammad Haris Aslam's profile?",
