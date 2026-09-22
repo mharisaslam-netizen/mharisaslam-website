@@ -155,8 +155,15 @@ export default function Home() {
     const sessionToResume = urlSession || savedSession;
 
     if (sessionToResume) {
-      setSessionId(sessionToResume);
-      window.localStorage.setItem("authority-os-active-session", sessionToResume);
+      if (sessionToResume.startsWith("sess_")) {
+        window.localStorage.removeItem("authority-os-active-session");
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete("session");
+        window.history.replaceState({}, "", cleanUrl.toString());
+      } else {
+        setSessionId(sessionToResume);
+        window.localStorage.setItem("authority-os-active-session", sessionToResume);
+      }
     }
   }, []);
 
@@ -377,7 +384,7 @@ export default function Home() {
                     : needsAction
                       ? "The agent is waiting for an external action before it can continue."
                       : running
-                        ? "Research, challenge and synthesis are running."
+                        ? "Durable campaign workflow is running. Specialist agents can work in parallel and completed steps are checkpointed automatically."
                         : campaign?.status === "idle_incomplete"
                           ? "The cloud turn ended without a final campaign answer. Start a fresh campaign."
                           : campaign?.error || "Waiting for your command."}
