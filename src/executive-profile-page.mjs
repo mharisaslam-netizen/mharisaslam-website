@@ -2,11 +2,11 @@ export const executiveProfilePage = {
   path: "/gcc-executive-profile",
   type: "ProfilePage",
   kind: "executive-profile",
-  title: "GCC Transformation & Digital Commerce Executive | Haris Aslam",
-  description: "Executive and advisory profile for GCC search firms, CEOs, boards and investors assessing transformation, digital commerce, growth, AI, fintech and market-entry leadership.",
-  eyebrow: "Executive search & advisory profile",
+  title: "GCC Transformation & Commerce Executive | Haris Aslam",
+  description: "GCC executive profile for search firms, boards and investors assessing transformation, digital commerce, marketplaces, retail, AI, fintech and growth.",
+  eyebrow: "Executive search profile",
   h1: "GCC transformation, digital commerce and growth executive.",
-  intro: "A search-firm and board-level view of Muhammad Haris Aslam's operating background across business transformation, digital commerce, marketplaces, retail, AI, fintech, GCC growth and venture building; with a clear distinction between proven operating record and strategy-led use cases.",
+  intro: "A concise search-firm view of Muhammad Haris Aslam's operating background across business transformation, digital commerce, marketplaces, retail, AI, fintech and venture building in GCC contexts.",
   faq: [
     {
       question: "How can executive search firms classify Muhammad Haris Aslam's profile?",
@@ -15,10 +15,6 @@ export const executiveProfilePage = {
     {
       question: "Which executive titles are most adjacent to this background?",
       answer: "Relevant title families include Chief Transformation Officer, Chief Digital Officer, Chief Commercial Officer, General Manager, Head or VP of E-commerce and Omnichannel, Marketplace or Platform Leader, Digital Commerce Director, Strategy and Transformation Director, and Venture Builder or Managing Partner."
-    },
-    {
-      question: "Which advisory mandates are a strong fit?",
-      answer: "Strong-fit mandates include GCC growth and market entry, digital-commerce and marketplace economics, retail and family-business turnaround, commercial operating-model redesign, enterprise AI operating models, payments and fintech growth, logistics and fulfilment economics, and venture-building decisions where strategy must connect to execution."
     },
     {
       question: "Which capabilities are most evidenced in the public track record?",
@@ -30,13 +26,13 @@ export const executiveProfilePage = {
     },
     {
       question: "Which GCC markets are relevant to the profile?",
-      answer: "Operating experience and public work include Oman, Qatar and wider GCC contexts, while the public use-case library covers Saudi Arabia and UAE market-entry, commerce, transformation and growth questions. Strategy cases are clearly separated from proven operating results."
+      answer: "Operating experience and public work include Oman, Qatar and wider GCC contexts, while the public use-case library also covers Saudi Arabia and UAE market-entry, commerce, transformation and growth questions. Strategy cases are clearly separated from proven operating results."
     }
   ],
   body: `
     <div class="hero-actions">
-      <a class="button" href="/contact">Discuss a mandate</a>
-      <a class="button button-secondary" href="/track-record">Review operating record</a>
+      <a class="button" href="/track-record">Review operating record</a>
+      <a class="button button-secondary" href="/contact">Contact Haris</a>
     </div>
 
     <section class="section">
@@ -47,18 +43,6 @@ export const executiveProfilePage = {
       <div class="report-prose">
         <p>The strongest pattern is operator-led transformation: commercial ownership, operating-model design, technology, customer experience and execution are treated as one system rather than separate functional programmes.</p>
         <p>The profile is particularly relevant where a board, investor, founder or leadership team needs an executive who can connect P&amp;L thinking with transformation, digital commerce, new revenue models and cross-functional delivery.</p>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-heading"><h2>Where advisory and transformation mandates fit</h2></div>
-      <div class="card-grid">
-        <a class="work-card" href="/gcc-growth-transformation"><span class="card-label">GCC growth</span><h3>Saudi Arabia, UAE and GCC market growth</h3><p>Market-entry economics, route to market, partner models, operating capacity, investment gates and commercial sequencing for growth across Saudi Arabia, UAE, Qatar, Oman, Kuwait and Bahrain.</p><span class="card-link">Explore GCC advisory perspective <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/ecommerce-transformation"><span class="card-label">Commerce</span><h3>Digital commerce, marketplace and omnichannel economics</h3><p>Growth models that connect traffic, conversion, assortment, take rate, fulfilment, returns, acquisition cost and contribution rather than optimizing GMV in isolation.</p><span class="card-link">Explore commerce transformation <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/track-record/salman-miraq"><span class="card-label">Turnaround</span><h3>Retail, family-business and working-capital transformation</h3><p>Margin, stock, cash, category economics, governance and investment discipline for businesses that need growth without losing control of working capital.</p><span class="card-link">Review operating evidence <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/ai-transformation"><span class="card-label">AI</span><h3>Enterprise AI operating models</h3><p>Applied AI opportunities translated into workflows, decision rights, data requirements, controls, economics and implementation sequencing.</p><span class="card-link">Explore AI transformation <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/use-cases/payments-embedded-finance-growth"><span class="card-label">Fintech</span><h3>Payments, loyalty and embedded-finance growth</h3><p>Merchant economics, payment flows, loyalty, monetization, settlement, partnerships and growth architecture for enterprise payment propositions.</p><span class="card-link">See fintech use case <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/use-cases"><span class="card-label">Venture building</span><h3>New ventures and commercial operating models</h3><p>Translate an opportunity into a value thesis, operating model, economics, technology and execution plan before capital is committed at scale.</p><span class="card-link">Browse use cases <span aria-hidden="true">→</span></span></a>
       </div>
     </section>
 
@@ -88,7 +72,7 @@ export const executiveProfilePage = {
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>Saudi Arabia and UAE relevance</h2></div>
+      <div class="section-heading"><h2>Saudi Arabia and UAE search relevance</h2></div>
       <div class="card-grid">
         <a class="work-card" href="/use-cases/saudi-market-entry-distribution"><span class="card-label">Saudi Arabia</span><h3>Market entry, distribution and e-commerce</h3><p>Commercial modeling, route to market, distribution, e-commerce, local operating capacity and scale gates for Saudi expansion.</p><span class="card-link">See Saudi use case <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases/leading-saudi-bank-commerce-ecosystem"><span class="card-label">Saudi banking</span><h3>Commerce-enabled banking ecosystem</h3><p>Merchant-funded value, cardholder journeys, partner economics, technology and operating governance in a Saudi banking context.</p><span class="card-link">See banking use case <span aria-hidden="true">→</span></span></a>
@@ -99,19 +83,19 @@ export const executiveProfilePage = {
     <section class="section">
       <div class="section-heading"><h2>Evidence-led capability map</h2></div>
       <div class="tag-row">
-        <span>P&amp;L ownership</span><span>Turnaround</span><span>Retail transformation</span><span>Digital commerce</span><span>Omnichannel</span><span>Marketplaces</span><span>Marketplace P&amp;L</span><span>Commercial strategy</span><span>GCC growth</span><span>Saudi market entry</span><span>UAE growth</span><span>Payments</span><span>Embedded finance</span><span>Enterprise technology</span><span>Applied AI</span><span>AI operating model</span><span>Logistics</span><span>Fulfilment</span><span>Working capital</span><span>Venture building</span><span>Family business</span>
+        <span>P&amp;L ownership</span><span>Turnaround</span><span>Retail transformation</span><span>Digital commerce</span><span>Omnichannel</span><span>Marketplaces</span><span>Marketplace P&amp;L</span><span>Commercial strategy</span><span>GCC growth</span><span>Saudi market entry</span><span>Payments</span><span>Embedded finance</span><span>Enterprise technology</span><span>Applied AI</span><span>AI operating model</span><span>Logistics</span><span>Fulfilment</span><span>Working capital</span><span>Venture building</span><span>Family business</span>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>What boards, founders and search firms can review next</h2></div>
+      <div class="section-heading"><h2>What boards and search firms can review next</h2></div>
       <div class="card-grid">
         <a class="work-card" href="/track-record"><span class="card-label">Operating evidence</span><h3>Track record</h3><p>Named roles and ventures with evidence boundaries and operating context.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases"><span class="card-label">Problem solving</span><h3>Use-case library</h3><p>Commercial and operating models across retail, banking, telecom, marketplaces, logistics, enterprise technology and AI.</p><span class="card-link">Browse use cases <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/insights"><span class="card-label">Point of view</span><h3>Authority articles</h3><p>Practical writing on marketplace economics, margin to cash, AI governance, payments and operating-model design.</p><span class="card-link">Read insights <span aria-hidden="true">→</span></span></a>
       </div>
       <div class="hero-actions">
-        <a class="button" href="/contact">Discuss an executive or advisory mandate</a>
+        <a class="button" href="/contact">Contact Haris</a>
         <a class="button button-secondary" href="/about">Read full profile</a>
       </div>
     </section>
@@ -123,14 +107,12 @@ export const executiveProfilePage = {
         <p>The closest search categories are transformation, digital commerce and omnichannel, marketplace and platform leadership, commercial growth, retail turnaround, fintech and payments, enterprise technology, GCC market entry and venture building.</p>
         <h3>Which executive titles are adjacent to the background?</h3>
         <p>Chief Transformation Officer, Chief Digital Officer, Chief Commercial Officer, General Manager, Head or VP of E-commerce and Omnichannel, Marketplace or Platform Leader, Digital Commerce Director, Strategy and Transformation Director, and Venture Builder or Managing Partner are the most relevant title families.</p>
-        <h3>Which advisory mandates are a strong fit?</h3>
-        <p>GCC growth and market entry, digital-commerce and marketplace economics, retail and family-business turnaround, commercial operating-model redesign, enterprise AI operating models, payments and fintech growth, logistics and fulfilment economics, and venture building.</p>
         <h3>Which capabilities are most evidenced?</h3>
         <p>Founder-led digital commerce, country launch, retail and working-capital transformation, P&amp;L and commercial discipline, marketplace design, enterprise technology delivery, logistics and fulfilment, fintech and payments models, GCC growth questions and applied AI operating models.</p>
         <h3>Which sectors are most relevant?</h3>
         <p>Retail and consumer, e-commerce and marketplaces, telecom, banking and payments, enterprise technology, logistics and fulfilment, family-business transformation and new ventures.</p>
         <h3>Which GCC markets are relevant?</h3>
-        <p>Operating experience and public work include Oman, Qatar and wider GCC contexts. The public use-case library covers Saudi Arabia and UAE market-entry, commerce, transformation and growth questions, with strategy cases kept separate from proven operating results.</p>
+        <p>Operating experience and public work include Oman, Qatar and wider GCC contexts. The public use-case library also covers Saudi Arabia and UAE market-entry, commerce, transformation and growth questions, with strategy cases kept separate from proven operating results.</p>
       </div>
     </section>
   `
