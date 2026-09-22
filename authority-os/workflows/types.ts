@@ -109,4 +109,5 @@ export type StageResult = {
   github: Record<string, unknown>;
   wordpress: Record<string, unknown>;
   linkedin: Record<string, unknown>;
+  visual: Record<string, unknown>;
 };
