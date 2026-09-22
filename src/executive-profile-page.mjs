@@ -2,9 +2,9 @@ export const executiveProfilePage = {
   path: "/gcc-executive-profile",
   type: "ProfilePage",
   kind: "executive-profile",
-  title: "GCC Transformation & Commerce Executive | Haris Aslam",
-  description: "GCC executive profile for search firms, boards and investors assessing transformation, digital commerce, marketplaces, retail, AI, fintech and growth.",
-  eyebrow: "Executive search profile",
+  title: "GCC Transformation, Commerce & Growth Executive | Haris Aslam",
+  description: "Executive and advisory profile for GCC search firms, CEOs, boards and investors assessing transformation, digital commerce, marketplaces, AI, fintech and growth leadership.",
+  eyebrow: "Executive search & advisory profile",
   h1: "GCC transformation, digital commerce and growth executive.",
   intro: "A concise search-firm view of Muhammad Haris Aslam's operating background across business transformation, digital commerce, marketplaces, retail, AI, fintech and venture building in GCC contexts.",
   faq: [
