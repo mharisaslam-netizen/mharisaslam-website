@@ -23,7 +23,7 @@ export async function GET() {
   url.searchParams.set("redirect_uri", redirectUri);
   url.searchParams.set("response_type", "code");
   url.searchParams.set("blog", site);
-  url.searchParams.set("scope", "posts media");
+  url.searchParams.set("scope", "global");
   url.searchParams.set("state", state);
 
   const response = NextResponse.redirect(url);
