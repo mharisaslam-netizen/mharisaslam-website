@@ -370,5 +370,10 @@
         }
       ]
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "authority-os-v1": false
+    }
+  }
 }
