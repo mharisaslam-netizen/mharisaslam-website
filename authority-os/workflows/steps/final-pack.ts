@@ -61,6 +61,7 @@ export async function finalPackStep(
     ["Main website / GitHub", String(staged.github.status || "NOT EXECUTED")],
     ["WordPress", String(staged.wordpress.status || "NOT EXECUTED")],
     ["LinkedIn", String(staged.linkedin.status || "NOT EXECUTED")],
+    ["Campaign visual", String(staged.visual.status || "NOT EXECUTED")],
     ["X", "READY FOR REVIEW"],
     ["Medium", "READY FOR REVIEW"],
     ["Substack", "READY FOR REVIEW"],
@@ -72,6 +73,7 @@ export async function finalPackStep(
   const githubDetails = JSON.stringify(staged.github, null, 2);
   const wordpressDetails = JSON.stringify(staged.wordpress, null, 2);
   const linkedinDetails = JSON.stringify(staged.linkedin, null, 2);
+  const visualDetails = JSON.stringify(staged.visual, null, 2);
 
   const finalAnswer = [
     "## CEO Recommendation",
@@ -112,6 +114,9 @@ export async function finalPackStep(
     "- **Text overlay:** " + visual.textOverlay,
     "- **Image prompt:** " + visual.imagePrompt,
     "- **Alt text:** " + visual.altText,
+    "",
+    "**Generated visual staging:**",
+    visualDetails,
     "",
     "## LinkedIn",
     channels.linkedinPost,
