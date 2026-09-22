@@ -1,98 +1,59 @@
-import OpenAI from "openai";
+
 import { NextResponse } from "next/server";
+import { getRun } from "workflow/api";
 
 export const runtime = "nodejs";
 
-function extractText(item: any) {
-  const content = Array.isArray(item?.content) ? item.content : [];
-  return content
-    .map((part: any) => {
-      if (typeof part?.text === "string") return part.text;
-      if (typeof part?.content === "string") return part.content;
-      return "";
-    })
-    .filter(Boolean)
-    .join("\n")
-    .trim();
-}
-
-function cleanFinalAnswer(text: string) {
-  return text
-    .replace(/\\\(/g, "(")
-    .replace(/\\\)/g, ")")
-    .replace(/^(\d+)\\\.[ \t]*\n(?:[ \t]*\n)*[ \t]*(.+)$/gm, "$1. $2")
-    .replace(/^•[ \t]*\n(?:[ \t]*\n)*[ \t]*(.+)$/gm, "- $1")
-    .replace(
-      /\n*The complete evidence-backed campaign package is available here:\s*\n+\[Download[^\]]*\]\(\/workspace\/outputs\/[^)]+\)\s*$/i,
-      ""
-    )
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+function toIso(value: Date | null | undefined) {
+  return value ? value.toISOString() : null;
 }
 
 export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
-  if (!process.env.OPENAI_API_KEY) {
-    return NextResponse.json({ error: "OPENAI_API_KEY is not configured." }, { status: 503 });
-  }
-
   const { id } = await context.params;
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
   try {
-    const session = await (client as any).beta.agents.sessions.retrieve(id);
-    const itemsPage = await (client as any).beta.agents.sessions.items.list(id, {
-      limit: 50,
-      order: "desc"
-    });
-    const items = Array.isArray(itemsPage?.data) ? itemsPage.data : [];
+    const run = await getRun(id);
+    const [status, workflowName, createdAt, startedAt, completedAt] = await Promise.all([
+      run.status,
+      run.workflowName,
+      run.createdAt,
+      run.startedAt,
+      run.completedAt
+    ]);
 
-    const finalItem = items.find(
-      (item: any) => item?.phase === "final_answer" && extractText(item)
-    );
-    const finalAnswer = finalItem ? cleanFinalAnswer(extractText(finalItem)) : null;
+    const rawStatus = String(status || "running").toLowerCase();
+    const terminalStatuses = new Set(["completed", "failed", "cancelled", "canceled"]);
+    const terminal = terminalStatuses.has(rawStatus);
 
-    const activity = items
-      .filter((item: any) => item?.phase === "commentary" && extractText(item))
-      .slice(0, 6)
-      .map((item: any) => ({
-        id: item.id,
-        phase: item.phase,
-        text: extractText(item)
-      }));
-
-    const rawStatus = String(session.status || "idle").toLowerCase();
-    const lastActiveAt = Number(session.last_active_at || 0);
-    const nowSeconds = Math.floor(Date.now() / 1000);
-    const staleSeconds = lastActiveAt ? Math.max(0, nowSeconds - lastActiveAt) : 0;
-    const stale = rawStatus === "in_progress" && staleSeconds >= 15 * 60;
-    const requiresAction = rawStatus === "requires_action";
-    const idleWithoutFinal = rawStatus === "idle" && !finalAnswer;
-    const terminal = Boolean(finalAnswer) || rawStatus === "failed" || idleWithoutFinal;
-    const status = finalAnswer
-      ? "completed"
-      : idleWithoutFinal
-        ? "idle_incomplete"
-        : stale
-          ? "stalled"
-          : rawStatus;
+    let result: any = null;
+    if (rawStatus === "completed") {
+      result = await run.returnValue.catch(() => null);
+    }
 
     return NextResponse.json({
-      id: session.id,
-      status,
+      id,
+      status: rawStatus,
       raw_status: rawStatus,
       terminal,
-      stale,
-      stale_seconds: staleSeconds,
-      requires_action: requiresAction,
-      required_actions: session.required_actions || [],
-      error: session.error || null,
-      last_active_at: lastActiveAt || null,
-      final_answer: finalAnswer,
-      activity,
-      tool_call_count: items.filter((item: any) => String(item?.id || "").startsWith("call_")).length
+      engine: "vercel-workflow",
+      workflow_name: workflowName,
+      created_at: toIso(createdAt),
+      started_at: toIso(startedAt),
+      completed_at: toIso(completedAt),
+      error: rawStatus === "failed" ? "The durable workflow failed. Open Vercel Workflows for the failed step." : null,
+      final_answer: result?.finalAnswer || null,
+      activity: Array.isArray(result?.activity)
+        ? result.activity.map((text: string, index: number) => ({
+            id: "workflow-" + index,
+            phase: "workflow",
+            text
+          }))
+        : [],
+      tool_call_count: Number(result?.toolCallCount || 0),
+      artifacts: result?.artifacts || null
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Could not retrieve agent session.";
+    const message = error instanceof Error ? error.message : "Could not retrieve durable workflow run.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
