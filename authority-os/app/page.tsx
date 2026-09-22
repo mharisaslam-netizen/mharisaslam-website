@@ -86,6 +86,18 @@ function ReportBody({ body }: { body: string }) {
         const trimmed = line.trim();
         if (!trimmed) return <div className="report-spacer" key={index} />;
 
+        const handoffMatch = trimmed.match(/"signed_review_url"\s*:\s*"([^"]+)"/);
+        if (handoffMatch) {
+          const rawUrl = handoffMatch[1].replace(/\\u0026/g, "&").replace(/\\&/g, "&");
+          return (
+            <div className="handoff-cta" key={index}>
+              <strong>LinkedIn review is ready</strong>
+              <span>Open the existing Haris Content Publisher with this draft prefilled. Nothing publishes until you approve it there.</span>
+              <a href={rawUrl} target="_blank" rel="noreferrer">Open LinkedIn Review</a>
+            </div>
+          );
+        }
+
         if (trimmed.startsWith(">")) {
           return (
             <blockquote key={index}>{renderInline(trimmed.replace(/^>\s?/, ""))}</blockquote>
