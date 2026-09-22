@@ -1,5 +1,6 @@
 import { deepInsights } from "../../src/deep-insights.mjs";
 import { agenticCommerceArticle } from "../../lib/linkedin-articles.js";
+import { authorityArticles } from "../../lib/authority-articles.js";
 import { SESSION_COOKIE, decryptSession, parseCookies } from "../../lib/linkedin-session.js";
 
 const esc = value => String(value ?? "")
@@ -91,6 +92,7 @@ function normalize(item, overrides = {}) {
 
 function buildArticles() {
   const marketplace = deepInsights.find(x => x.slug === "marketplace-economics-gmv-revenue-contribution-gcc");
+  const saudiMarketEntry = authorityArticles.find(x => x.slug === "saudi-market-entry-retail-commerce-economics");
   const articles = [
     normalize(agenticCommerceArticle, {
       sourceUrl: "https://www.mharisaslam.com/insights/fintech-agentic-commerce-ai-agents-moving-money"
@@ -99,6 +101,10 @@ function buildArticles() {
 
   if (marketplace) {
     articles.push(normalize(marketplace));
+  }
+
+  if (saudiMarketEntry) {
+    articles.unshift(normalize(saudiMarketEntry));
   }
 
   return articles;
@@ -161,7 +167,7 @@ button,.linkbtn{border:0;background:var(--navy);color:#fff;padding:11px 13px;fon
 <body>
 <main>
 <div class="top">
-  <div><div class="eyebrow">Private native-article workspace</div><h1>Haris LinkedIn Article Studio</h1><p class="sub">Two authority pieces prepared for native LinkedIn publishing: Marketplace Economics and Fintech × Agentic Commerce. Full copy, cover image, SEO fields and sources are kept together here.</p><a class="backlink" href="/api/linkedin/publisher">← Daily Post Publisher</a></div>
+  <div><div class="eyebrow">Private native-article workspace</div><h1>Haris LinkedIn Article Studio</h1><p class="sub">Authority pieces prepared for native LinkedIn publishing. Full copy, SEO fields, sources and available visual assets are kept together here.</p><a class="backlink" href="/api/linkedin/publisher">← Daily Post Publisher</a></div>
   <div class="status"><strong>LinkedIn identity verified</strong><br>${esc(session.name || "Muhammad Haris Aslam")}<br>Connection expires ${esc(expiry)} Qatar time.</div>
 </div>
 
