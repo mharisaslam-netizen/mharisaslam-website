@@ -20,6 +20,10 @@ type CampaignState = {
   status: string;
   raw_status?: string;
   terminal?: boolean;
+  stale?: boolean;
+  stale_seconds?: number;
+  requires_action?: boolean;
+  required_actions?: unknown[];
   error?: string | null;
   final_answer?: string | null;
   activity?: Activity[];
@@ -210,8 +214,10 @@ export default function Home() {
     [campaign?.final_answer]
   );
 
-  const running = busy || Boolean(sessionId && !campaign?.terminal);
+  const running = busy || Boolean(sessionId && !campaign?.terminal && !campaign?.stale);
   const completed = Boolean(campaign?.final_answer);
+  const stalled = Boolean(campaign?.stale);
+  const needsAction = Boolean(campaign?.requires_action);
 
   async function runCampaign() {
     if (running) return;
@@ -257,6 +263,27 @@ export default function Home() {
     anchor.download = "haris-authority-os-" + sessionId.slice(-8) + ".md";
     anchor.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function cancelCurrentRun() {
+    if (!sessionId) return;
+    try {
+      await fetch("/api/session/" + sessionId + "/cancel", { method: "POST" });
+    } catch {}
+    clearCurrentSession();
+  }
+
+  function clearCurrentSession() {
+    if (sessionId) {
+      window.localStorage.removeItem("authority-os-active-session");
+    }
+    const url = new URL(window.location.href);
+    url.searchParams.delete("session");
+    window.history.replaceState({}, "", url.toString());
+    setSessionId(null);
+    setCampaign(null);
+    setDecision(null);
+    setBusy(false);
   }
 
   function recordDecision(next: "approved" | "revision" | "rejected") {
@@ -324,19 +351,54 @@ export default function Home() {
             {running ? "CEO AGENT WORKING…" : "RUN AUTHORITY ENGINE"}
           </button>
 
-          <div className={"campaign-state " + (completed ? "done" : running ? "working" : "")}>
+          <div className={"campaign-state " + (completed ? "done" : stalled ? "stalled" : running ? "working" : "")}>
             <div className="state-dot" />
             <div>
-              <strong>{completed ? "COMPLETED" : running ? "IN PROGRESS" : campaign?.error ? "ERROR" : "READY"}</strong>
+              <strong>
+                {completed
+                  ? "COMPLETED"
+                  : stalled
+                    ? "STALLED"
+                    : needsAction
+                      ? "NEEDS ACTION"
+                      : running
+                        ? "IN PROGRESS"
+                        : campaign?.error
+                          ? "ERROR"
+                          : campaign?.status === "idle_incomplete"
+                            ? "INCOMPLETE"
+                            : "READY"}
+              </strong>
               <span>
                 {completed
                   ? "CEO recommendation is ready for your review."
-                  : running
-                    ? "Research, challenge and synthesis are running."
-                    : campaign?.error || "Waiting for your command."}
+                  : stalled
+                    ? "This cloud run has had no agent activity for at least 15 minutes. It is safe to cancel it and start a fresh campaign."
+                    : needsAction
+                      ? "The agent is waiting for an external action before it can continue."
+                      : running
+                        ? "Research, challenge and synthesis are running."
+                        : campaign?.status === "idle_incomplete"
+                          ? "The cloud turn ended without a final campaign answer. Start a fresh campaign."
+                          : campaign?.error || "Waiting for your command."}
               </span>
             </div>
           </div>
+
+          {(stalled || needsAction || campaign?.status === "idle_incomplete") && (
+            <div className="session-recovery">
+              <div>
+                <strong>Session recovery</strong>
+                <span>
+                  Refreshing the browser resumes the same cloud session by design. Use the controls here to detach from it instead.
+                </span>
+              </div>
+              <div className="session-recovery-actions">
+                <button className="secondary" onClick={clearCurrentSession}>Start fresh without cancelling</button>
+                <button className="danger-action" onClick={cancelCurrentRun}>Cancel run &amp; start fresh</button>
+              </div>
+            </div>
+          )}
 
           {campaign?.error && <div className="error-box">{campaign.error}</div>}
 
