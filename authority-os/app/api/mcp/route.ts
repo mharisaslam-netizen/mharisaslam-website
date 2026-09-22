@@ -3,6 +3,7 @@ import { createMcpHandler } from "mcp-handler";
 import { integrationSnapshot } from "../../../lib/integrations";
 import { publishMainSiteArticle } from "../../../lib/connectors/github";
 import { publishWordPressPost } from "../../../lib/connectors/wordpress";
+import { createLinkedInReviewHandoff } from "../../../lib/connectors/linkedin";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
 import { verifyLiveUrl } from "../../../lib/connectors/verify";
 import { ga4Report, searchConsolePerformance } from "../../../lib/connectors/google";
@@ -89,6 +90,28 @@ const handler = createMcpHandler((server) => {
     },
     async (input) => {
       const result = await publishWordPressPost(input);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.registerTool(
+    "prepare_linkedin_review",
+    {
+      description:
+        "Prepare a signed handoff URL that opens the existing Haris LinkedIn Publisher with the exact Authority OS draft prefilled for human review. This never publishes automatically.",
+      inputSchema: z.object({
+        text: z.string().min(1).max(3000),
+        articleUrl: z.string().url(),
+        title: z.string().max(200).optional(),
+        description: z.string().max(300).optional(),
+        visualUrl: z.string().url().optional(),
+        visualAlt: z.string().max(300).optional(),
+        visualTitle: z.string().max(200).optional(),
+        label: z.string().max(120).optional()
+      })
+    },
+    async (input) => {
+      const result = createLinkedInReviewHandoff(input);
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     }
   );
