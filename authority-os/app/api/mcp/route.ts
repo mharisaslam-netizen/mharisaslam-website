@@ -7,6 +7,7 @@ import { createLinkedInReviewHandoff } from "../../../lib/connectors/linkedin";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
 import { verifyLiveUrl } from "../../../lib/connectors/verify";
 import { ga4Report, searchConsolePerformance } from "../../../lib/connectors/google";
+import { canvaProfile } from "../../../lib/connectors/canva";
 
 const handler = createMcpHandler((server) => {
   server.registerTool(
@@ -112,6 +113,19 @@ const handler = createMcpHandler((server) => {
     },
     async (input) => {
       const result = createLinkedInReviewHandoff(input);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.registerTool(
+    "canva_connection_check",
+    {
+      description:
+        "Read-only Canva connection check. Returns the connected Canva profile, granted scopes and token-expiry information. Does not create or modify designs.",
+      inputSchema: z.object({})
+    },
+    async () => {
+      const result = await canvaProfile();
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     }
   );
