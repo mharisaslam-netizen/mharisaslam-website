@@ -60,18 +60,33 @@ export async function GET(_request: Request, context: { params: Promise<{ id: st
         text: extractText(item)
       }));
 
-    const rawStatus = String(session.status || "running").toLowerCase();
-    const terminalStatuses = new Set(["completed", "failed", "cancelled", "canceled"]);
-    const terminal = Boolean(finalAnswer) || terminalStatuses.has(rawStatus);
-    const status = finalAnswer && rawStatus === "idle" ? "completed" : rawStatus;
+    const rawStatus = String(session.status || "idle").toLowerCase();
+    const lastActiveAt = Number(session.last_active_at || 0);
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const staleSeconds = lastActiveAt ? Math.max(0, nowSeconds - lastActiveAt) : 0;
+    const stale = rawStatus === "in_progress" && staleSeconds >= 15 * 60;
+    const requiresAction = rawStatus === "requires_action";
+    const idleWithoutFinal = rawStatus === "idle" && !finalAnswer;
+    const terminal = Boolean(finalAnswer) || rawStatus === "failed" || idleWithoutFinal;
+    const status = finalAnswer
+      ? "completed"
+      : idleWithoutFinal
+        ? "idle_incomplete"
+        : stale
+          ? "stalled"
+          : rawStatus;
 
     return NextResponse.json({
       id: session.id,
       status,
       raw_status: rawStatus,
       terminal,
+      stale,
+      stale_seconds: staleSeconds,
+      requires_action: requiresAction,
+      required_actions: session.required_actions || [],
       error: session.error || null,
-      last_active_at: session.last_active_at || null,
+      last_active_at: lastActiveAt || null,
       final_answer: finalAnswer,
       activity,
       tool_call_count: items.filter((item: any) => String(item?.id || "").startsWith("call_")).length
