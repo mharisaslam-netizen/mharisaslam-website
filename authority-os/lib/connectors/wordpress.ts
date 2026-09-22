@@ -50,12 +50,20 @@ export async function publishWordPressPost(input: WordPressPostInput) {
     );
   }
 
+  const requestedStatus = input.status || "draft";
+  const livePublishingEnabled =
+    String(process.env.AUTHORITY_OS_LIVE_PUBLISH_ENABLED || "").toLowerCase() === "true";
+  const effectiveStatus =
+    livePublishingEnabled && (requestedStatus === "publish" || requestedStatus === "future")
+      ? requestedStatus
+      : "draft";
+
   const response = await fetch(endpoint, {
     method: "POST",
     headers,
     body: JSON.stringify({
       ...input,
-      status: input.status || "draft"
+      status: effectiveStatus
     })
   });
 
@@ -71,9 +79,11 @@ export async function publishWordPressPost(input: WordPressPostInput) {
 
   return {
     id: data.id,
+    requestedStatus,
     status: data.status,
     link: data.link,
     slug: data.slug,
-    published: data.status === "publish"
+    published: data.status === "publish",
+    livePublishingEnabled
   };
 }
