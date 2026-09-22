@@ -21,7 +21,8 @@ export const integrations: Integration[] = [
   { id: "openai-images", name: "OpenAI Images", role: "AI-generated social artwork, hero visuals and carousel assets", env: ["OPENAI_API_KEY"], mode: "api", phase: 1 },
   { id: "canva", name: "Canva (optional)", role: "Optional manual brand-template editing and collaboration", env: [], mode: "browser", phase: 3 },
   { id: "medium", name: "Medium", role: "Canonical syndication and external authority", env: ["MEDIUM_PROFILE_URL"], mode: "browser", phase: 2 },
-  { id: "substack", name: "Substack", role: "Executive newsletter and Europe/global subscriber channel", env: ["SUBSTACK_PROFILE_URL"], mode: "browser", phase: 2 },
+  { id: "substack", name: "Substack", role: "Executive newsletter handoff, subscriber channel and post-performance layer", env: ["SUBSTACK_PROFILE_URL"], mode: "browser", phase: 2 },
+  { id: "x", name: "X", role: "Approval-gated executive posts, threads and visual distribution", env: ["X_CLIENT_ID", "X_CLIENT_SECRET", "X_REFRESH_TOKEN"], mode: "api", phase: 2 },
   { id: "reddit", name: "Reddit", role: "Selective expert participation only when a relevant discussion exists", env: ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET"], mode: "api", phase: 3 },
   { id: "youtube", name: "YouTube", role: "Short-form executive video distribution", env: ["YOUTUBE_API_KEY"], mode: "api", phase: 3 },
   { id: "clay", name: "Clay", role: "Optional prospect research and distribution intelligence", env: ["CLAY_API_KEY"], mode: "api", phase: 3 }
