@@ -16,6 +16,19 @@ type Activity = {
   text: string;
 };
 
+type CampaignArtifacts = {
+  article?: Record<string, any>;
+  channels?: Record<string, any>;
+  visual?: Record<string, any>;
+  verification?: Record<string, any>;
+  staged?: {
+    github?: Record<string, any>;
+    wordpress?: Record<string, any>;
+    linkedin?: Record<string, any>;
+    visual?: Record<string, any>;
+  };
+};
+
 type CampaignState = {
   status: string;
   raw_status?: string;
@@ -28,6 +41,7 @@ type CampaignState = {
   final_answer?: string | null;
   activity?: Activity[];
   tool_call_count?: number;
+  artifacts?: CampaignArtifacts | null;
 };
 
 type ReportSection = {
@@ -83,6 +97,119 @@ function renderInline(text: string): ReactNode[] {
   });
 }
 
+
+function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) {
+  if (!artifacts) return null;
+
+  const article = artifacts.article || {};
+  const channels = artifacts.channels || {};
+  const visual = artifacts.visual || {};
+  const staged = artifacts.staged || {};
+  const visualStage = staged.visual || {};
+  const linkedinStage = staged.linkedin || {};
+  const wordpressStage = staged.wordpress || {};
+  const githubStage = staged.github || {};
+
+  const visualSrc = typeof visualStage.previewUrl === "string" ? visualStage.previewUrl : "";
+  const linkedinUrl = typeof linkedinStage.reviewUrl === "string" ? linkedinStage.reviewUrl : "";
+  const wordpressUrl = typeof wordpressStage.link === "string" ? wordpressStage.link : "";
+  const githubUrl = typeof githubStage.prUrl === "string" ? githubStage.prUrl : "";
+
+  const linkedinPost = String(channels.linkedinPost || "");
+  const xPost = String(channels.xPost || "");
+  const mediumTitle = String(channels.mediumTitle || "");
+  const mediumSubtitle = String(channels.mediumSubtitle || "");
+  const substackSubject = String(channels.substackSubject || "");
+  const substackSubtitle = String(channels.substackSubtitle || "");
+  const wordpressTitle = String(channels.wordpressTitle || article.title || "");
+  const wordpressExcerpt = String(channels.wordpressExcerpt || article.metaDescription || "");
+
+  return (
+    <section className="preview-studio">
+      <div className="preview-studio-head">
+        <div>
+          <div className="eyebrow">Campaign preview studio</div>
+          <h3>See the campaign before anything goes live</h3>
+          <p>These are review previews only. They show the generated visual, copy and channel treatment before approval.</p>
+        </div>
+        <div className="preview-status">REVIEW MODE</div>
+      </div>
+
+      <div className="preview-grid">
+        <article className="preview-card preview-hero">
+          <div className="preview-label">FLAGSHIP VISUAL</div>
+          {visualSrc ? (
+            <img className="preview-image" src={visualSrc} alt={String(visual.altText || "Campaign visual preview")} />
+          ) : (
+            <div className="visual-placeholder">
+              <strong>{String(visual.conceptName || "Visual concept")}</strong>
+              <span>{String(visual.composition || "This completed run contains a creative brief only. New runs now generate an actual visual automatically.")}</span>
+            </div>
+          )}
+          <div className="preview-copy">
+            <strong>{String(article.title || "")}</strong>
+            <span>{String(article.lead || "")}</span>
+          </div>
+        </article>
+
+        <article className="preview-card platform-card linkedin-card">
+          <div className="platform-head">
+            <div className="avatar">HA</div>
+            <div><strong>Muhammad Haris Aslam</strong><span>LinkedIn preview</span></div>
+          </div>
+          <div className="platform-body">{linkedinPost}</div>
+          {visualSrc ? <img className="platform-image" src={visualSrc} alt="" /> : null}
+          <div className="platform-actions"><span>Like</span><span>Comment</span><span>Repost</span><span>Send</span></div>
+          {linkedinUrl ? <a className="preview-action" href={linkedinUrl} target="_blank" rel="noreferrer">Open LinkedIn Review</a> : null}
+        </article>
+
+        <article className="preview-card platform-card x-card">
+          <div className="platform-head">
+            <div className="avatar">HA</div>
+            <div><strong>Haris Aslam</strong><span>@mharis_aslam · X preview</span></div>
+          </div>
+          <div className="platform-body">{xPost}</div>
+          {visualSrc ? <img className="platform-image" src={visualSrc} alt="" /> : null}
+          {Array.isArray(channels.xThread) && channels.xThread.length ? (
+            <div className="thread-note">{channels.xThread.length} post thread prepared</div>
+          ) : null}
+        </article>
+
+        <article className="preview-card publication-card">
+          <div className="publication-brand">mharisaslam.com</div>
+          {visualSrc ? <img className="publication-image" src={visualSrc} alt="" /> : null}
+          <h4>{String(article.title || "")}</h4>
+          <p>{String(article.lead || "")}</p>
+          {githubUrl ? <a className="preview-action secondary-link" href={githubUrl} target="_blank" rel="noreferrer">Open Draft PR</a> : null}
+        </article>
+
+        <article className="preview-card publication-card">
+          <div className="publication-brand">WordPress</div>
+          <h4>{wordpressTitle}</h4>
+          <p>{wordpressExcerpt}</p>
+          <div className="draft-pill">DRAFT</div>
+          {wordpressUrl ? <a className="preview-action secondary-link" href={wordpressUrl} target="_blank" rel="noreferrer">Open WordPress Draft</a> : null}
+        </article>
+
+        <article className="preview-card publication-card medium-preview">
+          <div className="publication-brand">Medium</div>
+          <h4>{mediumTitle}</h4>
+          <p>{mediumSubtitle}</p>
+          <div className="draft-pill">READY FOR REVIEW</div>
+        </article>
+
+        <article className="preview-card publication-card substack-preview">
+          <div className="publication-brand">Substack</div>
+          <div className="email-subject">Subject: {substackSubject}</div>
+          <h4>{substackSubtitle}</h4>
+          <p>{String(channels.substackOpeningNote || "")}</p>
+          <div className="draft-pill">READY FOR REVIEW</div>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function ReportBody({ body }: { body: string }) {
   return (
     <div className="report-body">
@@ -90,9 +217,12 @@ function ReportBody({ body }: { body: string }) {
         const trimmed = line.trim();
         if (!trimmed) return <div className="report-spacer" key={index} />;
 
-        const handoffMatch = trimmed.match(/"signed_review_url"\s*:\s*"([^"]+)"/);
+        const handoffMatch = trimmed.match(/(?:"signed_review_url"|"reviewUrl")\s*:\s*"([^"]+)"/);
         if (handoffMatch) {
-          const rawUrl = handoffMatch[1].replace(/\\u0026/g, "&").replace(/\\&/g, "&");
+          const rawUrl = handoffMatch[1]
+            .replace(/\\u0026/g, "&")
+            .replace(/\\&/g, "&")
+            .replace(/\\([:/.?=&-])/g, "$1");
           return (
             <div className="handoff-cta" key={index}>
               <strong>LinkedIn review is ready</strong>
@@ -419,14 +549,19 @@ export default function Home() {
                 <button className="secondary" onClick={downloadReport}>Download report</button>
               </div>
 
-              <div className="report-sections">
-                {sections.map((section, index) => (
-                  <article className={"report-section " + (index === 0 ? "hero-section" : "")} key={section.title + index}>
-                    <h3>{section.title}</h3>
-                    <ReportBody body={section.body} />
-                  </article>
-                ))}
-              </div>
+              <PreviewStudio artifacts={campaign.artifacts} />
+
+              <details className="full-report">
+                <summary>Open full evidence, article copy and technical details</summary>
+                <div className="report-sections">
+                  {sections.map((section, index) => (
+                    <article className={"report-section " + (index === 0 ? "hero-section" : "")} key={section.title + index}>
+                      <h3>{section.title}</h3>
+                      <ReportBody body={section.body} />
+                    </article>
+                  ))}
+                </div>
+              </details>
 
               <div className="decision-panel">
                 <div>
