@@ -189,3 +189,63 @@ export async function publishMainSiteArticle(article: AuthorityArticle) {
     published: false
   };
 }
+
+
+export async function uploadDraftAsset(input: {
+  branch: string;
+  path: string;
+  base64: string;
+  message: string;
+}) {
+  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPO;
+
+  if (!token || !repo) throw new Error("GitHub publishing is not configured.");
+  if (!input.branch || !input.path || !input.base64) {
+    throw new Error("Draft asset upload is missing required fields.");
+  }
+  if (!input.path.startsWith("public/assets/authority-os/")) {
+    throw new Error("Authority OS assets must stay under public/assets/authority-os/.");
+  }
+
+  const api = "https://api.github.com/repos/" + repo;
+  const endpoint = api + "/contents/" + input.path;
+
+  let existingSha: string | undefined;
+  const existing = await fetch(endpoint + "?ref=" + encodeURIComponent(input.branch), {
+    headers: authHeaders(token),
+    cache: "no-store"
+  });
+  if (existing.ok) {
+    const data = await existing.json();
+    existingSha = data?.sha;
+  }
+
+  const response = await fetch(endpoint, {
+    method: "PUT",
+    headers: authHeaders(token),
+    body: JSON.stringify({
+      message: input.message,
+      content: input.base64,
+      branch: input.branch,
+      ...(existingSha ? { sha: existingSha } : {})
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      "GitHub asset staging failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 800)
+    );
+  }
+
+  return {
+    path: input.path,
+    branch: input.branch,
+    commitSha: data?.commit?.sha || null,
+    commitUrl: data?.commit?.html_url || null
+  };
+}
