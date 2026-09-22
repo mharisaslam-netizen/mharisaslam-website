@@ -4,7 +4,7 @@ import { randomBytes } from "crypto";
 export const runtime = "nodejs";
 
 export async function GET() {
-  const clientId = process.env.WORDPRESS_CLIENT_ID;
+  const clientId = process.env.WORDPRESS_CLIENT_ID?.trim();
   const base = process.env.AUTHORITY_OS_BASE_URL?.replace(/\/$/, "");
   const site = process.env.WORDPRESS_SITE || "harisgccgrowth.wordpress.com";
 
@@ -23,7 +23,7 @@ export async function GET() {
   url.searchParams.set("redirect_uri", redirectUri);
   url.searchParams.set("response_type", "code");
   url.searchParams.set("blog", site);
-  url.searchParams.set("scope", "posts media taxonomy");
+  url.searchParams.set("scope", "posts media");
   url.searchParams.set("state", state);
 
   const response = NextResponse.redirect(url);
