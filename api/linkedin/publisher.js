@@ -16,9 +16,9 @@ function jsonForScript(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c");
 }
 
-function page(session, csrfToken) {
+function page(session, csrfToken, selectedId) {
   const draftsJson = jsonForScript(linkedinDrafts);
-  const first = linkedinDrafts.find(x => x.id === "saudi-market-entry-economics") || linkedinDrafts[0];
+  const first = linkedinDrafts.find(x => x.id === selectedId) || linkedinDrafts.find(x => x.id === "fintech-agentic-commerce") || linkedinDrafts[0];
   const expiry = new Date(session.expiresAt).toLocaleString("en-GB", { timeZone: "Asia/Qatar", dateStyle: "medium", timeStyle: "short" });
   return `<!doctype html>
 <html lang="en">
@@ -102,7 +102,7 @@ const previewUrl=document.getElementById("previewUrl");
 const approve=document.getElementById("approve");
 const button=document.getElementById("publishButton");
 for(const draft of drafts){const option=document.createElement("option");option.value=draft.id;option.textContent=draft.label;select.appendChild(option)}
-select.value="saudi-market-entry-economics";
+select.value=${JSON.stringify(first.id)};
 function render(){count.textContent=text.value.length;preview.textContent=text.value;previewTitle.textContent=title.value;previewDescription.textContent=description.value;previewUrl.textContent=url.value;visualPreview.src=visualUrl.value||"";visualPreview.alt=visualAlt.value||"LinkedIn post visual";visualPreview.style.display=visualUrl.value?"block":"none"}
 select.addEventListener("change",()=>{const d=drafts.find(x=>x.id===select.value);if(!d)return;text.value=d.text;url.value=d.url;title.value=d.title;description.value=d.description;visualUrl.value=d.visualUrl||"";visualAlt.value=d.visualAlt||"";visualTitle.value=d.visualTitle||"";approve.checked=false;button.disabled=true;render()});
 for(const el of [text,url,title,description,visibility]) el.addEventListener("input",()=>{approve.checked=false;button.disabled=true;render()});
@@ -124,7 +124,8 @@ export function GET(request) {
   }
 
   const csrfToken = createApprovalToken(session, secret);
-  return new Response(page(session, csrfToken), {
+  const selectedId = new URL(request.url).searchParams.get("draft");
+  return new Response(page(session, csrfToken, selectedId), {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
