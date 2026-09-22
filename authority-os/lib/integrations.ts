@@ -28,14 +28,23 @@ export const integrations: Integration[] = [
 
 export function integrationSnapshot() {
   return integrations.map((item) => {
+    const googleOAuthConfigured =
+      Boolean(process.env.GOOGLE_SEARCH_CONSOLE_CLIENT_ID) &&
+      Boolean(process.env.GOOGLE_SEARCH_CONSOLE_CLIENT_SECRET) &&
+      Boolean(process.env.GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN);
+
     const configured =
       item.id === "wordpress"
         ? Boolean(process.env.WORDPRESS_SITE) &&
           (Boolean(process.env.WORDPRESS_ACCESS_TOKEN) ||
             (Boolean(process.env.WORDPRESS_USERNAME) && Boolean(process.env.WORDPRESS_APP_PASSWORD)))
-        : item.env.length === 0
-          ? item.id === "jetpack"
-          : item.env.every((key) => Boolean(process.env[key]));
+        : item.id === "gsc"
+          ? googleOAuthConfigured && Boolean(process.env.GOOGLE_SEARCH_CONSOLE_SITE)
+          : item.id === "ga4"
+            ? googleOAuthConfigured && Boolean(process.env.GA4_PROPERTY_ID)
+            : item.env.length === 0
+              ? item.id === "jetpack"
+              : item.env.every((key) => Boolean(process.env[key]));
     return {
       ...item,
       configured,
