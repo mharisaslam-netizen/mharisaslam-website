@@ -17,9 +17,84 @@ function jsonForScript(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c");
 }
 
-function page(session, csrfToken, selectedId) {
-  const draftsJson = jsonForScript(linkedinDrafts);
-  const first = linkedinDrafts.find(x => x.id === selectedId) || linkedinDrafts.find(x => x.id === "fintech-agentic-commerce") || linkedinDrafts[0];
+function normalizeHandoffDraft(value) {
+  if (!value || typeof value !== "object") return null;
+
+  const text = String(value.text || "").trim();
+  const articleUrl = String(value.url || "").trim();
+  if (!text || text.length > 3000) return null;
+
+  try {
+    const article = new URL(articleUrl);
+    if (
+      article.protocol !== "https:" ||
+      article.hostname !== "www.mharisaslam.com" ||
+      !article.pathname.startsWith("/insights/")
+    ) return null;
+  } catch {
+    return null;
+  }
+
+  const visualUrl = String(value.visualUrl || "").trim();
+  if (visualUrl) {
+    try {
+      const visual = new URL(visualUrl);
+      if (
+        visual.protocol !== "https:" ||
+        visual.hostname !== "www.mharisaslam.com" ||
+        !visual.pathname.startsWith("/assets/linkedin/") ||
+        !/\.(png|jpe?g)$/i.test(visual.pathname)
+      ) return null;
+    } catch {
+      return null;
+    }
+  }
+
+  return {
+    id: "authority-os-handoff",
+    label: String(value.label || "Authority OS draft").slice(0, 120),
+    title: String(value.title || "Authority OS LinkedIn Draft").slice(0, 200),
+    url: articleUrl,
+    description: String(value.description || "").slice(0, 300),
+    visualUrl,
+    visualAlt: String(value.visualAlt || "").slice(0, 300),
+    visualTitle: String(value.visualTitle || "").slice(0, 200),
+    text
+  };
+}
+
+function handoffFromRequest(request) {
+  const secret = process.env.LINKEDIN_PUBLISHER_SECRET;
+  if (!secret) return null;
+
+  const url = new URL(request.url);
+  const payload = url.searchParams.get("handoff");
+  const signature = url.searchParams.get("sig");
+  if (!payload || !signature) return null;
+
+  try {
+    const expected = crypto.createHmac("sha256", secret).update(payload).digest("base64url");
+    const expectedBytes = Buffer.from(expected);
+    const actualBytes = Buffer.from(signature);
+    if (
+      expectedBytes.length !== actualBytes.length ||
+      !crypto.timingSafeEqual(expectedBytes, actualBytes)
+    ) return null;
+
+    const parsed = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    if (Number(parsed?.exp || 0) < Date.now()) return null;
+    return normalizeHandoffDraft(parsed?.draft);
+  } catch {
+    return null;
+  }
+}
+
+function page(session, csrfToken, selectedId, handoffDraft = null) {
+  const drafts = handoffDraft
+    ? [handoffDraft, ...linkedinDrafts]
+    : linkedinDrafts;
+  const draftsJson = jsonForScript(drafts);
+  const first = handoffDraft || drafts.find(x => x.id === selectedId) || drafts.find(x => x.id === "fintech-agentic-commerce") || drafts[0];
   const expiry = new Date(session.expiresAt).toLocaleString("en-GB", { timeZone: "Asia/Qatar", dateStyle: "medium", timeStyle: "short" });
   return `<!doctype html>
 <html lang="en">
@@ -125,8 +200,10 @@ export function GET(request) {
   }
 
   const csrfToken = createApprovalToken(session, secret);
-  const selectedId = new URL(request.url).searchParams.get("draft");
-  return new Response(page(session, csrfToken, selectedId), {
+  const requestUrl = new URL(request.url);
+  const handoffDraft = handoffFromRequest(request);
+  const selectedId = handoffDraft?.id || requestUrl.searchParams.get("draft");
+  return new Response(page(session, csrfToken, selectedId, handoffDraft), {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
