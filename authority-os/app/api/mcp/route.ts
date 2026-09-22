@@ -73,7 +73,7 @@ const handler = createMcpHandler((server) => {
     "publish_wordpress",
     {
       description:
-        "Publish the derivative WordPress article. Jetpack Social may distribute it to the connected social channels when enabled.",
+        "Stage the derivative WordPress article. Authority OS forces draft status unless AUTHORITY_OS_LIVE_PUBLISH_ENABLED=true. Jetpack Social distribution must remain blocked during connector testing.",
       inputSchema: z.object({
         title: z.string().min(1),
         content: z.string().min(1),
