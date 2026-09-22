@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  poweredByHeader: false,
-  distDir: "dist"
+  poweredByHeader: false
 };
 
 export default nextConfig;
