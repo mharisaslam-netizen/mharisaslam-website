@@ -122,6 +122,10 @@ function PreviewStudio({
 
   const visualSrc = typeof visualStage.previewUrl === "string" ? visualStage.previewUrl : "";
   const wordpressUrl = typeof wordpressStage.link === "string" ? wordpressStage.link : "";
+  const wordpressPostId = Number(wordpressStage.id || 0);
+  const wordpressEditorUrl = wordpressPostId
+    ? "https://wordpress.com/post/harisgccgrowth.wordpress.com/" + wordpressPostId
+    : "";
   const githubUrl = typeof githubStage.prUrl === "string" ? githubStage.prUrl : "";
   const canonicalUrl = article.slug
     ? "https://www.mharisaslam.com/insights/" + String(article.slug)
@@ -153,10 +157,8 @@ function PreviewStudio({
   const wordpressTitle = String(channels.wordpressTitle || article.title || "");
   const wordpressExcerpt = String(channels.wordpressExcerpt || article.metaDescription || "");
 
-  const mediumProfile =
-    "https://medium.com/@mharisaslam";
-  const substackDashboard =
-    "https://mharisaslam.substack.com/publish/home";
+  const mediumProfile = "https://medium.com/new-story";
+  const substackDashboard = "https://mharisaslam.substack.com/publish/post";
   const websitePreview = sessionId
     ? "/api/campaign/" + encodeURIComponent(sessionId) + "/website-preview"
     : "";
@@ -251,7 +253,15 @@ function PreviewStudio({
           <p>{wordpressExcerpt}</p>
           <div className="draft-pill">DRAFT</div>
           <div className="canonical-line"><span>Links back to:</span><span>{canonicalUrl}</span></div>
-          {wordpressUrl ? <a className="preview-action secondary-link" href={wordpressUrl} target="_blank" rel="noreferrer">Open WordPress Draft</a> : null}
+          {wordpressEditorUrl ? (
+            <a className="preview-action secondary-link" href={wordpressEditorUrl} target="_blank" rel="noreferrer">
+              Open WordPress Draft Editor
+            </a>
+          ) : wordpressUrl ? (
+            <a className="preview-action secondary-link" href={wordpressUrl} target="_blank" rel="noreferrer">
+              Open WordPress Draft
+            </a>
+          ) : null}
         </article>
 
         <article className="preview-card publication-card medium-preview">
@@ -259,9 +269,9 @@ function PreviewStudio({
           <h4>{mediumTitle}</h4>
           <p>{mediumSubtitle}</p>
           <div className="canonical-line"><span>Canonical source:</span><span>{canonicalUrl}</span></div>
-          <div className="draft-pill">READY FOR REVIEW</div>
+          <div className="draft-pill">PREPARED HANDOFF · NOT SAVED IN MEDIUM</div>
           <div className="preview-button-row">
-            <a className="preview-action secondary-link" href={mediumProfile} target="_blank" rel="noreferrer">Open Medium</a>
+            <a className="preview-action secondary-link" href={mediumProfile} target="_blank" rel="noreferrer">Open Medium Editor</a>
             <button className="preview-action secondary-link" onClick={() => copy("medium", mediumBody)}>
               {copied === "medium" ? "Copied" : "Copy Medium draft"}
             </button>
@@ -274,9 +284,9 @@ function PreviewStudio({
           <h4>{substackSubtitle}</h4>
           <p>{substackOpening}</p>
           <div className="canonical-line"><span>Full article:</span><span>{canonicalUrl}</span></div>
-          <div className="draft-pill">READY FOR REVIEW</div>
+          <div className="draft-pill">PREPARED HANDOFF · NOT SAVED IN SUBSTACK</div>
           <div className="preview-button-row">
-            <a className="preview-action secondary-link" href={substackDashboard} target="_blank" rel="noreferrer">Open Substack</a>
+            <a className="preview-action secondary-link" href={substackDashboard} target="_blank" rel="noreferrer">Open Substack Editor</a>
             <button className="preview-action secondary-link" onClick={() => copy("substack", substackOpening + "\n\n" + substackBody)}>
               {copied === "substack" ? "Copied" : "Copy Substack draft"}
             </button>
