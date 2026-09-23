@@ -220,8 +220,23 @@ export async function flagshipStep(
     "medium"
   );
 
-  article.datePublished = new Date().toISOString().slice(0, 10);
-  return article;
+  function normalizeForMainSite(value: unknown): unknown {
+    if (typeof value === "string") return value.replace(/[—–]/g, "-");
+    if (Array.isArray(value)) return value.map(normalizeForMainSite);
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+          key,
+          normalizeForMainSite(item)
+        ])
+      );
+    }
+    return value;
+  }
+
+  const normalized = normalizeForMainSite(article) as AuthorityArticle;
+  normalized.datePublished = new Date().toISOString().slice(0, 10);
+  return normalized;
 }
 
 export async function channelsStep(
