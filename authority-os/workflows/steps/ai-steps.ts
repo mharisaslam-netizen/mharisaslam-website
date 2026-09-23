@@ -202,7 +202,7 @@ export async function flagshipStep(
 ): Promise<AuthorityArticle> {
   "use step";
 
-  return structured<AuthorityArticle>(
+  const article = await structured<AuthorityArticle>(
     "flagship_article",
     articleSchema as any,
     [
@@ -219,6 +219,9 @@ export async function flagshipStep(
     "flagship",
     "medium"
   );
+
+  article.datePublished = new Date().toISOString().slice(0, 10);
+  return article;
 }
 
 export async function channelsStep(
