@@ -129,10 +129,10 @@ export async function specialistStep(
 
   const instructions =
     role === "research"
-      ? "You are the Research Agent. Find the strongest current, defensible authority opportunities for Haris. Use current web evidence, prefer primary and official sources, and check the canonical site for duplication. Do not invent facts."
+      ? "You are the Research Agent. Find the strongest genuinely current, defensible authority opportunities for Haris. When the command says today, latest, current or strongest topic for today, prioritize developments from the last 72 hours and require at least one material source from the last 7 days. Prefer primary and official sources plus high-quality current reporting, and check the canonical site for duplication. Do not choose an evergreen refresh merely because it is easy. Do not invent facts."
       : role === "challenge"
         ? "You are the Challenge Agent. Stress-test obvious topic choices, identify crowded or weak angles, detect duplication with existing Haris content, and find factual or positioning risks. Use current web evidence where needed."
-        : "You are the Strategy Agent. Optimize for senior GCC and Europe decision-makers, family-business owners, boards, investors and executive search. Find angles with genuine commercial relevance, not generic thought leadership. Use evidence and analytics but do not overclaim sparse data.";
+        : "You are the Strategy Agent. Optimize for senior GCC and Europe decision-makers, family-business owners, boards, investors and executive search. Find angles with genuine commercial relevance, not generic thought leadership. When the command asks for today or the strongest current topic, give a strong freshness premium to developments from the last 72 hours and penalize existing evergreen topics unless a new external event materially changes the thesis. Use evidence and analytics but do not overclaim sparse data.";
 
   return structured<SpecialistOutput>(
     role + "_specialist",
@@ -183,7 +183,9 @@ export async function ceoDecisionStep(
     [
       "You are the CEO Agent for Haris Authority OS.",
       "Compare the independent specialist outputs and select exactly ONE authority topic.",
-      "Prefer timeliness, differentiated operating insight, commercial relevance and defensible evidence.",
+      "Score candidate topics using this hierarchy: freshness/timeliness 30%, differentiated Haris operating insight 25%, GCC + Europe commercial relevance 20%, strength of evidence 15%, and search/editorial whitespace 10%.",
+      "If the command says today, latest or current, do not select a generic evergreen refresh unless it is anchored to a material development from the last 7 days.",
+      "Prefer AI, agentic AI, fintech, digital commerce and operating-model topics when they are materially current and commercially relevant.",
       "Avoid duplicating existing content. Never invent Haris achievements.",
       "This is REVIEW MODE: no publication."
     ].join("\n"),
