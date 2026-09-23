@@ -28,10 +28,17 @@ function allowedVisualUrl(value) {
   if (!value) return true;
   try {
     const url = new URL(value);
-    return url.protocol === "https:" &&
+    const liveAsset =
+      url.protocol === "https:" &&
       url.hostname === "www.mharisaslam.com" &&
-      url.pathname.startsWith("/assets/linkedin/") &&
+      (url.pathname.startsWith("/assets/linkedin/") ||
+        url.pathname.startsWith("/assets/authority-os/")) &&
       /\.(png|jpe?g)$/i.test(url.pathname);
+    const authorityPreview =
+      url.protocol === "https:" &&
+      url.hostname === "haris-authority-os.vercel.app" &&
+      url.pathname === "/api/preview/asset";
+    return liveAsset || authorityPreview;
   } catch {
     return false;
   }
@@ -121,7 +128,7 @@ export async function POST(request) {
     return new Response(resultPage("Post not published", "For safety, this publisher currently allows article links only from mharisaslam.com/insights/."), { status: 400, headers });
   }
   if (!allowedVisualUrl(visualUrl)) {
-    return new Response(resultPage("Post not published", "The selected visual is not an approved mharisaslam.com LinkedIn asset."), { status: 400, headers });
+    return new Response(resultPage("Post not published", "The selected visual is not an approved Haris Authority visual asset."), { status: 400, headers });
   }
   if (!session.memberSub) {
     return new Response(resultPage("Post not published", "The connected LinkedIn member identifier is missing. Reconnect LinkedIn and try again."), { status: 400, headers });
