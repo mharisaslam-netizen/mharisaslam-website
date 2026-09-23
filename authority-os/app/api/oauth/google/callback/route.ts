@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 
   return html(
     "Google authorization complete",
-    `<p>Authority OS now has offline read access for Google Search Console and GA4.</p>
+    `<p>Authority OS now has offline Search Console read/write access for sitemap submission and index monitoring, plus GA4 read access.</p>
      <p>Copy this refresh token now and store it in Vercel as the Secret environment variable <code>GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN</code>. Do not paste it into ChatGPT.</p>
      <textarea readonly onclick="this.select()">${safeToken}</textarea>
      <p>Also set <code>GOOGLE_SEARCH_CONSOLE_SITE</code> to <code>sc-domain:mharisaslam.com</code> and <code>GA4_PROPERTY_ID</code> to <code>554707017</code>.</p>
