@@ -211,3 +211,95 @@ export async function updateWordPressFeaturedMedia(postId: number, mediaId: numb
     status: data.status || null
   };
 }
+
+
+export async function getWordPressPost(postId: number) {
+  const auth = wordpressAuth();
+  const response = await fetch(
+    auth.base + "/posts/" + postId + "?context=edit",
+    {
+      headers: { Authorization: auth.authorization },
+      cache: "no-store"
+    }
+  );
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      "WordPress post lookup failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 600)
+    );
+  }
+  return data;
+}
+
+export async function publishStagedWordPressPost(input: {
+  postId: number;
+  publicizeMessage?: string;
+  keepSearchCanonicalOnMainSite?: boolean;
+}) {
+  if (!Number.isInteger(input.postId) || input.postId <= 0) {
+    throw new Error("A valid WordPress post ID is required.");
+  }
+
+  const auth = wordpressAuth();
+  const current = await getWordPressPost(input.postId);
+
+  if (current?.status === "publish") {
+    return {
+      status: "LIVE",
+      alreadyPublished: true,
+      id: current.id,
+      link: current.link || null,
+      featuredMedia: current.featured_media || null,
+      jetpackSocialAlreadyShared:
+        Boolean(current?.meta?.jetpack_social_post_already_shared)
+    };
+  }
+
+  const meta: Record<string, unknown> = {
+    jetpack_publicize_feature_enabled: true,
+    ...(input.publicizeMessage
+      ? { jetpack_publicize_message: input.publicizeMessage.slice(0, 500) }
+      : {}),
+    ...(input.keepSearchCanonicalOnMainSite !== false
+      ? { jetpack_seo_noindex: true }
+      : {})
+  };
+
+  const response = await fetch(auth.base + "/posts/" + input.postId, {
+    method: "POST",
+    headers: {
+      Authorization: auth.authorization,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      status: "publish",
+      meta
+    }),
+    cache: "no-store"
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      "WordPress release failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 800)
+    );
+  }
+
+  return {
+    status: "LIVE",
+    alreadyPublished: false,
+    id: data.id,
+    link: data.link || null,
+    featuredMedia: data.featured_media || null,
+    jetpackSocialAlreadyShared:
+      Boolean(data?.meta?.jetpack_social_post_already_shared),
+    publicizeEnabled:
+      data?.meta?.jetpack_publicize_feature_enabled !== false
+  };
+}
