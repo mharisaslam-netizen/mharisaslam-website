@@ -24,7 +24,7 @@ export async function GET() {
   url.searchParams.set(
     "scope",
     [
-      "https://www.googleapis.com/auth/webmasters.readonly",
+      "https://www.googleapis.com/auth/webmasters",
       "https://www.googleapis.com/auth/analytics.readonly"
     ].join(" ")
   );
