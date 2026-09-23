@@ -163,8 +163,7 @@ function schemaGraph(page, url, crumbs) {
   return { "@context":"https://schema.org", "@graph":graph };
 }
 function sitemap() {
-  const date = new Date().toISOString().slice(0,10);
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc><lastmod>${date}</lastmod></url>`).join("\n")}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc></url>`).join("\n")}\n</urlset>\n`;
 }
 function llmsTxt() {
   const links = allPages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
