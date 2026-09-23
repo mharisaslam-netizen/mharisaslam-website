@@ -23,12 +23,20 @@ function validateArticleUrl(value: string) {
 function validateVisualUrl(value?: string) {
   if (!value) return true;
   const url = new URL(value);
-  return (
+
+  const liveAsset =
     url.protocol === "https:" &&
     url.hostname === "www.mharisaslam.com" &&
-    url.pathname.startsWith("/assets/linkedin/") &&
-    /\.(png|jpe?g)$/i.test(url.pathname)
-  );
+    (url.pathname.startsWith("/assets/linkedin/") ||
+      url.pathname.startsWith("/assets/authority-os/")) &&
+    /\.(png|jpe?g)$/i.test(url.pathname);
+
+  const authorityPreview =
+    url.protocol === "https:" &&
+    url.hostname === "haris-authority-os.vercel.app" &&
+    url.pathname === "/api/preview/asset";
+
+  return liveAsset || authorityPreview;
 }
 
 export function createLinkedInReviewHandoff(input: LinkedInReviewInput) {
@@ -47,7 +55,7 @@ export function createLinkedInReviewHandoff(input: LinkedInReviewInput) {
     throw new Error("LinkedIn handoff only accepts mharisaslam.com/insights/ URLs.");
   }
   if (!validateVisualUrl(input.visualUrl)) {
-    throw new Error("LinkedIn visual must be an approved mharisaslam.com/assets/linkedin image.");
+    throw new Error("LinkedIn visual must be an approved mharisaslam.com asset or Authority OS review asset.");
   }
 
   const payload = {
