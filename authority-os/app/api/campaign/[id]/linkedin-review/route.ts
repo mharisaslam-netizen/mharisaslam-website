@@ -36,28 +36,46 @@ export async function POST(
     }
 
     let visualUrl: string | undefined;
-    const existingVisualUrl = String(staged?.visual?.absolutePreviewUrl || "");
-    if (existingVisualUrl) {
-      visualUrl = existingVisualUrl;
-    } else {
-      const draftBranch = String(staged?.github?.draftBranch || "");
-      if (draftBranch) {
-        const assetPath =
-          "public/assets/authority-os/" +
-          article.slug +
-          "-hero.jpg";
-        const resolved = await getDraftAssetPreview({
-          branch: draftBranch,
-          path: assetPath
-        });
-        if (resolved.exists && resolved.ref) {
-          const base = String(process.env.AUTHORITY_OS_BASE_URL || "").replace(/\/$/, "");
-          const previewPath =
-            "/api/preview/asset?ref=" +
-            encodeURIComponent(String(resolved.ref)) +
-            "&path=" +
-            encodeURIComponent(assetPath);
-          visualUrl = base ? base + previewPath : undefined;
+    const liveVisualUrl =
+      "https://www.mharisaslam.com/assets/authority-os/" +
+      article.slug +
+      "-hero.jpg";
+
+    try {
+      const liveVisual = await fetch(liveVisualUrl, {
+        method: "HEAD",
+        cache: "no-store"
+      });
+      const liveType = String(liveVisual.headers.get("content-type") || "").toLowerCase();
+      if (liveVisual.ok && liveType.startsWith("image/")) {
+        visualUrl = liveVisualUrl;
+      }
+    } catch {}
+
+    if (!visualUrl) {
+      const existingVisualUrl = String(staged?.visual?.absolutePreviewUrl || "");
+      if (existingVisualUrl) {
+        visualUrl = existingVisualUrl;
+      } else {
+        const draftBranch = String(staged?.github?.draftBranch || "");
+        if (draftBranch) {
+          const assetPath =
+            "public/assets/authority-os/" +
+            article.slug +
+            "-hero.jpg";
+          const resolved = await getDraftAssetPreview({
+            branch: draftBranch,
+            path: assetPath
+          });
+          if (resolved.exists && resolved.ref) {
+            const base = String(process.env.AUTHORITY_OS_BASE_URL || "").replace(/\/$/, "");
+            const previewPath =
+              "/api/preview/asset?ref=" +
+              encodeURIComponent(String(resolved.ref)) +
+              "&path=" +
+              encodeURIComponent(assetPath);
+            visualUrl = base ? base + previewPath : undefined;
+          }
         }
       }
     }
