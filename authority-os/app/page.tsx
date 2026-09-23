@@ -415,6 +415,11 @@ export default function Home() {
       setDecision(savedDecision);
     }
 
+    const savedReleaseRun = window.localStorage.getItem("authority-os-release-run-" + sessionId);
+    const savedIndexingRun = window.localStorage.getItem("authority-os-indexing-run-" + sessionId);
+    if (savedReleaseRun) setReleaseRunId(savedReleaseRun);
+    if (savedIndexingRun) setIndexingRunId(savedIndexingRun);
+
     let cancelled = false;
     let timer: number | undefined;
 
@@ -648,6 +653,16 @@ export default function Home() {
 
       setReleaseRunId(data.releaseRunId);
       setIndexingRunId(data.indexingMonitorRunId || null);
+      window.localStorage.setItem(
+        "authority-os-release-run-" + sessionId,
+        data.releaseRunId
+      );
+      if (data.indexingMonitorRunId) {
+        window.localStorage.setItem(
+          "authority-os-indexing-run-" + sessionId,
+          data.indexingMonitorRunId
+        );
+      }
       setReleaseState({ status: "running", terminal: false });
     } catch (error) {
       setReleaseState({
@@ -958,12 +973,19 @@ export default function Home() {
 
                     <button
                       className="publish-live"
-                      disabled={!liveConfirmation || busy || Boolean(releaseRunId && !releaseState?.terminal)}
+                      disabled={
+                        !liveConfirmation ||
+                        busy ||
+                        Boolean(releaseRunId && !releaseState?.terminal) ||
+                        Boolean(releaseState?.terminal && releaseState?.result)
+                      }
                       onClick={startLiveRelease}
                     >
-                      {releaseRunId && !releaseState?.terminal
-                        ? "PUBLISHING APPROVED CHANNELS…"
-                        : "PUBLISH APPROVED CHANNELS"}
+                      {releaseState?.terminal && releaseState?.result
+                        ? "RELEASE COMPLETE"
+                        : releaseRunId && !releaseState?.terminal
+                          ? "PUBLISHING APPROVED CHANNELS…"
+                          : "PUBLISH APPROVED CHANNELS"}
                     </button>
 
                     {releaseState ? (
