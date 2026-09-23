@@ -303,3 +303,73 @@ export async function publishStagedWordPressPost(input: {
       data?.meta?.jetpack_publicize_feature_enabled !== false
   };
 }
+
+
+export async function triggerJetpackPublicize(input: {
+  postId: number;
+  message?: string;
+}) {
+  const token = process.env.WORDPRESS_ACCESS_TOKEN?.trim();
+  const site = process.env.WORDPRESS_SITE?.trim();
+
+  if (!token || !site) {
+    return {
+      status: "NOT_AVAILABLE",
+      requested: false,
+      reason: "WORDPRESS_ACCESS_TOKEN is required for direct Jetpack Publicize."
+    };
+  }
+
+  const current = await getWordPressPost(input.postId);
+  if (current?.meta?.jetpack_social_post_already_shared) {
+    return {
+      status: "ALREADY_SHARED",
+      requested: false
+    };
+  }
+
+  const form = new URLSearchParams({
+    publicize: "true"
+  });
+  if (input.message) {
+    form.set("publicize_message", input.message.slice(0, 440));
+  }
+
+  const response = await fetch(
+    "https://public-api.wordpress.com/rest/v1.1/sites/" +
+      encodeURIComponent(site) +
+      "/posts/" +
+      input.postId,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: form,
+      cache: "no-store"
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    return {
+      status: "BLOCKED",
+      requested: true,
+      error:
+        "Jetpack Publicize failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 600)
+    };
+  }
+
+  return {
+    status: "REQUESTED",
+    requested: true,
+    publicizeUrls:
+      data?.publicize_URLs ||
+      data?.publicize_urls ||
+      null
+  };
+}
