@@ -44,6 +44,20 @@ type CampaignState = {
   artifacts?: CampaignArtifacts | null;
 };
 
+type ReleaseSelections = {
+  website: boolean;
+  wordpressJetpack: boolean;
+  x: boolean;
+  indexing: boolean;
+};
+
+type ReleaseState = {
+  status?: string;
+  terminal?: boolean;
+  result?: Record<string, any> | null;
+  error?: string | null;
+};
+
 type ReportSection = {
   title: string;
   body: string;
@@ -357,6 +371,18 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [campaign, setCampaign] = useState<CampaignState | null>(null);
   const [decision, setDecision] = useState<"approved" | "revision" | "rejected" | null>(null);
+  const [releaseToken, setReleaseToken] = useState<string | null>(null);
+  const [releaseSelections, setReleaseSelections] = useState<ReleaseSelections>({
+    website: true,
+    wordpressJetpack: true,
+    x: true,
+    indexing: true
+  });
+  const [liveConfirmation, setLiveConfirmation] = useState(false);
+  const [releaseRunId, setReleaseRunId] = useState<string | null>(null);
+  const [releaseState, setReleaseState] = useState<ReleaseState | null>(null);
+  const [indexingRunId, setIndexingRunId] = useState<string | null>(null);
+  const [indexingState, setIndexingState] = useState<ReleaseState | null>(null);
 
   useEffect(() => {
     fetch("/api/integrations")
@@ -446,6 +472,12 @@ export default function Home() {
     setBusy(true);
     setCampaign({ status: "starting" });
     setDecision(null);
+    setReleaseToken(null);
+    setReleaseRunId(null);
+    setReleaseState(null);
+    setIndexingRunId(null);
+    setIndexingState(null);
+    setLiveConfirmation(false);
     setSessionId(null);
 
     try {
@@ -560,11 +592,145 @@ export default function Home() {
     setBusy(false);
   }
 
-  function recordDecision(next: "approved" | "revision" | "rejected") {
+  async function approvePackage() {
+    if (!sessionId) return;
+    setBusy(true);
+    try {
+      const response = await fetch(
+        "/api/campaign/" + encodeURIComponent(sessionId) + "/approve",
+        { method: "POST" }
+      );
+      const data = await response.json();
+      if (!response.ok || !data.releaseToken) {
+        throw new Error(data.error || "Campaign approval could not be recorded.");
+      }
+
+      setDecision("approved");
+      setReleaseToken(data.releaseToken);
+      window.localStorage.setItem("authority-os-decision-" + sessionId, "approved");
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Campaign approval failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function recordDecision(next: "revision" | "rejected") {
     if (!sessionId) return;
     setDecision(next);
+    setReleaseToken(null);
+    setLiveConfirmation(false);
     window.localStorage.setItem("authority-os-decision-" + sessionId, next);
   }
+
+  async function startLiveRelease() {
+    if (!sessionId || !releaseToken || !liveConfirmation) return;
+
+    setBusy(true);
+    setReleaseState({ status: "starting", terminal: false });
+
+    try {
+      const response = await fetch("/api/release/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          campaignRunId: sessionId,
+          releaseToken,
+          confirmation: "PUBLISH APPROVED CHANNELS",
+          selections: releaseSelections
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.releaseRunId) {
+        throw new Error(data.error || "Live release could not start.");
+      }
+
+      setReleaseRunId(data.releaseRunId);
+      setIndexingRunId(data.indexingMonitorRunId || null);
+      setReleaseState({ status: "running", terminal: false });
+    } catch (error) {
+      setReleaseState({
+        status: "error",
+        terminal: true,
+        error: error instanceof Error ? error.message : "Live release failed to start."
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!releaseRunId) return;
+
+    let cancelled = false;
+    let timer: number | undefined;
+
+    async function pollRelease() {
+      try {
+        const response = await fetch("/api/release/" + encodeURIComponent(releaseRunId), {
+          cache: "no-store"
+        });
+        const data = await response.json();
+        if (cancelled) return;
+        if (!response.ok) throw new Error(data.error || "Release status could not be loaded.");
+
+        setReleaseState(data);
+        if (!data.terminal) {
+          timer = window.setTimeout(pollRelease, 5000);
+        }
+      } catch (error) {
+        if (cancelled) return;
+        setReleaseState({
+          status: "error",
+          terminal: true,
+          error: error instanceof Error ? error.message : "Release status failed."
+        });
+      }
+    }
+
+    pollRelease();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [releaseRunId]);
+
+  useEffect(() => {
+    if (!indexingRunId) return;
+
+    let cancelled = false;
+    let timer: number | undefined;
+
+    async function pollIndexing() {
+      try {
+        const response = await fetch("/api/indexing/" + encodeURIComponent(indexingRunId), {
+          cache: "no-store"
+        });
+        const data = await response.json();
+        if (cancelled) return;
+        if (!response.ok) throw new Error(data.error || "Indexing status could not be loaded.");
+
+        setIndexingState(data);
+        if (!data.terminal) {
+          timer = window.setTimeout(pollIndexing, 60000);
+        }
+      } catch (error) {
+        if (cancelled) return;
+        setIndexingState({
+          status: "error",
+          terminal: true,
+          error: error instanceof Error ? error.message : "Indexing monitor failed."
+        });
+      }
+    }
+
+    pollIndexing();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [indexingRunId]);
 
   return (
     <main className="shell">
@@ -708,14 +874,162 @@ export default function Home() {
               <div className="decision-panel">
                 <div>
                   <strong>Your decision</strong>
-                  <span>These controls record your review only. Publishing remains disabled until live connectors are enabled.</span>
+                  <span>
+                    Approving unlocks the live release console. It does not publish anything by itself.
+                  </span>
                 </div>
                 <div className="decision-actions">
-                  <button className={decision === "approved" ? "selected" : ""} onClick={() => recordDecision("approved")}>Approve package</button>
-                  <button className={decision === "revision" ? "selected" : ""} onClick={() => recordDecision("revision")}>Request revision</button>
-                  <button className={decision === "rejected" ? "selected danger" : ""} onClick={() => recordDecision("rejected")}>Reject</button>
+                  <button
+                    className={decision === "approved" ? "selected" : ""}
+                    onClick={approvePackage}
+                    disabled={busy}
+                  >
+                    Approve package
+                  </button>
+                  <button
+                    className={decision === "revision" ? "selected" : ""}
+                    onClick={() => recordDecision("revision")}
+                  >
+                    Request revision
+                  </button>
+                  <button
+                    className={decision === "rejected" ? "selected danger" : ""}
+                    onClick={() => recordDecision("rejected")}
+                  >
+                    Reject
+                  </button>
                 </div>
-                {decision && <div className="decision-note">Decision recorded: <b>{decision}</b>. No external action was triggered.</div>}
+
+                {decision === "approved" && releaseToken ? (
+                  <div className="release-console">
+                    <div className="release-console-head">
+                      <div>
+                        <div className="eyebrow">Final release gate</div>
+                        <h3>Ready to go live</h3>
+                        <p>
+                          Select the channels Authority OS may publish automatically. LinkedIn remains a separate final human approval. Medium and Substack remain handoffs.
+                        </p>
+                      </div>
+                      <span className="live-warning">PUBLIC ACTION</span>
+                    </div>
+
+                    <div className="release-options">
+                      {[
+                        ["website", "Main website", "Merge the approved GitHub PR and wait for the canonical article to return HTTP 200."],
+                        ["wordpressJetpack", "WordPress + Jetpack Social", "Publish the staged derivative post with featured image; Jetpack Social is triggered when available."],
+                        ["x", "X", "Publish the approved X post through the connected X API account."],
+                        ["indexing", "Indexing & discovery", "Submit IndexNow, re-submit the Google sitemap, and start a 72-hour Search Console indexing monitor."]
+                      ].map(([key, label, note]) => (
+                        <label className="release-option" key={key}>
+                          <input
+                            type="checkbox"
+                            checked={Boolean(releaseSelections[key as keyof ReleaseSelections])}
+                            onChange={(event) =>
+                              setReleaseSelections((current) => ({
+                                ...current,
+                                [key]: event.target.checked
+                              }))
+                            }
+                          />
+                          <span>
+                            <strong>{label}</strong>
+                            <small>{note}</small>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <div className="release-manual">
+                      <div><strong>LinkedIn</strong><span>Final human approval required in Haris Content Publisher.</span></div>
+                      <div><strong>Medium</strong><span>Prepared handoff only.</span></div>
+                      <div><strong>Substack</strong><span>Prepared handoff only.</span></div>
+                    </div>
+
+                    <label className="release-confirm">
+                      <input
+                        type="checkbox"
+                        checked={liveConfirmation}
+                        onChange={(event) => setLiveConfirmation(event.target.checked)}
+                      />
+                      <span>
+                        I understand that clicking the button below will make the selected channels public.
+                      </span>
+                    </label>
+
+                    <button
+                      className="publish-live"
+                      disabled={!liveConfirmation || busy || Boolean(releaseRunId && !releaseState?.terminal)}
+                      onClick={startLiveRelease}
+                    >
+                      {releaseRunId && !releaseState?.terminal
+                        ? "PUBLISHING APPROVED CHANNELS…"
+                        : "PUBLISH APPROVED CHANNELS"}
+                    </button>
+
+                    {releaseState ? (
+                      <div className="release-progress">
+                        <strong>
+                          Release status: {String(releaseState.status || "running").toUpperCase()}
+                        </strong>
+                        {releaseState.error ? <span>{releaseState.error}</span> : null}
+                        {releaseState.result ? (
+                          <div className="release-results">
+                            {[
+                              ["Website", releaseState.result.websiteVerification],
+                              ["WordPress / Jetpack", releaseState.result.wordpress],
+                              ["X", releaseState.result.x],
+                              ["Indexing", releaseState.result.indexing]
+                            ].map(([label, value]: any) => (
+                              <div className="release-result-row" key={label}>
+                                <span>{label}</span>
+                                <b>{String(value?.status || "PENDING")}</b>
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+
+                    {indexingRunId ? (
+                      <div className="indexing-monitor">
+                        <strong>Indexing monitor</strong>
+                        <span>
+                          {indexingState?.terminal
+                            ? "Monitoring cycle complete."
+                            : "Authority OS will re-check Google Search Console after 1h, 6h, 24h and 72h even if this browser is closed."}
+                        </span>
+                      </div>
+                    ) : null}
+
+                    {releaseState?.terminal ? (
+                      <div className="post-release-actions">
+                        <button className="preview-action" onClick={openFreshLinkedInReview}>
+                          Open LinkedIn final approval
+                        </button>
+                        <a
+                          className="preview-action secondary-link"
+                          href="https://medium.com/new-story"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Medium handoff
+                        </a>
+                        <a
+                          className="preview-action secondary-link"
+                          href="https://mharisaslam.substack.com/publish/post"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Substack handoff
+                        </a>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : decision ? (
+                  <div className="decision-note">
+                    Decision recorded: <b>{decision}</b>. No external action was triggered.
+                  </div>
+                ) : null}
               </div>
             </section>
           )}
