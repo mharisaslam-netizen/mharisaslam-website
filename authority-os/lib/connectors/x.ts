@@ -1,9 +1,7 @@
-export async function xAccessToken(refreshTokenOverride?: string) {
+export async function xAccessToken() {
   const clientId = process.env.X_CLIENT_ID?.trim();
   const clientSecret = process.env.X_CLIENT_SECRET?.trim();
-  const refreshToken =
-    String(refreshTokenOverride || "").trim() ||
-    process.env.X_REFRESH_TOKEN?.trim();
+  const refreshToken = process.env.X_REFRESH_TOKEN?.trim();
 
   if (!clientId || !clientSecret || !refreshToken) {
     throw new Error("X OAuth credentials are not configured.");
@@ -40,12 +38,11 @@ export async function xAccessToken(refreshTokenOverride?: string) {
 
 export async function publishXPost(input: {
   text: string;
-  refreshToken?: string;
 }) {
   const text = String(input.text || "").trim();
   if (!text) throw new Error("X post text is empty.");
 
-  const token = await xAccessToken(input.refreshToken);
+  const token = await xAccessToken();
 
   const response = await fetch("https://api.x.com/2/tweets", {
     method: "POST",
@@ -76,7 +73,6 @@ export async function publishXPost(input: {
     scope: token.scope,
     refreshTokenRotated:
       Boolean(token.refreshToken) &&
-      token.refreshToken !== String(input.refreshToken || process.env.X_REFRESH_TOKEN || ""),
-    nextRefreshToken: token.refreshToken
+      token.refreshToken !== String(process.env.X_REFRESH_TOKEN || "")
   };
 }
