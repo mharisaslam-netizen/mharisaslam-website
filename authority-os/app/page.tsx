@@ -98,7 +98,18 @@ function renderInline(text: string): ReactNode[] {
 }
 
 
-function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) {
+function PreviewStudio({
+  artifacts,
+  sessionId,
+  onGenerateVisual,
+  onOpenLinkedIn
+}: {
+  artifacts?: CampaignArtifacts | null;
+  sessionId: string | null;
+  onGenerateVisual: () => Promise<void>;
+  onOpenLinkedIn: () => Promise<void>;
+}) {
+  const [copied, setCopied] = useState<string | null>(null);
   if (!artifacts) return null;
 
   const article = artifacts.article || {};
@@ -106,23 +117,55 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
   const visual = artifacts.visual || {};
   const staged = artifacts.staged || {};
   const visualStage = staged.visual || {};
-  const linkedinStage = staged.linkedin || {};
   const wordpressStage = staged.wordpress || {};
   const githubStage = staged.github || {};
 
   const visualSrc = typeof visualStage.previewUrl === "string" ? visualStage.previewUrl : "";
-  const linkedinUrl = typeof linkedinStage.reviewUrl === "string" ? linkedinStage.reviewUrl : "";
   const wordpressUrl = typeof wordpressStage.link === "string" ? wordpressStage.link : "";
   const githubUrl = typeof githubStage.prUrl === "string" ? githubStage.prUrl : "";
+  const canonicalUrl = article.slug
+    ? "https://www.mharisaslam.com/insights/" + String(article.slug)
+    : "https://www.mharisaslam.com";
 
-  const linkedinPost = String(channels.linkedinPost || "");
-  const xPost = String(channels.xPost || "");
+  const ensureCanonical = (value: string, label?: string) =>
+    value.includes(canonicalUrl)
+      ? value
+      : value.trim() + "\n\n" + (label ? label + "\n" : "") + canonicalUrl;
+
+  const linkedinPost = ensureCanonical(
+    String(channels.linkedinPost || ""),
+    "Read the full framework:"
+  );
+  const xPost = ensureCanonical(String(channels.xPost || ""));
   const mediumTitle = String(channels.mediumTitle || "");
   const mediumSubtitle = String(channels.mediumSubtitle || "");
+  const mediumBody = ensureCanonical(
+    String(channels.mediumBody || ""),
+    "Originally published on mharisaslam.com:"
+  );
   const substackSubject = String(channels.substackSubject || "");
   const substackSubtitle = String(channels.substackSubtitle || "");
+  const substackOpening = String(channels.substackOpeningNote || "");
+  const substackBody = ensureCanonical(
+    String(channels.substackBody || ""),
+    "Read the full framework on mharisaslam.com:"
+  );
   const wordpressTitle = String(channels.wordpressTitle || article.title || "");
   const wordpressExcerpt = String(channels.wordpressExcerpt || article.metaDescription || "");
+
+  const mediumProfile =
+    "https://medium.com/@mharisaslam";
+  const substackDashboard =
+    "https://mharisaslam.substack.com/publish/home";
+  const websitePreview = sessionId
+    ? "/api/campaign/" + encodeURIComponent(sessionId) + "/website-preview"
+    : "";
+
+  async function copy(label: string, value: string) {
+    await navigator.clipboard.writeText(value);
+    setCopied(label);
+    window.setTimeout(() => setCopied(null), 1800);
+  }
 
   return (
     <section className="preview-studio">
@@ -130,7 +173,7 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
         <div>
           <div className="eyebrow">Campaign preview studio</div>
           <h3>See the campaign before anything goes live</h3>
-          <p>These are review previews only. They show the generated visual, copy and channel treatment before approval.</p>
+          <p>These are review previews only. The same canonical URL and visual should flow through the campaign once approved.</p>
         </div>
         <div className="preview-status">REVIEW MODE</div>
       </div>
@@ -143,7 +186,12 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
           ) : (
             <div className="visual-placeholder">
               <strong>{String(visual.conceptName || "Visual concept")}</strong>
-              <span>{String(visual.composition || "This completed run contains a creative brief only. New runs now generate an actual visual automatically.")}</span>
+              <span>{String(visual.composition || "This completed run contains a creative brief only.")}</span>
+              {sessionId ? (
+                <button className="preview-action visual-generate" onClick={onGenerateVisual}>
+                  Generate visual & attach to drafts
+                </button>
+              ) : null}
             </div>
           )}
           <div className="preview-copy">
@@ -160,7 +208,12 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
           <div className="platform-body">{linkedinPost}</div>
           {visualSrc ? <img className="platform-image" src={visualSrc} alt="" /> : null}
           <div className="platform-actions"><span>Like</span><span>Comment</span><span>Repost</span><span>Send</span></div>
-          {linkedinUrl ? <a className="preview-action" href={linkedinUrl} target="_blank" rel="noreferrer">Open LinkedIn Review</a> : null}
+          <div className="preview-button-row">
+            <button className="preview-action" onClick={onOpenLinkedIn}>Open fresh LinkedIn Review</button>
+            <button className="preview-action secondary-link" onClick={() => copy("linkedin", linkedinPost)}>
+              {copied === "linkedin" ? "Copied" : "Copy LinkedIn post"}
+            </button>
+          </div>
         </article>
 
         <article className="preview-card platform-card x-card">
@@ -173,6 +226,10 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
           {Array.isArray(channels.xThread) && channels.xThread.length ? (
             <div className="thread-note">{channels.xThread.length} post thread prepared</div>
           ) : null}
+          <div className="canonical-line"><span>Website:</span><a href={canonicalUrl} target="_blank" rel="noreferrer">{canonicalUrl}</a></div>
+          <button className="preview-action secondary-link" onClick={() => copy("x", xPost)}>
+            {copied === "x" ? "Copied" : "Copy X post"}
+          </button>
         </article>
 
         <article className="preview-card publication-card">
@@ -180,14 +237,20 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
           {visualSrc ? <img className="publication-image" src={visualSrc} alt="" /> : null}
           <h4>{String(article.title || "")}</h4>
           <p>{String(article.lead || "")}</p>
-          {githubUrl ? <a className="preview-action secondary-link" href={githubUrl} target="_blank" rel="noreferrer">Open Draft PR</a> : null}
+          <div className="canonical-line"><span>Proposed canonical:</span><span>{canonicalUrl}</span></div>
+          <div className="preview-button-row">
+            {websitePreview ? <a className="preview-action" href={websitePreview} target="_blank" rel="noreferrer">Open Full Website Preview</a> : null}
+            {githubUrl ? <a className="preview-action secondary-link" href={githubUrl} target="_blank" rel="noreferrer">Open Draft PR</a> : null}
+          </div>
         </article>
 
         <article className="preview-card publication-card">
-          <div className="publication-brand">WordPress</div>
+          <div className="publication-brand">WordPress / Jetpack</div>
+          {visualSrc ? <img className="publication-image" src={visualSrc} alt="" /> : null}
           <h4>{wordpressTitle}</h4>
           <p>{wordpressExcerpt}</p>
           <div className="draft-pill">DRAFT</div>
+          <div className="canonical-line"><span>Links back to:</span><span>{canonicalUrl}</span></div>
           {wordpressUrl ? <a className="preview-action secondary-link" href={wordpressUrl} target="_blank" rel="noreferrer">Open WordPress Draft</a> : null}
         </article>
 
@@ -195,15 +258,29 @@ function PreviewStudio({ artifacts }: { artifacts?: CampaignArtifacts | null }) 
           <div className="publication-brand">Medium</div>
           <h4>{mediumTitle}</h4>
           <p>{mediumSubtitle}</p>
+          <div className="canonical-line"><span>Canonical source:</span><span>{canonicalUrl}</span></div>
           <div className="draft-pill">READY FOR REVIEW</div>
+          <div className="preview-button-row">
+            <a className="preview-action secondary-link" href={mediumProfile} target="_blank" rel="noreferrer">Open Medium</a>
+            <button className="preview-action secondary-link" onClick={() => copy("medium", mediumBody)}>
+              {copied === "medium" ? "Copied" : "Copy Medium draft"}
+            </button>
+          </div>
         </article>
 
         <article className="preview-card publication-card substack-preview">
           <div className="publication-brand">Substack</div>
           <div className="email-subject">Subject: {substackSubject}</div>
           <h4>{substackSubtitle}</h4>
-          <p>{String(channels.substackOpeningNote || "")}</p>
+          <p>{substackOpening}</p>
+          <div className="canonical-line"><span>Full article:</span><span>{canonicalUrl}</span></div>
           <div className="draft-pill">READY FOR REVIEW</div>
+          <div className="preview-button-row">
+            <a className="preview-action secondary-link" href={substackDashboard} target="_blank" rel="noreferrer">Open Substack</a>
+            <button className="preview-action secondary-link" onClick={() => copy("substack", substackOpening + "\n\n" + substackBody)}>
+              {copied === "substack" ? "Copied" : "Copy Substack draft"}
+            </button>
+          </div>
         </article>
       </div>
     </section>
