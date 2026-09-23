@@ -818,6 +818,15 @@ const caseVisual = (item, compact = false) => {
 const commercialCaseVisual = item => item.slug === "leading-saudi-bank-commerce-ecosystem" ? stackVisual("Commercial value model", ["Incremental card spend", "Merchant-funded value", "Loyalty economics", "Customer engagement and data"], "Value is assessed after rewards, acquisition, platform and service cost.") : "";
 
 const articleVisual = (item, compact = false) => {
+  const generatedVisual =
+    Array.isArray(item.visual) &&
+    typeof item.visual[0] === "string" &&
+    item.visual[0].startsWith("/assets/")
+      ? item.visual[0]
+      : "";
+  if (generatedVisual) {
+    return `<figure class="visual-module article-generated-visual"><img src="${esc(generatedVisual)}" alt="${esc(item.heroAlt || item.title)}" width="1536" height="864" loading="${compact ? "lazy" : "eager"}"></figure>`;
+  }
   switch (item.slug) {
     case "fintech-agentic-commerce-ai-agents-moving-money": return journeyVisual("Agentic transaction chain", ["Intent", "Delegated authority", "Trusted agent identity", "Payment orchestration", "Settlement", "Reconciliation"], "The agent executes only inside an explicit mandate; every step remains attributable and auditable.", compact);
     case "marketplace-gmv-revenue-contribution": return bridgeVisual("GMV to contribution", ["GMV", "Platform revenue", "Service costs", "Contribution"], "Conceptual waterfall, not to scale.", compact);
@@ -962,7 +971,7 @@ const articlePage = item => {
     h1: item.title,
     intro: item.lead,
     faq: item.faq,
-    ogImage: item.heroImage || "",
+    ogImage: item.heroImage || (Array.isArray(item.visual) && typeof item.visual[0] === "string" && item.visual[0].startsWith("/assets/") ? item.visual[0] : ""),
     ogImageAlt: item.heroAlt || item.title,
     body: `${item.heroImage ? `<figure class="article-photo article-hero-photo"><img src="${esc(item.heroImage)}" alt="${esc(item.heroAlt || item.title)}" width="800" height="450"><figcaption>${esc(item.heroCaption || "")}</figcaption></figure>` : ""}<div class="article-visual-stage">${articleVisual(item)}</div><div class="article-layout${isDeep ? " deep-article-layout" : ""}"><article class="article-copy${isDeep ? " deep-article-copy" : ""}">${articleCopy}</article><aside class="article-lens"><span>Operating question</span><p>${esc(item.operatingLens || "What changes in the economics, decision rights and evidence before this model can scale?")}</p></aside></div>${section("Related work", `<div class="continue-grid">${card("/use-cases", "Use cases", "See the models in practice", "Explore business problems, solutions, operating models and economics.")}${card("/gcc-growth-transformation", "GCC growth", "Growth & Transformation", "Explore the operating perspective across GCC growth, turnaround and transformation.")}</div>`)}`
   };
