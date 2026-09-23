@@ -39,12 +39,17 @@ function normalizeHandoffDraft(value) {
   if (visualUrl) {
     try {
       const visual = new URL(visualUrl);
-      if (
-        visual.protocol !== "https:" ||
-        visual.hostname !== "www.mharisaslam.com" ||
-        !visual.pathname.startsWith("/assets/linkedin/") ||
-        !/\.(png|jpe?g)$/i.test(visual.pathname)
-      ) return null;
+      const liveAsset =
+        visual.protocol === "https:" &&
+        visual.hostname === "www.mharisaslam.com" &&
+        (visual.pathname.startsWith("/assets/linkedin/") ||
+          visual.pathname.startsWith("/assets/authority-os/")) &&
+        /\.(png|jpe?g)$/i.test(visual.pathname);
+      const authorityPreview =
+        visual.protocol === "https:" &&
+        visual.hostname === "haris-authority-os.vercel.app" &&
+        visual.pathname === "/api/preview/asset";
+      if (!liveAsset && !authorityPreview) return null;
     } catch {
       return null;
     }
