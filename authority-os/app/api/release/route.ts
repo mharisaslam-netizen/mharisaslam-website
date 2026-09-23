@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRun } from "workflow/api";
+import { getRun, start } from "workflow/api";
 import { verifyReleaseApprovalToken } from "../../../lib/release-auth";
 import { mergeAuthorityPullRequest } from "../../../lib/connectors/github";
 import { verifyLiveUrl } from "../../../lib/connectors/verify";
@@ -10,6 +10,7 @@ import {
   inspectSearchConsoleUrl,
   submitSearchConsoleSitemap
 } from "../../../lib/connectors/google";
+import { monitorPublishedUrlIndexing } from "../../../workflows/indexing-monitor";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -304,6 +305,16 @@ export async function POST(request: Request) {
 
       indexing.note =
         "Authority OS submitted the canonical URL to IndexNow, re-submitted the Google sitemap when authorized, and inspected Google index status. Google controls crawl/index timing for ordinary articles and does not provide a general-purpose instant-index API.";
+
+      try {
+        const monitor = await start(monitorPublishedUrlIndexing, [canonicalUrl]);
+        indexing.monitorRunId = monitor.runId;
+        indexing.monitorStatus = "SCHEDULED";
+      } catch (error) {
+        indexing.monitorStatus = "BLOCKED";
+        indexing.monitorError =
+          error instanceof Error ? error.message : String(error);
+      }
 
       result.indexing = indexing;
     }
