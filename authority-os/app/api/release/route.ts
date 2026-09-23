@@ -3,7 +3,10 @@ import { getRun, start } from "workflow/api";
 import { verifyReleaseApprovalToken } from "../../../lib/release-auth";
 import { mergeAuthorityPullRequest } from "../../../lib/connectors/github";
 import { verifyLiveUrl } from "../../../lib/connectors/verify";
-import { publishStagedWordPressPost } from "../../../lib/connectors/wordpress";
+import {
+  publishStagedWordPressPost,
+  triggerJetpackPublicize
+} from "../../../lib/connectors/wordpress";
 import { publishXPost } from "../../../lib/connectors/x";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
 import {
@@ -215,14 +218,26 @@ export async function POST(request: Request) {
             .slice(0, 440);
 
           try {
-            result.wordpressJetpack = await publishStagedWordPressPost({
+            const message =
+              publicizeMessage.includes(canonicalUrl)
+                ? publicizeMessage
+                : publicizeMessage + "\n\n" + canonicalUrl;
+
+            const published = await publishStagedWordPressPost({
               postId,
-              publicizeMessage:
-                publicizeMessage.includes(canonicalUrl)
-                  ? publicizeMessage
-                  : publicizeMessage + "\n\n" + canonicalUrl,
+              publicizeMessage: message,
               keepSearchCanonicalOnMainSite: true
             });
+
+            const publicize = await triggerJetpackPublicize({
+              postId,
+              message
+            });
+
+            result.wordpressJetpack = {
+              ...published,
+              jetpackPublicize: publicize
+            };
           } catch (error) {
             result.wordpressJetpack = {
               status: "BLOCKED",
