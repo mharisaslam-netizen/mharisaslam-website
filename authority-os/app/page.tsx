@@ -296,15 +296,12 @@ function ReportBody({ body }: { body: string }) {
 
         const handoffMatch = trimmed.match(/(?:"signed_review_url"|"reviewUrl")\s*:\s*"([^"]+)"/);
         if (handoffMatch) {
-          const rawUrl = handoffMatch[1]
-            .replace(/\\u0026/g, "&")
-            .replace(/\\&/g, "&")
-            .replace(/\\([:/.?=&-])/g, "$1");
           return (
             <div className="handoff-cta" key={index}>
-              <strong>LinkedIn review is ready</strong>
-              <span>Open the existing Haris Content Publisher with this draft prefilled. Nothing publishes until you approve it there.</span>
-              <a href={rawUrl} target="_blank" rel="noreferrer">Open LinkedIn Review</a>
+              <strong>LinkedIn review handoff recorded</strong>
+              <span>
+                Signed review links expire for security. Use the “Open fresh LinkedIn Review” button in the Campaign Preview Studio above.
+              </span>
             </div>
           );
         }
