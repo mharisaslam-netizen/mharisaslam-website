@@ -387,6 +387,7 @@ export default function Home() {
   const [liveConfirmation, setLiveConfirmation] = useState(false);
   const [publishingLive, setPublishingLive] = useState(false);
   const [releaseResult, setReleaseResult] = useState<ReleaseResult | null>(null);
+  const [indexingMonitor, setIndexingMonitor] = useState<Record<string, any> | null>(null);
 
   useEffect(() => {
     fetch("/api/integrations")
@@ -485,6 +486,7 @@ export default function Home() {
     setDecision(null);
     setReleaseToken(null);
     setReleaseResult(null);
+    setIndexingMonitor(null);
     setLiveConfirmation(false);
     setPublishingLive(false);
     setSessionId(null);
@@ -676,6 +678,44 @@ export default function Home() {
       setPublishingLive(false);
     }
   }
+
+  useEffect(() => {
+    const monitorRunId = String(releaseResult?.indexing?.monitorRunId || "");
+    if (!monitorRunId) return;
+
+    let cancelled = false;
+    let timer: number | undefined;
+
+    async function pollIndexingMonitor() {
+      try {
+        const response = await fetch(
+          "/api/indexing/" + encodeURIComponent(monitorRunId),
+          { cache: "no-store" }
+        );
+        const data = await response.json();
+        if (cancelled) return;
+        if (!response.ok) throw new Error(data.error || "Indexing monitor could not be loaded.");
+
+        setIndexingMonitor(data);
+        if (!data.terminal) {
+          timer = window.setTimeout(pollIndexingMonitor, 60000);
+        }
+      } catch (error) {
+        if (cancelled) return;
+        setIndexingMonitor({
+          status: "error",
+          terminal: true,
+          error: error instanceof Error ? error.message : "Indexing monitor failed."
+        });
+      }
+    }
+
+    pollIndexingMonitor();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [releaseResult?.indexing?.monitorRunId]);
 
   return (
     <main className="shell">
@@ -991,6 +1031,17 @@ export default function Home() {
                             <span>Google index status</span>
                             <b>{String(releaseResult.indexing?.googleInspection?.status || "MONITORING")}</b>
                           </div>
+                          <div className="release-result-row">
+                            <span>72-hour index monitor</span>
+                            <b>
+                              {String(
+                                indexingMonitor?.result?.status ||
+                                indexingMonitor?.status ||
+                                releaseResult.indexing?.monitorStatus ||
+                                "NOT SCHEDULED"
+                              ).toUpperCase()}
+                            </b>
+                          </div>
                         </div>
 
                         {releaseResult.x?.postUrl ? (
@@ -1003,6 +1054,12 @@ export default function Home() {
                           <a className="preview-action secondary-link" href={String(releaseResult.canonicalUrl)} target="_blank" rel="noreferrer">
                             Open live canonical article
                           </a>
+                        ) : null}
+
+                        {releaseResult.indexing?.monitorRunId ? (
+                          <span>
+                            Search Console monitoring continues automatically at approximately 1h, 6h, 24h and 72h. You can close this browser.
+                          </span>
                         ) : null}
                       </div>
                     ) : null}
