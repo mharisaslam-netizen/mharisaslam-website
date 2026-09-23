@@ -323,3 +323,43 @@ export async function setDraftArticleVisual(input: {
     visualPath: input.visualPath
   };
 }
+
+
+export async function getDraftAssetPreview(input: {
+  branch: string;
+  path: string;
+}) {
+  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPO;
+  if (!token || !repo) throw new Error("GitHub publishing is not configured.");
+
+  const api = "https://api.github.com/repos/" + repo;
+  const contentResponse = await fetch(
+    api +
+      "/contents/" +
+      input.path.split("/").map(encodeURIComponent).join("/") +
+      "?ref=" +
+      encodeURIComponent(input.branch),
+    { headers: authHeaders(token), cache: "no-store" }
+  );
+
+  if (!contentResponse.ok) {
+    return { exists: false, branch: input.branch, path: input.path, ref: null };
+  }
+
+  const branchResponse = await fetch(
+    api + "/commits/" + encodeURIComponent(input.branch),
+    { headers: authHeaders(token), cache: "no-store" }
+  );
+  if (!branchResponse.ok) {
+    throw new Error("Could not resolve draft branch head (" + branchResponse.status + ").");
+  }
+
+  const branchData = await branchResponse.json();
+  return {
+    exists: true,
+    branch: input.branch,
+    path: input.path,
+    ref: branchData?.sha || null
+  };
+}
