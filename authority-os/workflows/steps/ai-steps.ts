@@ -213,19 +213,63 @@ export async function channelsStep(
 ): Promise<ChannelPackage> {
   "use step";
 
-  return structured<ChannelPackage>(
+  const result = await structured<ChannelPackage>(
     "channel_package",
     channelsSchema as any,
     [
       "You are the Channel Adaptation Agent.",
       "Adapt the flagship idea natively for each channel rather than copying it verbatim.",
-      "LinkedIn should be executive and conversational, X concise, Medium editorial, Substack newsletter-like.",
+      "LinkedIn should be executive and conversational.",
+      "X must be concise enough to leave room for the canonical website URL; keep the standalone copy under roughly 210 characters before the URL.",
+      "Medium should read like an editorial adaptation and Substack like an executive newsletter.",
       "The WordPress derivative should be shorter and differently structured from the canonical article.",
+      "Every outward-facing channel should contain a clear route back to the canonical mharisaslam.com article.",
       "Never claim that anything is published."
     ].join("\n"),
     "Campaign: " + JSON.stringify(input) + "\n\nDecision: " + JSON.stringify(decision) + "\n\nFlagship article: " + JSON.stringify(article),
     false
   );
+
+  const canonicalUrl = "https://www.mharisaslam.com/insights/" + article.slug;
+  const hasCanonical = (value: string) =>
+    value.includes(canonicalUrl) || value.includes("mharisaslam.com/insights/" + article.slug);
+
+  if (!hasCanonical(result.linkedinPost)) {
+    result.linkedinPost = result.linkedinPost.trim() + "\n\nRead the full framework:\n" + canonicalUrl;
+  }
+
+  if (!hasCanonical(result.xPost)) {
+    result.xPost = result.xPost.trim() + "\n\n" + canonicalUrl;
+  }
+
+  if (result.xThread.length && !result.xThread.some(hasCanonical)) {
+    const last = result.xThread[result.xThread.length - 1].trim();
+    const addition = "\n\nFull framework: " + canonicalUrl;
+    if ((last + addition).length <= 280) result.xThread[result.xThread.length - 1] = last + addition;
+    else result.xThread.push("Full framework:\n" + canonicalUrl);
+  }
+
+  if (!hasCanonical(result.mediumBody)) {
+    result.mediumBody =
+      result.mediumBody.trim() +
+      "\n\n---\n\nOriginally published on mharisaslam.com: " +
+      canonicalUrl;
+  }
+
+  if (!hasCanonical(result.substackBody)) {
+    result.substackBody =
+      result.substackBody.trim() +
+      "\n\nRead the full framework on mharisaslam.com:\n" +
+      canonicalUrl;
+  }
+
+  if (!result.wordpressHtml.includes(canonicalUrl)) {
+    result.wordpressHtml =
+      result.wordpressHtml.trim() +
+      '<p><a href="' + canonicalUrl + '">Read the full framework on mharisaslam.com</a></p>';
+  }
+
+  return result;
 }
 
 export async function visualStep(
