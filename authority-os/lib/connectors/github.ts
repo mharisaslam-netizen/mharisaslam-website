@@ -363,3 +363,97 @@ export async function getDraftAssetPreview(input: {
     ref: branchData?.sha || null
   };
 }
+
+
+export async function mergeAuthorityPullRequest(input: {
+  prNumber: number;
+  expectedHeadSha?: string;
+}) {
+  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPO;
+  if (!token || !repo) throw new Error("GitHub publishing is not configured.");
+  if (!Number.isInteger(input.prNumber) || input.prNumber <= 0) {
+    throw new Error("A valid Authority OS pull request number is required.");
+  }
+
+  const api = "https://api.github.com/repos/" + repo;
+  const prResponse = await fetch(api + "/pulls/" + input.prNumber, {
+    headers: authHeaders(token),
+    cache: "no-store"
+  });
+  const pr = await prResponse.json().catch(() => ({}));
+  if (!prResponse.ok) {
+    throw new Error(
+      "Could not read Authority OS pull request (" +
+        prResponse.status +
+        "): " +
+        JSON.stringify(pr).slice(0, 500)
+    );
+  }
+
+  if (pr.merged) {
+    return {
+      status: "LIVE",
+      alreadyMerged: true,
+      prNumber: input.prNumber,
+      mergeSha: pr.merge_commit_sha || null,
+      prUrl: pr.html_url || null
+    };
+  }
+
+  const headSha = String(pr?.head?.sha || "");
+  if (input.expectedHeadSha && headSha && input.expectedHeadSha !== headSha) {
+    throw new Error(
+      "Draft PR changed after approval. Expected " +
+        input.expectedHeadSha +
+        " but current head is " +
+        headSha +
+        ". Review is required again before publishing."
+    );
+  }
+
+  if (pr.draft) {
+    const graphResponse = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: authHeaders(token),
+      body: JSON.stringify({
+        query:
+          "mutation MarkReady($id: ID!) { markPullRequestReadyForReview(input: { pullRequestId: $id }) { pullRequest { id isDraft } } }",
+        variables: { id: pr.node_id }
+      })
+    });
+    const graph = await graphResponse.json().catch(() => ({}));
+    if (!graphResponse.ok || graph?.errors?.length) {
+      throw new Error(
+        "Could not mark draft PR ready for release: " +
+          JSON.stringify(graph).slice(0, 700)
+      );
+    }
+  }
+
+  const mergeResponse = await fetch(api + "/pulls/" + input.prNumber + "/merge", {
+    method: "PUT",
+    headers: authHeaders(token),
+    body: JSON.stringify({
+      merge_method: "squash",
+      ...(headSha ? { sha: headSha } : {})
+    })
+  });
+  const merged = await mergeResponse.json().catch(() => ({}));
+  if (!mergeResponse.ok || !merged?.merged) {
+    throw new Error(
+      "GitHub merge failed (" +
+        mergeResponse.status +
+        "): " +
+        JSON.stringify(merged).slice(0, 800)
+    );
+  }
+
+  return {
+    status: "LIVE",
+    alreadyMerged: false,
+    prNumber: input.prNumber,
+    mergeSha: merged.sha || null,
+    prUrl: pr.html_url || null
+  };
+}
