@@ -479,6 +479,59 @@ export default function Home() {
     URL.revokeObjectURL(url);
   }
 
+  async function generateVisualForReview() {
+    if (!sessionId) return;
+    setBusy(true);
+    try {
+      const response = await fetch(
+        "/api/campaign/" + encodeURIComponent(sessionId) + "/visual",
+        { method: "POST" }
+      );
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Visual could not be generated.");
+
+      setCampaign((current) => {
+        if (!current) return current;
+        const artifacts = { ...(current.artifacts || {}) } as CampaignArtifacts;
+        const staged = { ...(artifacts.staged || {}) };
+        staged.visual = data.visual || staged.visual;
+        if (staged.wordpress) {
+          staged.wordpress = {
+            ...staged.wordpress,
+            media: data.wordpress?.media || staged.wordpress.media,
+            featuredMediaUpdate: data.wordpress?.update || null
+          };
+        }
+        artifacts.staged = staged;
+        return { ...current, artifacts };
+      });
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Visual generation failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function openFreshLinkedInReview() {
+    if (!sessionId) return;
+    const popup = window.open("about:blank", "_blank");
+    try {
+      const response = await fetch(
+        "/api/campaign/" + encodeURIComponent(sessionId) + "/linkedin-review",
+        { method: "POST" }
+      );
+      const data = await response.json();
+      if (!response.ok || !data.reviewUrl) {
+        throw new Error(data.error || "LinkedIn review link could not be prepared.");
+      }
+      if (popup) popup.location.href = data.reviewUrl;
+      else window.location.href = data.reviewUrl;
+    } catch (error) {
+      if (popup) popup.close();
+      window.alert(error instanceof Error ? error.message : "LinkedIn review could not be opened.");
+    }
+  }
+
   async function cancelCurrentRun() {
     if (!sessionId) return;
     try {
@@ -626,7 +679,12 @@ export default function Home() {
                 <button className="secondary" onClick={downloadReport}>Download report</button>
               </div>
 
-              <PreviewStudio artifacts={campaign.artifacts} />
+              <PreviewStudio
+                artifacts={campaign.artifacts}
+                sessionId={sessionId}
+                onGenerateVisual={generateVisualForReview}
+                onOpenLinkedIn={openFreshLinkedInReview}
+              />
 
               <details className="full-report">
                 <summary>Open full evidence, article copy and technical details</summary>
