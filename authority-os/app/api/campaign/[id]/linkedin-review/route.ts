@@ -62,9 +62,14 @@ export async function POST(
       }
     }
 
+    const canonicalUrl = "https://www.mharisaslam.com/insights/" + article.slug;
+    const linkedinText = String(channels.linkedinPost || "").includes(canonicalUrl)
+      ? String(channels.linkedinPost || "")
+      : String(channels.linkedinPost || "").trim() + "\n\nRead the full framework:\n" + canonicalUrl;
+
     const handoff = createLinkedInReviewHandoff({
-      text: channels.linkedinPost,
-      articleUrl: "https://www.mharisaslam.com/insights/" + article.slug,
+      text: linkedinText,
+      articleUrl: canonicalUrl,
       title: article.title,
       description: article.metaDescription,
       visualUrl,
