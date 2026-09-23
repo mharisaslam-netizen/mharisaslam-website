@@ -249,3 +249,77 @@ export async function uploadDraftAsset(input: {
     commitUrl: data?.commit?.html_url || null
   };
 }
+
+
+export async function setDraftArticleVisual(input: {
+  branch: string;
+  slug: string;
+  visualPath: string;
+}) {
+  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPO;
+  if (!token || !repo) throw new Error("GitHub publishing is not configured.");
+
+  const api = "https://api.github.com/repos/" + repo;
+  const endpoint = api + "/contents/" + registryPath;
+  const currentResponse = await fetch(
+    endpoint + "?ref=" + encodeURIComponent(input.branch),
+    { headers: authHeaders(token), cache: "no-store" }
+  );
+
+  if (!currentResponse.ok) {
+    throw new Error("Could not read draft article registry (" + currentResponse.status + ").");
+  }
+
+  const current = await currentResponse.json();
+  const source = Buffer.from(
+    String(current.content || "").replace(/\n/g, ""),
+    "base64"
+  ).toString("utf8");
+  const match = source.match(/export const authorityArticles = ([\s\S]*);\s*$/);
+  if (!match) throw new Error("Article registry format is invalid.");
+
+  const articles = JSON.parse(match[1]) as AuthorityArticle[];
+  const index = articles.findIndex((item) => item.slug === input.slug);
+  if (index < 0) throw new Error("Draft article was not found in the registry.");
+
+  articles[index] = {
+    ...articles[index],
+    visual: [input.visualPath]
+  };
+
+  const nextSource =
+    "// Generated and maintained by Haris Authority OS.\n" +
+    "// Keep this file machine-safe: JSON-compatible objects only.\n" +
+    "export const authorityArticles = " +
+    JSON.stringify(articles, null, 2) +
+    ";\n";
+
+  const response = await fetch(endpoint, {
+    method: "PUT",
+    headers: authHeaders(token),
+    body: JSON.stringify({
+      message: "Attach authority visual: " + articles[index].title,
+      content: Buffer.from(nextSource, "utf8").toString("base64"),
+      sha: current.sha,
+      branch: input.branch
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      "GitHub draft article visual update failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 800)
+    );
+  }
+
+  return {
+    branch: input.branch,
+    commitSha: data?.commit?.sha || null,
+    commitUrl: data?.commit?.html_url || null,
+    visualPath: input.visualPath
+  };
+}
