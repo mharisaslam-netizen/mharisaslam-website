@@ -3,8 +3,16 @@ import { getRun, start } from "workflow/api";
 import { verifyReleaseApprovalToken } from "../../../lib/release-auth";
 import { mergeAuthorityPullRequest } from "../../../lib/connectors/github";
 import { verifyLiveUrl } from "../../../lib/connectors/verify";
-import { publishStagedWordPressPost } from "../../../lib/connectors/wordpress";
+import {
+  publishStagedWordPressPost,
+  getWordPressPublicizeConnections
+} from "../../../lib/connectors/wordpress";
 import { publishXPost } from "../../../lib/connectors/x";
+import {
+  decryptXRefreshToken,
+  encryptXRefreshToken,
+  X_REFRESH_COOKIE
+} from "../../../lib/x-cookie";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
 import {
   inspectSearchConsoleUrl,
@@ -17,6 +25,11 @@ export const maxDuration = 300;
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function cookieValue(cookie: string, name: string) {
+  const match = cookie.match(new RegExp("(?:^|; )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[1]) : "";
 }
 
 export async function POST(request: Request) {
@@ -215,7 +228,7 @@ export async function POST(request: Request) {
             .slice(0, 440);
 
           try {
-            result.wordpressJetpack = await publishStagedWordPressPost({
+            const published = await publishStagedWordPressPost({
               postId,
               publicizeMessage:
                 publicizeMessage.includes(canonicalUrl)
@@ -223,6 +236,11 @@ export async function POST(request: Request) {
                   : publicizeMessage + "\n\n" + canonicalUrl,
               keepSearchCanonicalOnMainSite: true
             });
+            const connections = await getWordPressPublicizeConnections();
+            result.wordpressJetpack = {
+              ...published,
+              connections
+            };
           } catch (error) {
             result.wordpressJetpack = {
               status: "BLOCKED",
@@ -233,6 +251,8 @@ export async function POST(request: Request) {
       );
     }
 
+    let nextXRefreshToken: string | null = null;
+
     if (selections.x) {
       parallelTasks.push(
         (async () => {
@@ -241,8 +261,18 @@ export async function POST(request: Request) {
             ? draft
             : draft + "\n\n" + canonicalUrl;
 
+          const cookie = request.headers.get("cookie") || "";
+          const encrypted = cookieValue(cookie, X_REFRESH_COOKIE);
+          const cookieRefresh = decryptXRefreshToken(encrypted);
+
           try {
-            result.x = await publishXPost({ text });
+            const published = await publishXPost({
+              text,
+              ...(cookieRefresh ? { refreshToken: cookieRefresh } : {})
+            });
+            nextXRefreshToken = String(published.nextRefreshToken || "") || null;
+            const { nextRefreshToken, ...safePublished } = published;
+            result.x = safePublished;
           } catch (error) {
             result.x = {
               status: "BLOCKED",
@@ -319,11 +349,27 @@ export async function POST(request: Request) {
       result.indexing = indexing;
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       ...result,
       status: "COMPLETED",
       completedAt: new Date().toISOString()
     });
+
+    if (nextXRefreshToken) {
+      response.cookies.set(
+        X_REFRESH_COOKIE,
+        encryptXRefreshToken(nextXRefreshToken),
+        {
+          httpOnly: true,
+          secure: true,
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24 * 180
+        }
+      );
+    }
+
+    return response;
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Live release failed.";
