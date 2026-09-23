@@ -26,8 +26,11 @@ function client() {
   return new OpenAI({ apiKey });
 }
 
-function model() {
-  return process.env.AUTHORITY_OS_MODEL || "gpt-5.6-sol";
+function modelFor(tier: "economy" | "flagship") {
+  if (tier === "flagship") {
+    return process.env.AUTHORITY_OS_FLAGSHIP_MODEL || "gpt-6-sol";
+  }
+  return process.env.AUTHORITY_OS_ECONOMY_MODEL || "gpt-6-luna";
 }
 
 async function structured<T>(
@@ -35,12 +38,14 @@ async function structured<T>(
   schema: Record<string, unknown>,
   instructions: string,
   input: string,
-  useWeb: boolean
+  useWeb: boolean,
+  tier: "economy" | "flagship" = "economy",
+  effort: "low" | "medium" = "low"
 ): Promise<T> {
   const openai = client();
   const response = await openai.responses.create({
-    model: model(),
-    reasoning: { effort: "medium" },
+    model: modelFor(tier),
+    reasoning: { effort },
     instructions,
     input,
     ...(useWeb ? { tools: [{ type: "web_search" as const }] } : {}),
@@ -134,7 +139,9 @@ export async function specialistStep(
     specialistSchema as any,
     instructions,
     shared,
-    role !== "strategy"
+    role !== "strategy",
+    "economy",
+    "low"
   );
 }
 
@@ -158,7 +165,9 @@ export async function searchStrategyStep(
     specialistSchema as any,
     "Return evidence-led search and analytics insight. Sparse data must be labelled sparse, not converted into false demand signals.",
     prompt,
-    true
+    true,
+    "economy",
+    "low"
   );
 }
 
@@ -179,7 +188,9 @@ export async function ceoDecisionStep(
       "This is REVIEW MODE: no publication."
     ].join("\n"),
     "Campaign: " + JSON.stringify(input) + "\n\nSpecialists: " + JSON.stringify(specialists),
-    false
+    false,
+    "flagship",
+    "medium"
   );
 }
 
@@ -202,7 +213,9 @@ export async function flagshipStep(
       "Include a useful framework, takeaways, FAQs and sources."
     ].join("\n"),
     "Campaign: " + JSON.stringify(input) + "\n\nCEO decision: " + JSON.stringify(decision),
-    false
+    false,
+    "flagship",
+    "medium"
   );
 }
 
@@ -227,7 +240,9 @@ export async function channelsStep(
       "Never claim that anything is published."
     ].join("\n"),
     "Campaign: " + JSON.stringify(input) + "\n\nDecision: " + JSON.stringify(decision) + "\n\nFlagship article: " + JSON.stringify(article),
-    false
+    false,
+    "economy",
+    "low"
   );
 
   const canonicalUrl = "https://www.mharisaslam.com/insights/" + article.slug;
@@ -290,7 +305,9 @@ export async function visualStep(
       "The imagePrompt must be directly usable with OpenAI image generation."
     ].join("\n"),
     "Campaign: " + JSON.stringify(input) + "\n\nDecision: " + JSON.stringify(decision) + "\n\nArticle title: " + article.title + "\nLead: " + article.lead,
-    false
+    false,
+    "economy",
+    "low"
   );
 }
 
@@ -311,6 +328,8 @@ export async function verificationStep(
       "Minor wording cautions should not block draft staging."
     ].join("\n"),
     "CEO decision: " + JSON.stringify(decision) + "\n\nArticle: " + JSON.stringify(article),
-    true
+    true,
+    "flagship",
+    "low"
   );
 }
