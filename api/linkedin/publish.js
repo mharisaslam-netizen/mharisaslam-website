@@ -46,39 +46,58 @@ function allowedVisualUrl(value) {
 
 async function uploadImage(session, visualUrl) {
   const owner = `urn:li:person:${session.memberSub}`;
-  const register = await fetch("https://api.linkedin.com/v2/assets?action=registerUpload", {
+  const register = await fetch("https://api.linkedin.com/rest/images?action=initializeUpload", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
       "X-Restli-Protocol-Version": "2.0.0",
+      "Linkedin-Version": "202609",
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      registerUploadRequest: {
-        recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
-        owner,
-        serviceRelationships: [{
-          relationshipType: "OWNER",
-          identifier: "urn:li:userGeneratedContent"
-        }]
+      initializeUploadRequest: {
+        owner
       }
     })
   });
 
-  if (!register.ok) throw new Error(`Image registration failed (${register.status})`);
-  const data = await register.json();
-  const mechanism = data?.value?.uploadMechanism?.["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"];
-  const uploadUrl = mechanism?.uploadUrl;
-  const asset = data?.value?.asset;
-  if (!uploadUrl || !asset) throw new Error("LinkedIn did not return image upload details");
+  const registerDetail = await register.text();
+  if (!register.ok) {
+    throw new Error(
+      "LinkedIn image initialization failed (" +
+        register.status +
+        "): " +
+        registerDetail.slice(0, 500)
+    );
+  }
 
-  const image = await fetch(visualUrl);
+  let data = {};
+  try {
+    data = JSON.parse(registerDetail);
+  } catch {}
+
+  const uploadUrl = data?.value?.uploadUrl;
+  const imageUrn = data?.value?.image;
+  if (!uploadUrl || !imageUrn) {
+    throw new Error("LinkedIn did not return current Images API upload details.");
+  }
+
+  const image = await fetch(visualUrl, {
+    headers: { "User-Agent": "Haris-Content-Publisher/1.0" }
+  });
   if (!image.ok) throw new Error(`Visual fetch failed (${image.status})`);
-  const type = String(image.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
-  if (!["image/png", "image/jpeg"].includes(type)) throw new Error(`Unsupported visual type: ${type}`);
+  const type = String(image.headers.get("content-type") || "")
+    .split(";")[0]
+    .trim()
+    .toLowerCase();
+  if (!["image/png", "image/jpeg"].includes(type)) {
+    throw new Error(`Unsupported visual type: ${type || "unknown"}`);
+  }
 
   const bytes = await image.arrayBuffer();
-  if (!bytes.byteLength || bytes.byteLength > 10 * 1024 * 1024) throw new Error("Visual is empty or too large");
+  if (!bytes.byteLength || bytes.byteLength > 10 * 1024 * 1024) {
+    throw new Error("Visual is empty or too large.");
+  }
 
   const uploaded = await fetch(uploadUrl, {
     method: "PUT",
@@ -88,8 +107,17 @@ async function uploadImage(session, visualUrl) {
     },
     body: bytes
   });
-  if (!uploaded.ok) throw new Error(`Image upload failed (${uploaded.status})`);
-  return asset;
+  if (!uploaded.ok) {
+    const detail = await uploaded.text().catch(() => "");
+    throw new Error(
+      "LinkedIn image upload failed (" +
+        uploaded.status +
+        "): " +
+        detail.slice(0, 500)
+    );
+  }
+
+  return imageUrn;
 }
 
 export async function POST(request) {
@@ -135,45 +163,52 @@ export async function POST(request) {
   }
 
   try {
-    let shareMediaCategory = "ARTICLE";
-    let media = [{
-      status: "READY",
-      originalUrl: articleUrl,
-      ...(articleTitle ? { title: { text: articleTitle } } : {}),
-      ...(articleDescription ? { description: { text: articleDescription } } : {})
-    }];
+    const author = `urn:li:person:${session.memberSub}`;
+    const imageUrn = visualUrl ? await uploadImage(session, visualUrl) : "";
 
-    if (visualUrl) {
-      const asset = await uploadImage(session, visualUrl);
-      shareMediaCategory = "IMAGE";
-      media = [{
-        status: "READY",
-        media: asset,
-        ...(visualTitle ? { title: { text: visualTitle } } : {}),
-        ...(visualAlt ? { description: { text: visualAlt } } : {})
-      }];
+    const finalText = text.includes(articleUrl)
+      ? text
+      : text + "\n\n" + articleUrl;
+
+    if (finalText.length > 3000) {
+      return new Response(
+        resultPage(
+          "Post not published",
+          "The approved copy plus the required article URL exceeds LinkedIn's 3000-character limit."
+        ),
+        { status: 400, headers }
+      );
     }
 
-    const body = {
-      author: `urn:li:person:${session.memberSub}`,
-      lifecycleState: "PUBLISHED",
-      specificContent: {
-        "com.linkedin.ugc.ShareContent": {
-          shareCommentary: { text },
-          shareMediaCategory,
-          media
-        }
-      },
-      visibility: {
-        "com.linkedin.ugc.MemberNetworkVisibility": visibility
-      }
+    const article = {
+      source: articleUrl,
+      ...(imageUrn ? { thumbnail: imageUrn } : {}),
+      title: articleTitle || visualTitle || "Read the full article",
+      ...(articleDescription ? { description: articleDescription } : {})
     };
 
-    const response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
+    const body = {
+      author,
+      commentary: finalText,
+      visibility,
+      distribution: {
+        feedDistribution: "MAIN_FEED",
+        targetEntities: [],
+        thirdPartyDistributionChannels: []
+      },
+      content: {
+        article
+      },
+      lifecycleState: "PUBLISHED",
+      isReshareDisabledByAuthor: false
+    };
+
+    const response = await fetch("https://api.linkedin.com/rest/posts", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
         "X-Restli-Protocol-Version": "2.0.0",
+        "Linkedin-Version": "202609",
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body)
@@ -181,15 +216,40 @@ export async function POST(request) {
 
     if (!response.ok) {
       const detail = await response.text();
-      console.error("LinkedIn publish error", response.status, detail.slice(0, 1200));
-      return new Response(resultPage("LinkedIn did not publish the post", `LinkedIn returned status ${response.status}. No successful publication was recorded.`), { status: 502, headers });
+      console.error("LinkedIn Posts API publish error", response.status, detail.slice(0, 1200));
+      return new Response(
+        resultPage(
+          "LinkedIn did not publish the post",
+          `LinkedIn Posts API returned status ${response.status}. No successful publication was recorded.`
+        ),
+        { status: 502, headers }
+      );
     }
 
-    const postId = response.headers.get("x-restli-id") || response.headers.get("x-linkedin-id") || "";
-    const postUrl = postId ? `https://www.linkedin.com/feed/update/${postId}` : "";
-    return new Response(resultPage("Published to LinkedIn", "The approved post has been published to your personal LinkedIn profile.", postUrl), { status: 201, headers });
+    const postId =
+      response.headers.get("x-restli-id") ||
+      response.headers.get("x-linkedin-id") ||
+      "";
+    const postUrl = postId
+      ? `https://www.linkedin.com/feed/update/${postId}`
+      : "";
+    return new Response(
+      resultPage(
+        "Published to LinkedIn",
+        "The approved post has been published to your personal LinkedIn profile.",
+        postUrl
+      ),
+      { status: 201, headers }
+    );
   } catch (error) {
     console.error("LinkedIn publish exception", error);
-    return new Response(resultPage("LinkedIn publish failed", "A network or API error occurred. No successful publication was recorded."), { status: 502, headers });
+    const detail = error instanceof Error ? error.message : "Unknown LinkedIn publishing error.";
+    return new Response(
+      resultPage(
+        "LinkedIn publish failed",
+        detail + " No successful publication was recorded."
+      ),
+      { status: 502, headers }
+    );
   }
 }
