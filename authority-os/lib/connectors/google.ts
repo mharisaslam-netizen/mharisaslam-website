@@ -100,3 +100,99 @@ export async function ga4Report(input: {
   }
   return data;
 }
+
+
+export async function inspectSearchConsoleUrl(url: string) {
+  const siteUrl =
+    process.env.GOOGLE_SEARCH_CONSOLE_SITE || "sc-domain:mharisaslam.com";
+  const token = await googleAccessToken();
+
+  const response = await fetch(
+    "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        inspectionUrl: url,
+        siteUrl,
+        languageCode: "en-US"
+      }),
+      cache: "no-store"
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      "Search Console URL inspection failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 700)
+    );
+  }
+
+  const result = data?.inspectionResult?.indexStatusResult || {};
+  return {
+    verdict: result.verdict || null,
+    coverageState: result.coverageState || null,
+    indexingState: result.indexingState || null,
+    robotsTxtState: result.robotsTxtState || null,
+    pageFetchState: result.pageFetchState || null,
+    lastCrawlTime: result.lastCrawlTime || null,
+    googleCanonical: result.googleCanonical || null,
+    userCanonical: result.userCanonical || null,
+    raw: data
+  };
+}
+
+export async function submitSearchConsoleSitemap(
+  sitemapUrl = "https://www.mharisaslam.com/sitemap.xml"
+) {
+  const siteUrl =
+    process.env.GOOGLE_SEARCH_CONSOLE_SITE || "sc-domain:mharisaslam.com";
+  const token = await googleAccessToken();
+
+  const response = await fetch(
+    "https://www.googleapis.com/webmasters/v3/sites/" +
+      encodeURIComponent(siteUrl) +
+      "/sitemaps/" +
+      encodeURIComponent(sitemapUrl),
+    {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + token
+      },
+      cache: "no-store"
+    }
+  );
+
+  if (response.status === 403) {
+    const detail = await response.text().catch(() => "");
+    return {
+      status: "NEEDS_REAUTHORIZE",
+      submitted: false,
+      reason:
+        "Google Search Console write scope is not present. Reauthorize Authority OS once with the webmasters scope.",
+      detail: detail.slice(0, 500)
+    };
+  }
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    throw new Error(
+      "Search Console sitemap submission failed (" +
+        response.status +
+        "): " +
+        detail.slice(0, 600)
+    );
+  }
+
+  return {
+    status: "SUBMITTED",
+    submitted: true,
+    sitemapUrl
+  };
+}
