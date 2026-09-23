@@ -44,6 +44,26 @@ type CampaignState = {
   artifacts?: CampaignArtifacts | null;
 };
 
+type ReleaseSelections = {
+  website: boolean;
+  wordpressJetpack: boolean;
+  x: boolean;
+  indexing: boolean;
+};
+
+type ReleaseResult = {
+  status?: string;
+  completedAt?: string;
+  canonicalUrl?: string;
+  website?: Record<string, any>;
+  websiteVerification?: Record<string, any>;
+  wordpressJetpack?: Record<string, any>;
+  x?: Record<string, any>;
+  indexing?: Record<string, any>;
+  manualGates?: Record<string, string>;
+  error?: string;
+};
+
 type ReportSection = {
   title: string;
   body: string;
@@ -357,6 +377,16 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [campaign, setCampaign] = useState<CampaignState | null>(null);
   const [decision, setDecision] = useState<"approved" | "revision" | "rejected" | null>(null);
+  const [releaseToken, setReleaseToken] = useState<string | null>(null);
+  const [releaseSelections, setReleaseSelections] = useState<ReleaseSelections>({
+    website: true,
+    wordpressJetpack: true,
+    x: true,
+    indexing: true
+  });
+  const [liveConfirmation, setLiveConfirmation] = useState(false);
+  const [publishingLive, setPublishingLive] = useState(false);
+  const [releaseResult, setReleaseResult] = useState<ReleaseResult | null>(null);
 
   useEffect(() => {
     fetch("/api/integrations")
@@ -387,6 +417,13 @@ export default function Home() {
     const savedDecision = window.localStorage.getItem("authority-os-decision-" + sessionId);
     if (savedDecision === "approved" || savedDecision === "revision" || savedDecision === "rejected") {
       setDecision(savedDecision);
+    }
+
+    const savedRelease = window.localStorage.getItem("authority-os-release-result-" + sessionId);
+    if (savedRelease) {
+      try {
+        setReleaseResult(JSON.parse(savedRelease));
+      } catch {}
     }
 
     let cancelled = false;
@@ -446,6 +483,10 @@ export default function Home() {
     setBusy(true);
     setCampaign({ status: "starting" });
     setDecision(null);
+    setReleaseToken(null);
+    setReleaseResult(null);
+    setLiveConfirmation(false);
+    setPublishingLive(false);
     setSessionId(null);
 
     try {
@@ -560,10 +601,80 @@ export default function Home() {
     setBusy(false);
   }
 
-  function recordDecision(next: "approved" | "revision" | "rejected") {
+  async function approvePackage() {
+    if (!sessionId) return;
+    setBusy(true);
+    try {
+      const response = await fetch(
+        "/api/campaign/" + encodeURIComponent(sessionId) + "/approve",
+        { method: "POST" }
+      );
+      const data = await response.json();
+      if (!response.ok || !data.releaseToken) {
+        throw new Error(data.error || "Campaign approval could not be recorded.");
+      }
+
+      setDecision("approved");
+      setReleaseToken(data.releaseToken);
+      setLiveConfirmation(false);
+      window.localStorage.setItem("authority-os-decision-" + sessionId, "approved");
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Campaign approval failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function recordDecision(next: "revision" | "rejected") {
     if (!sessionId) return;
     setDecision(next);
+    setReleaseToken(null);
+    setLiveConfirmation(false);
     window.localStorage.setItem("authority-os-decision-" + sessionId, next);
+  }
+
+  function toggleRelease(key: keyof ReleaseSelections) {
+    setReleaseSelections((current) => ({
+      ...current,
+      [key]: !current[key]
+    }));
+  }
+
+  async function publishApprovedChannels() {
+    if (!sessionId || !releaseToken || !liveConfirmation || publishingLive) return;
+
+    setPublishingLive(true);
+    try {
+      const response = await fetch("/api/release", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          campaignRunId: sessionId,
+          releaseToken,
+          confirmation: "PUBLISH APPROVED CHANNELS",
+          selections: releaseSelections
+        })
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Live release failed.");
+      }
+
+      setReleaseResult(data);
+      window.localStorage.setItem(
+        "authority-os-release-result-" + sessionId,
+        JSON.stringify(data)
+      );
+    } catch (error) {
+      const result = {
+        status: "ERROR",
+        error: error instanceof Error ? error.message : "Live release failed."
+      };
+      setReleaseResult(result);
+    } finally {
+      setPublishingLive(false);
+    }
   }
 
   return (
@@ -708,14 +819,213 @@ export default function Home() {
               <div className="decision-panel">
                 <div>
                   <strong>Your decision</strong>
-                  <span>These controls record your review only. Publishing remains disabled until live connectors are enabled.</span>
+                  <span>
+                    Approving the package unlocks the release console. Approval alone does not publish anything.
+                  </span>
                 </div>
+
                 <div className="decision-actions">
-                  <button className={decision === "approved" ? "selected" : ""} onClick={() => recordDecision("approved")}>Approve package</button>
-                  <button className={decision === "revision" ? "selected" : ""} onClick={() => recordDecision("revision")}>Request revision</button>
-                  <button className={decision === "rejected" ? "selected danger" : ""} onClick={() => recordDecision("rejected")}>Reject</button>
+                  <button
+                    className={decision === "approved" ? "selected" : ""}
+                    onClick={approvePackage}
+                    disabled={busy || publishingLive}
+                  >
+                    Approve package
+                  </button>
+                  <button
+                    className={decision === "revision" ? "selected" : ""}
+                    onClick={() => recordDecision("revision")}
+                  >
+                    Request revision
+                  </button>
+                  <button
+                    className={decision === "rejected" ? "selected danger" : ""}
+                    onClick={() => recordDecision("rejected")}
+                  >
+                    Reject
+                  </button>
                 </div>
-                {decision && <div className="decision-note">Decision recorded: <b>{decision}</b>. No external action was triggered.</div>}
+
+                {decision === "approved" && !releaseToken && !releaseResult ? (
+                  <div className="decision-note">
+                    Approval was recorded earlier. Click <b>Approve package</b> once more to mint a fresh one-hour release authorization.
+                  </div>
+                ) : null}
+
+                {decision === "approved" && (releaseToken || releaseResult) ? (
+                  <div className="release-console">
+                    <div className="release-console-head">
+                      <div>
+                        <div className="eyebrow">Final release gate</div>
+                        <h3>Ready to go live</h3>
+                        <p>
+                          Select what Authority OS may publish automatically. LinkedIn remains a separate final human approval. Medium and Substack remain controlled handoffs.
+                        </p>
+                      </div>
+                      <span className="live-warning">PUBLIC ACTION</span>
+                    </div>
+
+                    <div className="release-options">
+                      <label className="release-option">
+                        <input
+                          type="checkbox"
+                          checked={releaseSelections.website}
+                          onChange={() => toggleRelease("website")}
+                          disabled={Boolean(releaseResult?.completedAt)}
+                        />
+                        <span>
+                          <strong>Main website</strong>
+                          <small>Merge the approved GitHub draft and verify the canonical URL is live before any downstream distribution.</small>
+                        </span>
+                      </label>
+
+                      <label className="release-option">
+                        <input
+                          type="checkbox"
+                          checked={releaseSelections.wordpressJetpack}
+                          onChange={() => toggleRelease("wordpressJetpack")}
+                          disabled={Boolean(releaseResult?.completedAt)}
+                        />
+                        <span>
+                          <strong>WordPress + Jetpack Social</strong>
+                          <small>Publish the staged derivative with its featured image and trigger Jetpack publicize where connected.</small>
+                        </span>
+                      </label>
+
+                      <label className="release-option">
+                        <input
+                          type="checkbox"
+                          checked={releaseSelections.x}
+                          onChange={() => toggleRelease("x")}
+                          disabled={Boolean(releaseResult?.completedAt)}
+                        />
+                        <span>
+                          <strong>X</strong>
+                          <small>Publish the approved X post directly through the connected X API account.</small>
+                        </span>
+                      </label>
+
+                      <label className="release-option">
+                        <input
+                          type="checkbox"
+                          checked={releaseSelections.indexing}
+                          onChange={() => toggleRelease("indexing")}
+                          disabled={Boolean(releaseResult?.completedAt)}
+                        />
+                        <span>
+                          <strong>Indexing & discovery</strong>
+                          <small>Submit IndexNow, re-submit the Google sitemap when authorized, and inspect the live URL in Search Console.</small>
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="release-manual">
+                      <div>
+                        <strong>LinkedIn</strong>
+                        <span>Final human approval remains mandatory in Haris Content Publisher.</span>
+                      </div>
+                      <div>
+                        <strong>Medium</strong>
+                        <span>Prepared editor handoff. No supported new auto-publish API.</span>
+                      </div>
+                      <div>
+                        <strong>Substack</strong>
+                        <span>Prepared editor handoff. No general external auto-publish API used.</span>
+                      </div>
+                    </div>
+
+                    {!releaseResult?.completedAt ? (
+                      <>
+                        <label className="release-confirm">
+                          <input
+                            type="checkbox"
+                            checked={liveConfirmation}
+                            onChange={(event) => setLiveConfirmation(event.target.checked)}
+                          />
+                          <span>
+                            I understand that clicking below will make the selected channels public.
+                          </span>
+                        </label>
+
+                        <button
+                          className="publish-live"
+                          disabled={!liveConfirmation || publishingLive || !releaseToken}
+                          onClick={publishApprovedChannels}
+                        >
+                          {publishingLive
+                            ? "PUBLISHING APPROVED CHANNELS…"
+                            : "PUBLISH APPROVED CHANNELS"}
+                        </button>
+                      </>
+                    ) : null}
+
+                    {releaseResult ? (
+                      <div className="release-progress">
+                        <strong>
+                          Release status: {String(releaseResult.status || "UNKNOWN").toUpperCase()}
+                        </strong>
+                        {releaseResult.error ? <span>{releaseResult.error}</span> : null}
+
+                        <div className="release-results">
+                          <div className="release-result-row">
+                            <span>Main website</span>
+                            <b>{String(releaseResult.websiteVerification?.status || releaseResult.website?.status || "PENDING")}</b>
+                          </div>
+                          <div className="release-result-row">
+                            <span>WordPress / Jetpack</span>
+                            <b>{String(releaseResult.wordpressJetpack?.status || "PENDING")}</b>
+                          </div>
+                          <div className="release-result-row">
+                            <span>X</span>
+                            <b>{String(releaseResult.x?.status || "PENDING")}</b>
+                          </div>
+                          <div className="release-result-row">
+                            <span>IndexNow</span>
+                            <b>{String(releaseResult.indexing?.indexNow?.status || releaseResult.indexing?.status || "PENDING")}</b>
+                          </div>
+                          <div className="release-result-row">
+                            <span>Google sitemap</span>
+                            <b>{String(releaseResult.indexing?.googleSitemap?.status || "PENDING")}</b>
+                          </div>
+                          <div className="release-result-row">
+                            <span>Google index status</span>
+                            <b>{String(releaseResult.indexing?.googleInspection?.status || "MONITORING")}</b>
+                          </div>
+                        </div>
+
+                        {releaseResult.x?.postUrl ? (
+                          <a className="preview-action secondary-link" href={String(releaseResult.x.postUrl)} target="_blank" rel="noreferrer">
+                            Open X post
+                          </a>
+                        ) : null}
+
+                        {releaseResult.canonicalUrl ? (
+                          <a className="preview-action secondary-link" href={String(releaseResult.canonicalUrl)} target="_blank" rel="noreferrer">
+                            Open live canonical article
+                          </a>
+                        ) : null}
+                      </div>
+                    ) : null}
+
+                    {releaseResult?.completedAt ? (
+                      <div className="post-release-actions">
+                        <button className="preview-action" onClick={openFreshLinkedInReview}>
+                          Open LinkedIn final approval
+                        </button>
+                        <a className="preview-action secondary-link" href="https://medium.com/new-story" target="_blank" rel="noreferrer">
+                          Medium handoff
+                        </a>
+                        <a className="preview-action secondary-link" href="https://mharisaslam.substack.com/publish/post" target="_blank" rel="noreferrer">
+                          Substack handoff
+                        </a>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : decision ? (
+                  <div className="decision-note">
+                    Decision recorded: <b>{decision}</b>. No external action was triggered.
+                  </div>
+                ) : null}
               </div>
             </section>
           )}
