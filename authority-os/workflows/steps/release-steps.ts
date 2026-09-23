@@ -22,10 +22,10 @@ export async function releaseWebsiteStep(input: ReleaseInput) {
     return { status: "NOT_SELECTED" };
   }
 
-  const prNumber = Number(input.staged?.github?.prNumber || 0);
+  const prNumber = Number(input.staged.github?.prNumber || 0);
   const expectedHeadSha = String(
-    input.staged?.github?.commitSha ||
-      input.staged?.visual?.ref ||
+    input.staged.github?.commitSha ||
+      input.staged.visual?.ref ||
       ""
   );
 
@@ -38,11 +38,10 @@ export async function releaseWebsiteStep(input: ReleaseInput) {
 
   try {
     const { mergeAuthorityPullRequest } = await import("../../lib/connectors/github");
-    const result = await mergeAuthorityPullRequest({
+    return await mergeAuthorityPullRequest({
       prNumber,
       ...(expectedHeadSha ? { expectedHeadSha } : {})
     });
-    return result;
   } catch (error) {
     return {
       status: "BLOCKED",
@@ -93,7 +92,7 @@ export async function releaseWordPressStep(input: ReleaseInput) {
     return { status: "NOT_SELECTED" };
   }
 
-  const postId = Number(input.staged?.wordpress?.id || 0);
+  const postId = Number(input.staged.wordpress?.id || 0);
   if (!postId) {
     return {
       status: "BLOCKED",
@@ -106,10 +105,7 @@ export async function releaseWordPressStep(input: ReleaseInput) {
     input.article.slug;
 
   const publicizeMessage = String(input.channels.linkedinPost || "")
-    .replace(/
-{3,}/g, "
-
-")
+    .replace(/\n{3,}/g, "\n\n")
     .trim()
     .slice(0, 480);
 
@@ -117,17 +113,15 @@ export async function releaseWordPressStep(input: ReleaseInput) {
     const { publishStagedWordPressPost } = await import(
       "../../lib/connectors/wordpress"
     );
-    const result = await publishStagedWordPressPost({
+
+    return await publishStagedWordPressPost({
       postId,
       publicizeMessage:
         publicizeMessage.includes(canonicalUrl)
           ? publicizeMessage
-          : publicizeMessage + "
-
-" + canonicalUrl,
+          : publicizeMessage + "\n\n" + canonicalUrl,
       keepSearchCanonicalOnMainSite: true
     });
-    return result;
   } catch (error) {
     return {
       status: "BLOCKED",
@@ -150,9 +144,7 @@ export async function releaseXStep(input: ReleaseInput) {
   const draft = String(input.channels.xPost || "").trim();
   const text = draft.includes(canonicalUrl)
     ? draft
-    : draft + "
-
-" + canonicalUrl;
+    : draft + "\n\n" + canonicalUrl;
 
   try {
     const { publishXPost } = await import("../../lib/connectors/x");
@@ -184,8 +176,8 @@ export async function indexingStep(input: ReleaseInput) {
     const { submitIndexNow } = await import("../../lib/connectors/indexnow");
     const result = await submitIndexNow([url]);
     indexNow = {
-      status: "SUBMITTED",
-      ...result
+      ...result,
+      releaseStatus: "SUBMITTED"
     };
   } catch (error) {
     indexNow = {
@@ -206,11 +198,11 @@ export async function indexingStep(input: ReleaseInput) {
 
     const inspected = await inspectSearchConsoleUrl(url);
     googleInspection = {
+      ...inspected,
       status:
         inspected.verdict === "PASS"
           ? "INDEXED"
-          : "MONITORING",
-      ...inspected
+          : "MONITORING"
     };
   } catch (error) {
     googleInspection = {
