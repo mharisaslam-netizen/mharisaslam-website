@@ -34,3 +34,45 @@ export async function xAccessToken() {
     scope: String(data.scope || "")
   };
 }
+
+
+export async function publishXPost(input: {
+  text: string;
+}) {
+  const text = String(input.text || "").trim();
+  if (!text) throw new Error("X post text is empty.");
+
+  const token = await xAccessToken();
+
+  const response = await fetch("https://api.x.com/2/tweets", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token.accessToken,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ text }),
+    cache: "no-store"
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data?.data?.id) {
+    throw new Error(
+      "X publish failed (" +
+        response.status +
+        "): " +
+        JSON.stringify(data).slice(0, 800)
+    );
+  }
+
+  const id = String(data.data.id);
+  return {
+    status: "LIVE",
+    id,
+    text: String(data.data.text || text),
+    postUrl: "https://x.com/i/web/status/" + id,
+    scope: token.scope,
+    refreshTokenRotated:
+      Boolean(token.refreshToken) &&
+      token.refreshToken !== String(process.env.X_REFRESH_TOKEN || "")
+  };
+}
