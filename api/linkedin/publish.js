@@ -44,8 +44,24 @@ function allowedVisualUrl(value) {
   }
 }
 
-async function uploadImage(session, visualUrl) {
-  const owner = `urn:li:person:${session.memberSub}`;
+async function resolveMemberId(session) {
+  try {
+    const response = await fetch("https://api.linkedin.com/v2/me", {
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+        "X-Restli-Protocol-Version": "2.0.0"
+      }
+    });
+    if (response.ok) {
+      const profile = await response.json();
+      if (profile?.id) return String(profile.id);
+    }
+  } catch {}
+  return String(session.memberSub || "");
+}
+
+async function uploadImage(session, visualUrl, memberId) {
+  const owner = `urn:li:person:${memberId}`;
   const register = await fetch("https://api.linkedin.com/rest/images?action=initializeUpload", {
     method: "POST",
     headers: {
@@ -163,9 +179,18 @@ export async function POST(request) {
   }
 
   try {
-    const author = `urn:li:person:${session.memberSub}`;
-    const imageUrn = visualUrl ? await uploadImage(session, visualUrl) : "";
+    const memberId = await resolveMemberId(session);
+    if (!memberId) {
+      return new Response(
+        resultPage(
+          "LinkedIn publish failed",
+          "LinkedIn did not return a usable member identifier. Reconnect LinkedIn and try again."
+        ),
+        { status: 502, headers }
+      );
+    }
 
+    const author = `urn:li:person:${memberId}`;
     const finalText = text.includes(articleUrl)
       ? text
       : text + "\n\n" + articleUrl;
@@ -180,6 +205,20 @@ export async function POST(request) {
       );
     }
 
+    const diagnostics = [];
+    let imageUrn = "";
+
+    if (visualUrl) {
+      try {
+        imageUrn = await uploadImage(session, visualUrl, memberId);
+      } catch (error) {
+        diagnostics.push(
+          "Image step: " +
+            (error instanceof Error ? error.message : String(error))
+        );
+      }
+    }
+
     const article = {
       source: articleUrl,
       ...(imageUrn ? { thumbnail: imageUrn } : {}),
@@ -187,7 +226,7 @@ export async function POST(request) {
       ...(articleDescription ? { description: articleDescription } : {})
     };
 
-    const body = {
+    const baseBody = {
       author,
       commentary: finalText,
       visibility,
@@ -196,14 +235,11 @@ export async function POST(request) {
         targetEntities: [],
         thirdPartyDistributionChannels: []
       },
-      content: {
-        article
-      },
       lifecycleState: "PUBLISHED",
       isReshareDisabledByAuthor: false
     };
 
-    const response = await fetch("https://api.linkedin.com/rest/posts", {
+    let response = await fetch("https://api.linkedin.com/rest/posts", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -211,19 +247,85 @@ export async function POST(request) {
         "Linkedin-Version": "202609",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        ...baseBody,
+        content: { article }
+      })
     });
 
     if (!response.ok) {
       const detail = await response.text();
-      console.error("LinkedIn Posts API publish error", response.status, detail.slice(0, 1200));
-      return new Response(
-        resultPage(
-          "LinkedIn did not publish the post",
-          `LinkedIn Posts API returned status ${response.status}. No successful publication was recorded.`
-        ),
-        { status: 502, headers }
+      diagnostics.push(
+        "Posts API article: HTTP " +
+          response.status +
+          " " +
+          detail.slice(0, 500)
       );
+
+      response = await fetch("https://api.linkedin.com/rest/posts", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+          "X-Restli-Protocol-Version": "2.0.0",
+          "Linkedin-Version": "202609",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(baseBody)
+      });
+
+      if (!response.ok) {
+        const textDetail = await response.text();
+        diagnostics.push(
+          "Posts API text-only: HTTP " +
+            response.status +
+            " " +
+            textDetail.slice(0, 500)
+        );
+
+        const legacyBody = {
+          author,
+          lifecycleState: "PUBLISHED",
+          specificContent: {
+            "com.linkedin.ugc.ShareContent": {
+              shareCommentary: { text: finalText },
+              shareMediaCategory: "NONE"
+            }
+          },
+          visibility: {
+            "com.linkedin.ugc.MemberNetworkVisibility": visibility
+          }
+        };
+
+        response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+            "X-Restli-Protocol-Version": "2.0.0",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(legacyBody)
+        });
+
+        if (!response.ok) {
+          const legacyDetail = await response.text();
+          diagnostics.push(
+            "Legacy UGC fallback: HTTP " +
+              response.status +
+              " " +
+              legacyDetail.slice(0, 500)
+          );
+
+          console.error("LinkedIn publish diagnostics", diagnostics.join(" | "));
+          return new Response(
+            resultPage(
+              "LinkedIn publish failed",
+              diagnostics.join(" | ") +
+                " No successful publication was recorded."
+            ),
+            { status: 502, headers }
+          );
+        }
+      }
     }
 
     const postId =
@@ -236,14 +338,17 @@ export async function POST(request) {
     return new Response(
       resultPage(
         "Published to LinkedIn",
-        "The approved post has been published to your personal LinkedIn profile.",
+        imageUrn
+          ? "The approved post has been published to your personal LinkedIn profile with the campaign visual."
+          : "The approved post has been published to your personal LinkedIn profile. LinkedIn rejected the image step, so the publisher used the approved article/text fallback.",
         postUrl
       ),
       { status: 201, headers }
     );
   } catch (error) {
     console.error("LinkedIn publish exception", error);
-    const detail = error instanceof Error ? error.message : "Unknown LinkedIn publishing error.";
+    const detail =
+      error instanceof Error ? error.message : "Unknown LinkedIn publishing error.";
     return new Response(
       resultPage(
         "LinkedIn publish failed",
@@ -251,5 +356,4 @@ export async function POST(request) {
       ),
       { status: 502, headers }
     );
-  }
-}
+  }}
