@@ -78,9 +78,9 @@ export async function GET(request: Request) {
     "X authorization complete",
     `<p>Authority OS now has approval-gated X access with offline refresh capability.</p>
      <p>The current refresh token is stored in an encrypted, secure browser cookie so future approved releases can handle X token rotation automatically.</p>
-     <p>Keep the Vercel <code>X_REFRESH_TOKEN</code> as a server-side fallback. Do not paste either token into ChatGPT.</p>
-     <textarea readonly onclick="this.select()">${safeToken}</textarea>
-     <p>Nothing has been posted to X.</p>`
+     <p>No Vercel update is required for normal publishing now; Authority OS will rotate the token inside this secure browser session. The existing Vercel value remains only a fallback.</p>
+     <details><summary>Show current refresh token (normally not needed)</summary><textarea readonly onclick="this.select()">${safeToken}</textarea></details>
+     <p>Do not paste the token into ChatGPT. Nothing has been posted to X.</p>`
   );
   response.headers.append(
     "Set-Cookie",
