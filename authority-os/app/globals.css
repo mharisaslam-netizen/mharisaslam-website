@@ -99,3 +99,9 @@ button,input,select,textarea{font:inherit}.shell{width:min(100%,1440px);max-widt
 .post-release-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .post-release-actions .preview-action{margin-top:0}
 @media(max-width:760px){.release-options,.release-manual{grid-template-columns:1fr}.release-console-head{flex-direction:column}}
+
+
+.release-error-detail{display:flex;flex-direction:column;gap:6px;border:1px solid rgba(221,119,119,.38);background:rgba(221,119,119,.06);border-radius:10px;padding:10px 12px;font-size:11px;line-height:1.45}
+.release-error-detail strong{color:#ffd0d0}
+.release-error-detail span{color:var(--muted);overflow-wrap:anywhere}
+.release-error-detail .preview-action{align-self:flex-start;margin-top:2px}
