@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { getRun } from "workflow/api";
-import { verifyReleaseApprovalToken } from "../../../lib/release-auth";
-import { verifyLiveUrl } from "../../../lib/connectors/verify";
-import { publishXPost } from "../../../lib/connectors/x";
+import { verifyReleaseApprovalToken } from "../../../../lib/release-auth";
+import { verifyLiveUrl } from "../../../../lib/connectors/verify";
+import { publishXPost } from "../../../../lib/connectors/x";
 import {
   decryptXRefreshToken,
   encryptXRefreshToken,
   X_REFRESH_COOKIE
-} from "../../../lib/x-cookie";
+} from "../../../../lib/x-cookie";
 
 export const runtime = "nodejs";
 
