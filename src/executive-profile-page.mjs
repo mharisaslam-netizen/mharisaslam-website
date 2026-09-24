@@ -17,6 +17,10 @@ export const executiveProfilePage = {
       answer: "Relevant title families include Chief Transformation Officer, Chief Digital Officer, Chief Commercial Officer, General Manager, Head or VP of E-commerce and Omnichannel, Marketplace or Platform Leader, Digital Commerce Director, Strategy and Transformation Director, and Venture Builder or Managing Partner."
     },
     {
+      question: "What makes the profile relevant for GCC C-level transformation searches?",
+      answer: "The public record combines founder and operator experience, country launch, retail and working-capital transformation, P&L and commercial discipline, marketplace design, enterprise technology delivery and applied AI operating models. It is most relevant where a mandate crosses commercial, operating and technology boundaries rather than sitting inside one function."
+    },
+    {
       question: "Which capabilities are most evidenced in the public track record?",
       answer: "Public evidence covers founder-led digital commerce, country launch, retail and working-capital transformation, P&L and commercial discipline, marketplace design, enterprise technology delivery, logistics and fulfilment, fintech and payments models, GCC growth questions and applied AI operating models."
     },
@@ -34,6 +38,19 @@ export const executiveProfilePage = {
       <a class="button" href="/track-record">Review operating record</a>
       <a class="button button-secondary" href="/contact">Contact Haris</a>
     </div>
+
+    <section class="section">
+      <div class="section-heading"><h2>Executive search summary</h2></div>
+      <div class="card-grid">
+        <div class="work-card"><span class="card-label">Best-fit mandates</span><h3>Cross-functional growth and transformation</h3><p>Transformation, digital commerce, marketplaces, commercial growth, turnaround, operating-model redesign and venture building where P&amp;L, technology and execution need to move together.</p></div>
+        <div class="work-card"><span class="card-label">Strongest sectors</span><h3>Commerce-led and platform businesses</h3><p>Retail and consumer, e-commerce and marketplaces, banking and payments, telecom, enterprise technology, logistics and fulfilment, family business and new ventures.</p></div>
+        <div class="work-card"><span class="card-label">Operating evidence</span><h3>Builder and operator, not strategy-only</h3><p>Public evidence spans founder-led commerce, country launch, retail and working-capital transformation, enterprise delivery, fulfilment, commercial discipline and platform design.</p></div>
+        <div class="work-card"><span class="card-label">GCC relevance</span><h3>Operating context plus regional growth work</h3><p>Operating experience is evidenced in Oman, Qatar and wider GCC contexts, with Saudi and UAE growth, market-entry and commercial models presented separately as strategy and use-case work.</p></div>
+      </div>
+      <div class="report-prose">
+        <p><strong>Evidence boundary:</strong> the site separates named operating track record from modeled strategy cases. Search firms can review the underlying role or venture pages before treating any result or capability as proven.</p>
+      </div>
+    </section>
 
     <section class="section">
       <div class="section-heading"><h2>How executive search firms can classify the profile</h2></div>
@@ -88,6 +105,15 @@ export const executiveProfilePage = {
     </section>
 
     <section class="section">
+      <div class="section-heading"><h2>Indexed perspectives supporting the profile</h2></div>
+      <div class="card-grid">
+        <a class="work-card" href="/insights/gcc-omnichannel-retail-operating-model"><span class="card-label">Retail &amp; commerce</span><h3>GCC omnichannel operating model</h3><p>A practical view of inventory, pricing, fulfilment, stores and completed-order contribution.</p><span class="card-link">Read perspective <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/insights/ai-transformation-gcc-enterprise-operating-model"><span class="card-label">AI transformation</span><h3>Enterprise AI operating model</h3><p>A governed approach to AI workflows, authority, source systems, approvals and value realization.</p><span class="card-link">Read perspective <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/insights/marketplace-economics-gmv-revenue-contribution-gcc"><span class="card-label">Marketplace economics</span><h3>GMV, revenue, contribution and cash</h3><p>A commercial bridge from marketplace activity to recognized revenue, service cost and cash economics.</p><span class="card-link">Read perspective <span aria-hidden="true">→</span></span></a>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="section-heading"><h2>What boards and search firms can review next</h2></div>
       <div class="card-grid">
         <a class="work-card" href="/track-record"><span class="card-label">Operating evidence</span><h3>Track record</h3><p>Named roles and ventures with evidence boundaries and operating context.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
@@ -107,6 +133,8 @@ export const executiveProfilePage = {
         <p>The closest search categories are transformation, digital commerce and omnichannel, marketplace and platform leadership, commercial growth, retail turnaround, fintech and payments, enterprise technology, GCC market entry and venture building.</p>
         <h3>Which executive titles are adjacent to the background?</h3>
         <p>Chief Transformation Officer, Chief Digital Officer, Chief Commercial Officer, General Manager, Head or VP of E-commerce and Omnichannel, Marketplace or Platform Leader, Digital Commerce Director, Strategy and Transformation Director, and Venture Builder or Managing Partner are the most relevant title families.</p>
+        <h3>What makes the profile relevant for GCC C-level transformation searches?</h3>
+        <p>The public record combines founder and operator experience, country launch, retail and working-capital transformation, P&amp;L and commercial discipline, marketplace design, enterprise technology delivery and applied AI operating models.</p>
         <h3>Which capabilities are most evidenced?</h3>
         <p>Founder-led digital commerce, country launch, retail and working-capital transformation, P&amp;L and commercial discipline, marketplace design, enterprise technology delivery, logistics and fulfilment, fintech and payments models, GCC growth questions and applied AI operating models.</p>
         <h3>Which sectors are most relevant?</h3>
