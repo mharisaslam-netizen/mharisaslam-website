@@ -616,9 +616,25 @@ export default function Home() {
         throw new Error(data.error || "Campaign approval could not be recorded.");
       }
 
+      const retryingBlockedX =
+        String(releaseResult?.x?.status || "").toUpperCase() === "BLOCKED";
+
       setDecision("approved");
       setReleaseToken(data.releaseToken);
       setLiveConfirmation(false);
+      if (retryingBlockedX) {
+        setReleaseSelections({
+          website: false,
+          wordpressJetpack: false,
+          x: true,
+          indexing: false
+        });
+        setReleaseResult(null);
+        setIndexingMonitor(null);
+        window.localStorage.removeItem(
+          "authority-os-release-result-" + sessionId
+        );
+      }
       window.localStorage.setItem("authority-os-decision-" + sessionId, "approved");
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "Campaign approval failed.");
