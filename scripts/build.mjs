@@ -6,8 +6,8 @@ import { advisoryPage } from "../src/advisory-page.mjs";
 import { executiveProfilePage } from "../src/executive-profile-page.mjs";
 
 const allPages = [advisoryPage, executiveProfilePage, ...pages];
-const primaryNavigation = [navigation[0], ["GCC Growth", advisoryPage.path], ...navigation.slice(1)];
-const commercialBridgePaths = new Set(["/", "/about", "/track-record", "/use-cases", "/ai-transformation", "/insights"]);
+const primaryNavigation = [navigation[0], ["GCC Growth", advisoryPage.path], ["Executive Profile", executiveProfilePage.path], ...navigation.slice(1)];
+const commercialBridgePaths = new Set(["/", "/about", "/track-record", "/use-cases", "/ai-transformation", "/insights", "/insights/saudi-market-entry-retail-commerce-economics", "/markets/uae"]);
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const out = join(root, "dist");
