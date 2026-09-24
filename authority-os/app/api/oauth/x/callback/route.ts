@@ -1,3 +1,5 @@
+import { encryptXRefreshToken, X_REFRESH_COOKIE } from "../../../../../lib/x-cookie";
+
 export const runtime = "nodejs";
 
 function html(title: string, body: string) {
@@ -72,12 +74,20 @@ export async function GET(request: Request) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;");
 
-  return html(
+  const response = html(
     "X authorization complete",
     `<p>Authority OS now has approval-gated X access with offline refresh capability.</p>
-     <p>Copy this refresh token now and store it in Vercel as the Secret environment variable <code>X_REFRESH_TOKEN</code>. Do not paste it into ChatGPT.</p>
+     <p>The current refresh token is stored in an encrypted, secure browser cookie so future approved releases can handle X token rotation automatically.</p>
+     <p>Keep the Vercel <code>X_REFRESH_TOKEN</code> as a server-side fallback. Do not paste either token into ChatGPT.</p>
      <textarea readonly onclick="this.select()">${safeToken}</textarea>
-     <p>After saving the variable, redeploy Authority OS once.</p>
      <p>Nothing has been posted to X.</p>`
   );
+  response.headers.append(
+    "Set-Cookie",
+    X_REFRESH_COOKIE +
+      "=" +
+      encryptXRefreshToken(String(token.refresh_token)) +
+      "; Path=/; Max-Age=15552000; HttpOnly; Secure; SameSite=Lax"
+  );
+  return response;
 }
