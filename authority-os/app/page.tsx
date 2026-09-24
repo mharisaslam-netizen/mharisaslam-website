@@ -388,11 +388,18 @@ export default function Home() {
   const [publishingLive, setPublishingLive] = useState(false);
   const [releaseResult, setReleaseResult] = useState<ReleaseResult | null>(null);
   const [indexingMonitor, setIndexingMonitor] = useState<Record<string, any> | null>(null);
+  const [xConnection, setXConnection] = useState<Record<string, any> | null>(null);
+  const [retryingX, setRetryingX] = useState(false);
 
   useEffect(() => {
     fetch("/api/integrations")
       .then((r) => r.json())
       .then((d) => setIntegrations(d.integrations || []))
+      .catch(() => {});
+
+    fetch("/api/oauth/x/status", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setXConnection(d))
       .catch(() => {});
 
     const urlSession = new URLSearchParams(window.location.search).get("session");
@@ -656,6 +663,72 @@ export default function Home() {
       ...current,
       [key]: !current[key]
     }));
+  }
+
+  async function retryXAfterReconnect() {
+    if (!sessionId || retryingX) return;
+
+    setRetryingX(true);
+    try {
+      const approvalResponse = await fetch(
+        "/api/campaign/" + encodeURIComponent(sessionId) + "/approve",
+        { method: "POST" }
+      );
+      const approval = await approvalResponse.json();
+      if (!approvalResponse.ok || !approval.releaseToken) {
+        throw new Error(approval.error || "Fresh release approval could not be created.");
+      }
+
+      const response = await fetch("/api/release/x-retry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          campaignRunId: sessionId,
+          releaseToken: approval.releaseToken,
+          confirmation: "RETRY X NOW"
+        })
+      });
+      const data = await response.json();
+      if (!response.ok || !data?.x) {
+        throw new Error(data.error || "X retry failed.");
+      }
+
+      setReleaseResult((current) => {
+        const next = {
+          ...(current || {}),
+          x: data.x
+        } as ReleaseResult;
+        window.localStorage.setItem(
+          "authority-os-release-result-" + sessionId,
+          JSON.stringify(next)
+        );
+        return next;
+      });
+
+      setXConnection((current) => ({
+        ...(current || {}),
+        connected: true,
+        browserTokenReady: true
+      }));
+    } catch (error) {
+      setReleaseResult((current) => {
+        const next = {
+          ...(current || {}),
+          x: {
+            ...(current?.x || {}),
+            status: "BLOCKED",
+            error: error instanceof Error ? error.message : "X retry failed."
+          }
+        } as ReleaseResult;
+        window.localStorage.setItem(
+          "authority-os-release-result-" + sessionId,
+          JSON.stringify(next)
+        );
+        return next;
+      });
+    } finally {
+      setRetryingX(false);
+    }
   }
 
   async function publishApprovedChannels() {
@@ -1045,14 +1118,29 @@ export default function Home() {
                             <div className="release-error-detail">
                               <strong>X error</strong>
                               <span>{String(releaseResult.x.error)}</span>
-                              <a
-                                className="preview-action secondary-link"
-                                href="/api/oauth/x/start"
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                Reconnect X
-                              </a>
+                              {xConnection?.browserTokenReady ? (
+                                <>
+                                  <span>
+                                    X is reconnected. The BLOCKED label above is the result of the earlier release attempt and will remain until that X step is retried.
+                                  </span>
+                                  <button
+                                    className="preview-action"
+                                    onClick={retryXAfterReconnect}
+                                    disabled={retryingX}
+                                  >
+                                    {retryingX ? "RETRYING X…" : "Retry X now"}
+                                  </button>
+                                </>
+                              ) : (
+                                <a
+                                  className="preview-action secondary-link"
+                                  href="/api/oauth/x/start"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  Reconnect X
+                                </a>
+                              )}
                             </div>
                           ) : null}
                           <div className="release-result-row">
