@@ -212,9 +212,17 @@ export async function POST(request) {
       try {
         imageUrn = await uploadImage(session, visualUrl, memberId);
       } catch (error) {
-        diagnostics.push(
+        const detail =
           "Image step: " +
-            (error instanceof Error ? error.message : String(error))
+          (error instanceof Error ? error.message : String(error));
+        console.error("LinkedIn publish diagnostics", detail);
+        return new Response(
+          resultPage(
+            "LinkedIn publish failed",
+            detail +
+              " No post was published because the approved campaign includes this visual."
+          ),
+          { status: 502, headers }
         );
       }
     }
@@ -262,6 +270,19 @@ export async function POST(request) {
           detail.slice(0, 500)
       );
 
+      const fallbackBody = imageUrn
+        ? {
+            ...baseBody,
+            content: {
+              media: {
+                title: articleTitle || visualTitle || "Campaign visual",
+                id: imageUrn,
+                ...(visualAlt ? { altText: visualAlt } : {})
+              }
+            }
+          }
+        : baseBody;
+
       response = await fetch("https://api.linkedin.com/rest/posts", {
         method: "POST",
         headers: {
@@ -270,50 +291,59 @@ export async function POST(request) {
           "Linkedin-Version": "202609",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(baseBody)
+        body: JSON.stringify(fallbackBody)
       });
 
       if (!response.ok) {
-        const textDetail = await response.text();
+        const fallbackDetail = await response.text();
         diagnostics.push(
-          "Posts API text-only: HTTP " +
+          (imageUrn ? "Posts API image fallback" : "Posts API text-only") +
+            ": HTTP " +
             response.status +
             " " +
-            textDetail.slice(0, 500)
+            fallbackDetail.slice(0, 500)
         );
 
-        const legacyBody = {
-          author,
-          lifecycleState: "PUBLISHED",
-          specificContent: {
-            "com.linkedin.ugc.ShareContent": {
-              shareCommentary: { text: finalText },
-              shareMediaCategory: "NONE"
+        if (!imageUrn) {
+          const legacyBody = {
+            author,
+            lifecycleState: "PUBLISHED",
+            specificContent: {
+              "com.linkedin.ugc.ShareContent": {
+                shareCommentary: { text: finalText },
+                shareMediaCategory: "NONE"
+              }
+            },
+            visibility: {
+              "com.linkedin.ugc.MemberNetworkVisibility": visibility
             }
-          },
-          visibility: {
-            "com.linkedin.ugc.MemberNetworkVisibility": visibility
-          }
-        };
+          };
 
-        response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-            "X-Restli-Protocol-Version": "2.0.0",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(legacyBody)
-        });
+          response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${session.accessToken}`,
+              "X-Restli-Protocol-Version": "2.0.0",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(legacyBody)
+          });
+
+          if (response.ok) {
+            diagnostics.push("Legacy UGC text fallback succeeded.");
+          }
+        }
 
         if (!response.ok) {
-          const legacyDetail = await response.text();
-          diagnostics.push(
-            "Legacy UGC fallback: HTTP " +
-              response.status +
-              " " +
-              legacyDetail.slice(0, 500)
-          );
+          if (!imageUrn) {
+            const legacyDetail = await response.text();
+            diagnostics.push(
+              "Legacy UGC fallback: HTTP " +
+                response.status +
+                " " +
+                legacyDetail.slice(0, 500)
+            );
+          }
 
           console.error("LinkedIn publish diagnostics", diagnostics.join(" | "));
           return new Response(
