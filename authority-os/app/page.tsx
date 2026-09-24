@@ -1015,10 +1015,30 @@ export default function Home() {
                             <span>WordPress / Jetpack</span>
                             <b>{String(releaseResult.wordpressJetpack?.status || "PENDING")}</b>
                           </div>
+                          {releaseResult.wordpressJetpack?.error ? (
+                            <div className="release-error-detail">
+                              <strong>WordPress / Jetpack error</strong>
+                              <span>{String(releaseResult.wordpressJetpack.error)}</span>
+                            </div>
+                          ) : null}
                           <div className="release-result-row">
                             <span>X</span>
                             <b>{String(releaseResult.x?.status || "PENDING")}</b>
                           </div>
+                          {releaseResult.x?.error ? (
+                            <div className="release-error-detail">
+                              <strong>X error</strong>
+                              <span>{String(releaseResult.x.error)}</span>
+                              <a
+                                className="preview-action secondary-link"
+                                href="/api/oauth/x/start"
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Reconnect X
+                              </a>
+                            </div>
+                          ) : null}
                           <div className="release-result-row">
                             <span>IndexNow</span>
                             <b>{String(releaseResult.indexing?.indexNow?.status || releaseResult.indexing?.status || "PENDING")}</b>
