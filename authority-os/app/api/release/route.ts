@@ -8,6 +8,11 @@ import {
   triggerJetpackPublicize
 } from "../../../lib/connectors/wordpress";
 import { publishXPost } from "../../../lib/connectors/x";
+import {
+  decryptXRefreshToken,
+  encryptXRefreshToken,
+  X_REFRESH_COOKIE
+} from "../../../lib/x-cookie";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
 import {
   inspectSearchConsoleUrl,
@@ -20,6 +25,11 @@ export const maxDuration = 300;
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function cookieValue(cookie: string, name: string) {
+  const match = cookie.match(new RegExp("(?:^|; )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[1]) : "";
 }
 
 export async function POST(request: Request) {
@@ -248,6 +258,8 @@ export async function POST(request: Request) {
       );
     }
 
+    let nextXRefreshToken: string | null = null;
+
     if (selections.x) {
       parallelTasks.push(
         (async () => {
@@ -256,8 +268,19 @@ export async function POST(request: Request) {
             ? draft
             : draft + "\n\n" + canonicalUrl;
 
+          const cookie = request.headers.get("cookie") || "";
+          const encryptedRefresh = cookieValue(cookie, X_REFRESH_COOKIE);
+          const cookieRefresh = decryptXRefreshToken(encryptedRefresh);
+
           try {
-            result.x = await publishXPost({ text });
+            const published = await publishXPost({
+              text,
+              ...(cookieRefresh ? { refreshToken: cookieRefresh } : {})
+            });
+            nextXRefreshToken =
+              String(published.nextRefreshToken || "").trim() || null;
+            const { nextRefreshToken, ...safePublished } = published;
+            result.x = safePublished;
           } catch (error) {
             result.x = {
               status: "BLOCKED",
@@ -334,11 +357,27 @@ export async function POST(request: Request) {
       result.indexing = indexing;
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       ...result,
       status: "COMPLETED",
       completedAt: new Date().toISOString()
     });
+
+    if (nextXRefreshToken) {
+      response.cookies.set(
+        X_REFRESH_COOKIE,
+        encryptXRefreshToken(nextXRefreshToken),
+        {
+          httpOnly: true,
+          secure: true,
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24 * 180
+        }
+      );
+    }
+
+    return response;
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Live release failed.";
