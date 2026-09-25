@@ -385,7 +385,7 @@ const useCases = [
   },
   {
     slug: "saudi-market-entry-distribution", title: "Saudi market entry and distribution", sector: "Consumer distribution", geography: "Oman to Saudi Arabia", type: "Strategy blueprint",
-    summary: "A market-entry model built around rights, landed cost, channels and local operating capacity.",
+    summary: "A Saudi Arabia market-entry model for CEOs, family businesses and investors covering distribution, landed cost, e-commerce, local capacity, partner economics and scale gates.",
     overview: "An anonymized regional growth case. Planning and partner work are evidenced; Saudi sales and profitability are not.",
     problem: "Regional demand did not justify a local setup without product rights, landed cost and a credible route to customers.",
     solution: "Secure representation and supplier rights, validate one channel and delay inventory or fixed commitments until the contribution case holds.",
