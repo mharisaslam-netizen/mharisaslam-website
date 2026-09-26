@@ -172,10 +172,10 @@ export async function POST(request: Request) {
     }
 
     // Always verify the canonical URL before sending traffic to it.
-    // A GitHub merge can take several minutes to become a production Vercel
-    // deployment. Give the canonical site nearly the full serverless window
-    // before handing control back to the browser for a durable retry.
-    for (let attempt = 0; attempt < 48; attempt += 1) {
+    // Keep each server request short. If the production deployment is still
+    // propagating after this bounded window, the browser persists the release
+    // state and resumes the same approved release automatically.
+    for (let attempt = 0; attempt < 10; attempt += 1) {
       try {
         const check = await verifyLiveUrl(canonicalUrl);
         const canonicalOk =
