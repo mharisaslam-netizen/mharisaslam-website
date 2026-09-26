@@ -149,7 +149,10 @@ export async function POST(request: Request) {
     }
 
     // Always verify the canonical URL before sending traffic to it.
-    for (let attempt = 0; attempt < 18; attempt += 1) {
+    // A GitHub merge can take several minutes to become a production Vercel
+    // deployment. Give the canonical site nearly the full serverless window
+    // before handing control back to the browser for a durable retry.
+    for (let attempt = 0; attempt < 48; attempt += 1) {
       try {
         const check = await verifyLiveUrl(canonicalUrl);
         const canonicalOk =
@@ -182,29 +185,28 @@ export async function POST(request: Request) {
     const canonicalLive = result.websiteVerification.status === "LIVE";
 
     if (!canonicalLive) {
+      const waitingState = {
+        status: "WAITING_FOR_WEBSITE",
+        note:
+          "The GitHub release is complete but the canonical URL has not reached the production edge yet. Authority OS will resume the same approved release automatically without requiring another manual channel-by-channel retry."
+      };
+
       if (selections.wordpressJetpack) {
-        result.wordpressJetpack = {
-          status: "BLOCKED",
-          error: "Canonical website URL did not become live within the release window."
-        };
+        result.wordpressJetpack = { ...waitingState };
       }
       if (selections.x) {
-        result.x = {
-          status: "BLOCKED",
-          error: "Canonical website URL did not become live within the release window."
-        };
+        result.x = { ...waitingState };
       }
       if (selections.indexing) {
-        result.indexing = {
-          status: "BLOCKED",
-          error: "Canonical website URL did not become live within the release window."
-        };
+        result.indexing = { ...waitingState };
       }
 
       return NextResponse.json({
         ...result,
-        status: "PARTIAL",
-        completedAt: new Date().toISOString()
+        status: "WAITING",
+        retryable: true,
+        retryAfterMs: 15000,
+        lastAttemptAt: new Date().toISOString()
       });
     }
 
@@ -246,7 +248,11 @@ export async function POST(request: Request) {
 
             result.wordpressJetpack = {
               ...published,
-              jetpackPublicize: publicize
+              jetpackPublicize: publicize,
+              status:
+                publicize?.status === "BLOCKED"
+                  ? "PARTIAL"
+                  : "LIVE"
             };
           } catch (error) {
             result.wordpressJetpack = {
@@ -341,6 +347,12 @@ export async function POST(request: Request) {
         };
       }
 
+      const indexingHasBlockedStep =
+        indexing.indexNow?.status === "BLOCKED" ||
+        indexing.googleSitemap?.status === "BLOCKED" ||
+        indexing.monitorStatus === "BLOCKED";
+
+      indexing.status = indexingHasBlockedStep ? "PARTIAL" : "ACTIVE";
       indexing.note =
         "Authority OS submitted the canonical URL to IndexNow, re-submitted the Google sitemap when authorized, and inspected Google index status. Google controls crawl/index timing for ordinary articles and does not provide a general-purpose instant-index API.";
 
@@ -357,10 +369,41 @@ export async function POST(request: Request) {
       result.indexing = indexing;
     }
 
+    const failedChannels: string[] = [];
+    if (
+      selections.wordpressJetpack &&
+      ["BLOCKED", "PARTIAL", "ERROR"].includes(
+        String(result.wordpressJetpack?.status || "").toUpperCase()
+      )
+    ) {
+      failedChannels.push("wordpressJetpack");
+    }
+    if (
+      selections.x &&
+      ["BLOCKED", "PARTIAL", "ERROR"].includes(
+        String(result.x?.status || "").toUpperCase()
+      )
+    ) {
+      failedChannels.push("x");
+    }
+    if (
+      selections.indexing &&
+      ["BLOCKED", "PARTIAL", "ERROR"].includes(
+        String(result.indexing?.status || "").toUpperCase()
+      )
+    ) {
+      failedChannels.push("indexing");
+    }
+
+    const completedAt = new Date().toISOString();
+    const overallStatus = failedChannels.length ? "PARTIAL" : "COMPLETED";
     const response = NextResponse.json({
       ...result,
-      status: "COMPLETED",
-      completedAt: new Date().toISOString()
+      status: overallStatus,
+      retryable: failedChannels.length > 0,
+      failedChannels,
+      lastAttemptAt: completedAt,
+      ...(overallStatus === "COMPLETED" ? { completedAt } : {})
     });
 
     if (nextXRefreshToken) {
