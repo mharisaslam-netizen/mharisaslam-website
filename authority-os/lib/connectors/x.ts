@@ -38,6 +38,53 @@ export async function xAccessToken(refreshTokenOverride?: string) {
 }
 
 
+function normalizeTweetText(value: string) {
+  return String(value || "")
+    .replace(/\r\n/g, "\n")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+async function findExistingXPost(accessToken: string, text: string) {
+  try {
+    const meResponse = await fetch("https://api.x.com/2/users/me", {
+      headers: { Authorization: "Bearer " + accessToken },
+      cache: "no-store"
+    });
+    const me = await meResponse.json().catch(() => ({}));
+    const userId = String(me?.data?.id || "");
+    if (!meResponse.ok || !userId) return null;
+
+    const recentResponse = await fetch(
+      "https://api.x.com/2/users/" +
+        encodeURIComponent(userId) +
+        "/tweets?max_results=10&exclude=replies,retweets",
+      {
+        headers: { Authorization: "Bearer " + accessToken },
+        cache: "no-store"
+      }
+    );
+    const recent = await recentResponse.json().catch(() => ({}));
+    if (!recentResponse.ok || !Array.isArray(recent?.data)) return null;
+
+    const expected = normalizeTweetText(text);
+    const existing = recent.data.find(
+      (tweet: any) => normalizeTweetText(String(tweet?.text || "")) === expected
+    );
+    if (!existing?.id) return null;
+
+    return {
+      id: String(existing.id),
+      text: String(existing.text || text)
+    };
+  } catch {
+    // Duplicate protection is best-effort. A read failure must not block a
+    // legitimate approved publish attempt.
+    return null;
+  }
+}
+
 export async function publishXPost(input: {
   text: string;
   refreshToken?: string;
@@ -46,6 +93,25 @@ export async function publishXPost(input: {
   if (!text) throw new Error("X post text is empty.");
 
   const token = await xAccessToken(input.refreshToken);
+
+  // Release retries are intentionally idempotent. If the exact approved post
+  // already exists among the account's recent tweets, return it instead of
+  // creating a duplicate.
+  const existing = await findExistingXPost(token.accessToken, text);
+  if (existing) {
+    return {
+      status: "LIVE",
+      id: existing.id,
+      text: existing.text,
+      postUrl: "https://x.com/i/web/status/" + existing.id,
+      scope: token.scope,
+      alreadyPublished: true,
+      refreshTokenRotated:
+        Boolean(token.refreshToken) &&
+        token.refreshToken !== String(input.refreshToken || process.env.X_REFRESH_TOKEN || ""),
+      nextRefreshToken: token.refreshToken
+    };
+  }
 
   const response = await fetch("https://api.x.com/2/tweets", {
     method: "POST",
@@ -74,6 +140,7 @@ export async function publishXPost(input: {
     text: String(data.data.text || text),
     postUrl: "https://x.com/i/web/status/" + id,
     scope: token.scope,
+    alreadyPublished: false,
     refreshTokenRotated:
       Boolean(token.refreshToken) &&
       token.refreshToken !== String(input.refreshToken || process.env.X_REFRESH_TOKEN || ""),
