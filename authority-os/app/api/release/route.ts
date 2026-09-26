@@ -347,12 +347,6 @@ export async function POST(request: Request) {
         };
       }
 
-      const indexingHasBlockedStep =
-        indexing.indexNow?.status === "BLOCKED" ||
-        indexing.googleSitemap?.status === "BLOCKED" ||
-        indexing.monitorStatus === "BLOCKED";
-
-      indexing.status = indexingHasBlockedStep ? "PARTIAL" : "ACTIVE";
       indexing.note =
         "Authority OS submitted the canonical URL to IndexNow, re-submitted the Google sitemap when authorized, and inspected Google index status. Google controls crawl/index timing for ordinary articles and does not provide a general-purpose instant-index API.";
 
@@ -366,6 +360,12 @@ export async function POST(request: Request) {
           error instanceof Error ? error.message : String(error);
       }
 
+      const indexingHasBlockedStep =
+        indexing.indexNow?.status === "BLOCKED" ||
+        indexing.googleSitemap?.status === "BLOCKED" ||
+        indexing.monitorStatus === "BLOCKED";
+
+      indexing.status = indexingHasBlockedStep ? "PARTIAL" : "ACTIVE";
       result.indexing = indexing;
     }
 
