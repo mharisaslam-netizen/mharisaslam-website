@@ -12,8 +12,8 @@ const errors = [];
 const titles = new Map();
 const descriptions = new Map();
 const jobSignals = [
-  /available for/i,
-  /open to/i,
+  /\bavailable for\b.{0,80}\b(?:ceo|executive|leadership|board|role|position|opportunit)/i,
+  /\bopen to\b.{0,80}\b(?:ceo|executive|leadership|board|role|position|opportunit)/i,
   /looking for (?:an?|the|my|selected)?\s*(?:ceo|executive|leadership|board|role|position|opportunit)/i,
   /seeking (?:an?|the|my|selected)?\s*(?:ceo|executive|leadership|board|role|position|opportunit)/i,
   /ceo roles?/i,
