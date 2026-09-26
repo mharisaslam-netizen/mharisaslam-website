@@ -105,7 +105,7 @@ export const uaeMarketPage = {
         <div class="work-card"><span class="card-label">Kuwait & Bahrain</span><h3>Regional leverage still needs market-level economics</h3><p>Shared platforms and partners can reduce duplication, but proposition, channel, service and investment decisions should remain locally measurable.</p></div>
       </div>
       <div class="hero-actions">
-        <a class="button" href="/use-cases/saudi-market-entry-distribution">Review Saudi market-entry thinking</a>
+        <a class="button" href="/markets/saudi-arabia">Explore Saudi growth & market entry</a>
         <a class="button button-secondary" href="/insights/saudi-market-entry-retail-commerce-economics">Read the Saudi economics analysis</a>
       </div>
     </section>

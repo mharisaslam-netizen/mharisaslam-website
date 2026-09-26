@@ -46,7 +46,7 @@
     },
     {
       "source": "/markets-ksa.dc.html",
-      "destination": "/use-cases/saudi-market-entry-distribution",
+      "destination": "/markets/saudi-arabia",
       "permanent": true
     },
     {
@@ -250,13 +250,8 @@
       "permanent": true
     },
     {
-      "source": "/markets/saudi-arabia",
-      "destination": "/use-cases/saudi-market-entry-distribution",
-      "permanent": true
-    },
-    {
       "source": "/markets/ksa",
-      "destination": "/use-cases/saudi-market-entry-distribution",
+      "destination": "/markets/saudi-arabia",
       "permanent": true
     },
     {
