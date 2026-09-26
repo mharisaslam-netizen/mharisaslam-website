@@ -148,6 +148,29 @@ export async function POST(request: Request) {
       }
     }
 
+    if (
+      selections.website &&
+      String(result.website?.status || "").toUpperCase() === "BLOCKED"
+    ) {
+      const blockedByWebsite = {
+        status: "NOT_RUN",
+        note:
+          "Downstream publishing was not attempted because the approved website release could not be merged."
+      };
+
+      if (selections.wordpressJetpack) result.wordpressJetpack = { ...blockedByWebsite };
+      if (selections.x) result.x = { ...blockedByWebsite };
+      if (selections.indexing) result.indexing = { ...blockedByWebsite };
+
+      return NextResponse.json({
+        ...result,
+        status: "PARTIAL",
+        retryable: false,
+        failedChannels: ["website"],
+        lastAttemptAt: new Date().toISOString()
+      });
+    }
+
     // Always verify the canonical URL before sending traffic to it.
     // A GitHub merge can take several minutes to become a production Vercel
     // deployment. Give the canonical site nearly the full serverless window
@@ -370,6 +393,14 @@ export async function POST(request: Request) {
     }
 
     const failedChannels: string[] = [];
+    if (
+      selections.website &&
+      ["BLOCKED", "PARTIAL", "ERROR"].includes(
+        String(result.website?.status || "").toUpperCase()
+      )
+    ) {
+      failedChannels.push("website");
+    }
     if (
       selections.wordpressJetpack &&
       ["BLOCKED", "PARTIAL", "ERROR"].includes(
