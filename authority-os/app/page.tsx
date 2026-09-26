@@ -54,6 +54,8 @@ type ReleaseSelections = {
 type ReleaseResult = {
   status?: string;
   completedAt?: string;
+  attemptedAt?: string;
+  lastAttemptAt?: string;
   canonicalUrl?: string;
   website?: Record<string, any>;
   websiteVerification?: Record<string, any>;
@@ -61,6 +63,10 @@ type ReleaseResult = {
   x?: Record<string, any>;
   indexing?: Record<string, any>;
   manualGates?: Record<string, string>;
+  selections?: ReleaseSelections;
+  retryable?: boolean;
+  retryAfterMs?: number;
+  failedChannels?: string[];
   error?: string;
 };
 
@@ -420,6 +426,32 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const refreshXConnection = () => {
+      fetch("/api/oauth/x/status", { cache: "no-store" })
+        .then((response) => response.json())
+        .then((data) => {
+          if (!cancelled) setXConnection(data);
+        })
+        .catch(() => {});
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") refreshXConnection();
+    };
+
+    window.addEventListener("focus", refreshXConnection);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", refreshXConnection);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!sessionId) return;
 
     const savedDecision = window.localStorage.getItem("authority-os-decision-" + sessionId);
@@ -430,7 +462,59 @@ export default function Home() {
     const savedRelease = window.localStorage.getItem("authority-os-release-result-" + sessionId);
     if (savedRelease) {
       try {
-        setReleaseResult(JSON.parse(savedRelease));
+        const parsed = JSON.parse(savedRelease) as ReleaseResult;
+        const legacyCanonicalWait = [
+          parsed.wordpressJetpack?.error,
+          parsed.x?.error,
+          parsed.indexing?.error
+        ].some((value) =>
+          String(value || "").includes(
+            "Canonical website URL did not become live within the release window."
+          )
+        );
+
+        if (legacyCanonicalWait) {
+          const waitingState = {
+            status: "WAITING_FOR_WEBSITE",
+            note:
+              "The website deployment was slower than the old release window. Authority OS will now resume this approved release automatically."
+          };
+
+          parsed.status = "WAITING";
+          parsed.retryable = true;
+          parsed.retryAfterMs = 3000;
+          parsed.lastAttemptAt = new Date().toISOString();
+          delete parsed.completedAt;
+
+          if (
+            String(parsed.wordpressJetpack?.error || "").includes(
+              "Canonical website URL did not become live within the release window."
+            )
+          ) {
+            parsed.wordpressJetpack = { ...waitingState };
+          }
+          if (
+            String(parsed.x?.error || "").includes(
+              "Canonical website URL did not become live within the release window."
+            )
+          ) {
+            parsed.x = { ...waitingState };
+          }
+          if (
+            String(parsed.indexing?.error || "").includes(
+              "Canonical website URL did not become live within the release window."
+            )
+          ) {
+            parsed.indexing = { ...waitingState };
+          }
+
+          window.localStorage.setItem(
+            "authority-os-release-result-" + sessionId,
+            JSON.stringify(parsed)
+          );
+        }
+
+        setReleaseResult(parsed);
       } catch {}
     }
 
@@ -769,6 +853,94 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if (!sessionId || String(releaseResult?.status || "").toUpperCase() !== "WAITING") {
+      return;
+    }
+
+    let cancelled = false;
+    const delay = Math.max(3000, Number(releaseResult?.retryAfterMs || 15000));
+
+    const timer = window.setTimeout(async () => {
+      setPublishingLive(true);
+
+      try {
+        const approvalResponse = await fetch(
+          "/api/campaign/" + encodeURIComponent(sessionId) + "/approve",
+          { method: "POST" }
+        );
+        const approval = await approvalResponse.json();
+        if (!approvalResponse.ok || !approval.releaseToken) {
+          throw new Error(
+            approval.error || "Fresh release authorization could not be created."
+          );
+        }
+
+        const selections =
+          releaseResult?.selections ||
+          ({
+            website: true,
+            wordpressJetpack: true,
+            x: true,
+            indexing: true
+          } as ReleaseSelections);
+
+        const response = await fetch("/api/release", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            campaignRunId: sessionId,
+            releaseToken: approval.releaseToken,
+            confirmation: "PUBLISH APPROVED CHANNELS",
+            selections
+          })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "Approved release could not resume.");
+        }
+        if (cancelled) return;
+
+        setReleaseToken(approval.releaseToken);
+        setReleaseResult(data);
+        window.localStorage.setItem(
+          "authority-os-release-result-" + sessionId,
+          JSON.stringify(data)
+        );
+      } catch (error) {
+        if (cancelled) return;
+        const next: ReleaseResult = {
+          ...(releaseResult || {}),
+          status: "WAITING",
+          retryable: true,
+          retryAfterMs: 30000,
+          lastAttemptAt: new Date().toISOString(),
+          error:
+            error instanceof Error
+              ? "Automatic release resume is waiting to retry: " + error.message
+              : "Automatic release resume is waiting to retry."
+        };
+        setReleaseResult(next);
+        window.localStorage.setItem(
+          "authority-os-release-result-" + sessionId,
+          JSON.stringify(next)
+        );
+      } finally {
+        if (!cancelled) setPublishingLive(false);
+      }
+    }, delay);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [
+    sessionId,
+    releaseResult?.status,
+    releaseResult?.lastAttemptAt,
+    releaseResult?.retryAfterMs
+  ]);
+
+  useEffect(() => {
     const monitorRunId = String(releaseResult?.indexing?.monitorRunId || "");
     if (!monitorRunId) return;
 
@@ -1063,7 +1235,8 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {!releaseResult?.completedAt ? (
+                    {!releaseResult?.completedAt &&
+                    String(releaseResult?.status || "").toUpperCase() !== "WAITING" ? (
                       <>
                         <label className="release-confirm">
                           <input
@@ -1093,6 +1266,11 @@ export default function Home() {
                         <strong>
                           Release status: {String(releaseResult.status || "UNKNOWN").toUpperCase()}
                         </strong>
+                        {String(releaseResult.status || "").toUpperCase() === "WAITING" ? (
+                          <span>
+                            Main-site deployment is still propagating. Authority OS will continue the same approved release automatically; do not reconnect channels or start over.
+                          </span>
+                        ) : null}
                         {releaseResult.error ? <span>{releaseResult.error}</span> : null}
 
                         <div className="release-results">
