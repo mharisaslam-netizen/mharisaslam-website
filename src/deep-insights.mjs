@@ -51,7 +51,7 @@ export const deepInsights = [
         ]
       },
       {
-        "heading": "Where AI belongs — and where it does not",
+        "heading": "Where AI belongs - and where it does not",
         "paragraphs": [
           "AI is valuable when it reduces the cost of translating unstructured information into structured work. It can parse job descriptions, cluster employer demand, map tasks to a skills taxonomy, identify likely gaps, recommend learning sequences, generate practice scenarios, summarize assessment evidence and surface candidate-role matches for review.",
           "The design principle should be bounded authority. AI can prepare, rank and explain. Employers, educators and candidates retain consequential decisions. A model should not silently reject a learner from an opportunity, infer sensitive characteristics, manufacture evidence or treat a probabilistic score as objective truth.",
@@ -76,7 +76,7 @@ export const deepInsights = [
       {
         "heading": "The UAE is building AI literacy; the next layer is economic conversion",
         "paragraphs": [
-          "The UAE is approaching the problem from another direction: building AI capability earlier in the learning journey. Its National AI Literacy Curriculum Framework for K–12 establishes a progressive structure from foundational understanding through application, evaluation and real-world implementation. It explicitly connects AI literacy with higher education, future careers and responsible decision-making.",
+          "The UAE is approaching the problem from another direction: building AI capability earlier in the learning journey. Its National AI Literacy Curriculum Framework for K-12 establishes a progressive structure from foundational understanding through application, evaluation and real-world implementation. It explicitly connects AI literacy with higher education, future careers and responsible decision-making.",
           "The UAE Ministry of Education and Hamdan Bin Mohammed Smart University also launched a national AI upskilling programme for teachers in 2026, reinforcing the point that an AI-enabled education system requires educator capability as well as student access to tools.",
           "For universities, vocational institutions, corporate academies and EdTech providers, the next commercial layer is conversion: how does AI literacy or technical learning translate into employability, productivity and verified capability? A skills-to-jobs operating platform can sit above many individual courses and providers, making the labour-market signal visible and giving employers a more direct role in the learning loop."
         ]
