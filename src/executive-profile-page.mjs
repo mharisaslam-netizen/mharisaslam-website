@@ -2,19 +2,19 @@ export const executiveProfilePage = {
   path: "/gcc-executive-profile",
   type: "ProfilePage",
   kind: "executive-profile",
-  title: "GCC Commercial, Growth & Transformation Executive | Haris Aslam",
-  description: "Executive profile spanning GCC commercial growth, transformation, digital commerce, marketplaces, AI, fintech, retail and venture building.",
-  eyebrow: "Executive leadership profile",
-  h1: "GCC commercial, growth and transformation executive.",
-  intro: "An operating profile across commercial growth, business transformation, digital commerce, marketplaces, retail, AI, fintech and venture building in GCC contexts.",
+  title: "GCC Commerce & Transformation Executive | Haris Aslam",
+  description: "GCC executive profile for search firms, CEOs, boards and investors assessing digital commerce, transformation, marketplaces, AI, fintech and growth leadership.",
+  eyebrow: "Executive search & advisory profile",
+  h1: "GCC transformation, digital commerce and growth executive.",
+  intro: "A concise search-firm view of Muhammad Haris Aslam's operating background across business transformation, digital commerce, marketplaces, retail, AI, fintech and venture building in GCC contexts.",
   faq: [
     {
-      question: "How does Muhammad Haris Aslam's background map to executive leadership mandates?",
-      answer: "The strongest mandate clusters are commercial growth, business transformation, digital commerce and omnichannel, marketplace and platform leadership, retail turnaround, fintech and payments, enterprise technology, GCC market entry and venture building. The profile is strongest where commercial ownership and execution need to sit together."
+      question: "How can executive search firms classify Muhammad Haris Aslam's profile?",
+      answer: "The closest search categories are transformation, digital commerce and omnichannel, marketplace and platform leadership, commercial growth, retail turnaround, fintech and payments, enterprise technology, GCC market entry and venture building. The profile is strongest where commercial ownership and execution need to sit together."
     },
     {
-      question: "Which leadership mandate families are most adjacent to this background?",
-      answer: "Relevant leadership mandates include Chief Commercial Officer, Chief Transformation Officer, Chief Digital Officer, General Manager, Managing Director, marketplace or platform leadership, digital commerce and omnichannel leadership, strategy and transformation, and venture building."
+      question: "Which executive titles are most adjacent to this background?",
+      answer: "Relevant title families include Chief Transformation Officer, Chief Digital Officer, Chief Commercial Officer, General Manager, Head or VP of E-commerce and Omnichannel, Marketplace or Platform Leader, Digital Commerce Director, Strategy and Transformation Director, and Venture Builder or Managing Partner."
     },
     {
       question: "Which capabilities are most evidenced in the public track record?",
@@ -36,7 +36,7 @@ export const executiveProfilePage = {
     </div>
 
     <section class="section">
-      <div class="section-heading"><h2>Leadership mandate map</h2></div>
+      <div class="section-heading"><h2>How executive search firms can classify the profile</h2></div>
       <div class="tag-row">
         <span>Chief Transformation Officer</span><span>Chief Digital Officer</span><span>Chief Commercial Officer</span><span>General Management</span><span>E-commerce &amp; Omnichannel</span><span>Marketplace Leadership</span><span>Digital Commerce</span><span>Strategy &amp; Transformation</span><span>Venture Building</span>
       </div>
@@ -47,7 +47,7 @@ export const executiveProfilePage = {
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>Capability domains</h2></div>
+      <div class="section-heading"><h2>Recruiter search terms that map to the evidence</h2></div>
       <div class="card-grid">
         <div class="work-card"><span class="card-label">Transformation</span><h3>Enterprise and business transformation</h3><p>Large-scale transformation, operating-model redesign, value realization, operational excellence, turnaround, restructuring, change execution and cross-functional governance.</p></div>
         <div class="work-card"><span class="card-label">Digital commerce</span><h3>E-commerce, omnichannel and marketplace growth</h3><p>E-commerce P&amp;L, digital revenue, marketplace expansion, omnichannel, conversion, assortment, customer experience, seller models and profitability.</p></div>
@@ -61,7 +61,7 @@ export const executiveProfilePage = {
     <section class="section">
       <div class="section-heading"><h2>Leadership mandate patterns</h2></div>
       <div class="report-prose">
-        <p>The public record distinguishes strategy from operating consequence. Haris's background combines founder and operator experience, commercial and transformation leadership, country launch, family-business operating work and enterprise delivery.</p>
+        <p>Search firms often need to distinguish between strategy-only profiles and executives who have carried operating consequence. Haris's public record is built around founder and operator experience, commercial and transformation leadership, country launch, family-business operating work and enterprise delivery.</p>
       </div>
       <div class="card-grid">
         <a class="work-card" href="/track-record/roumaan"><span class="card-label">Founder/operator</span><h3>Build a digital business from the operating layer up</h3><p>Customer proposition, catalogue, trading, order operations and fulfilment in a live multi-category commerce business.</p><span class="card-link">Review evidence <span aria-hidden="true">→</span></span></a>
@@ -72,7 +72,7 @@ export const executiveProfilePage = {
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>Saudi Arabia and UAE relevance</h2></div>
+      <div class="section-heading"><h2>Saudi Arabia and UAE search relevance</h2></div>
       <div class="card-grid">
         <a class="work-card" href="/use-cases/saudi-market-entry-distribution"><span class="card-label">Saudi Arabia</span><h3>Market entry, distribution and e-commerce</h3><p>Commercial modeling, route to market, distribution, e-commerce, local operating capacity and scale gates for Saudi expansion.</p><span class="card-link">See Saudi use case <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases/leading-saudi-bank-commerce-ecosystem"><span class="card-label">Saudi banking</span><h3>Commerce-enabled banking ecosystem</h3><p>Merchant-funded value, cardholder journeys, partner economics, technology and operating governance in a Saudi banking context.</p><span class="card-link">See banking use case <span aria-hidden="true">→</span></span></a>
@@ -88,7 +88,7 @@ export const executiveProfilePage = {
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>What boards, founders and leadership teams can review next</h2></div>
+      <div class="section-heading"><h2>What boards and search firms can review next</h2></div>
       <div class="card-grid">
         <a class="work-card" href="/track-record"><span class="card-label">Operating evidence</span><h3>Track record</h3><p>Named roles and ventures with evidence boundaries and operating context.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases"><span class="card-label">Problem solving</span><h3>Use-case library</h3><p>Commercial and operating models across retail, banking, telecom, marketplaces, logistics, enterprise technology and AI.</p><span class="card-link">Browse use cases <span aria-hidden="true">→</span></span></a>
@@ -103,10 +103,10 @@ export const executiveProfilePage = {
     <section class="section">
       <div class="section-heading"><h2>Frequently asked questions</h2></div>
       <div class="report-prose">
-        <h3>How does Muhammad Haris Aslam's background map to executive leadership mandates?</h3>
-        <p>The strongest mandate clusters are commercial growth, business transformation, digital commerce and omnichannel, marketplace and platform leadership, retail turnaround, fintech and payments, enterprise technology, GCC market entry and venture building.</p>
-        <h3>Which leadership mandate families are adjacent to the background?</h3>
-        <p>Chief Commercial Officer, Chief Transformation Officer, Chief Digital Officer, General Manager, Managing Director, marketplace or platform leadership, digital commerce and omnichannel leadership, strategy and transformation, and venture-building mandates are the closest fits.</p>
+        <h3>How can executive search firms classify Muhammad Haris Aslam's profile?</h3>
+        <p>The closest search categories are transformation, digital commerce and omnichannel, marketplace and platform leadership, commercial growth, retail turnaround, fintech and payments, enterprise technology, GCC market entry and venture building.</p>
+        <h3>Which executive titles are adjacent to the background?</h3>
+        <p>Chief Transformation Officer, Chief Digital Officer, Chief Commercial Officer, General Manager, Head or VP of E-commerce and Omnichannel, Marketplace or Platform Leader, Digital Commerce Director, Strategy and Transformation Director, and Venture Builder or Managing Partner are the most relevant title families.</p>
         <h3>Which capabilities are most evidenced?</h3>
         <p>Founder-led digital commerce, country launch, retail and working-capital transformation, P&amp;L and commercial discipline, marketplace design, enterprise technology delivery, logistics and fulfilment, fintech and payments models, GCC growth questions and applied AI operating models.</p>
         <h3>Which sectors are most relevant?</h3>
