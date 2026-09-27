@@ -9,21 +9,12 @@ const overrides = [
     file: join(root, "dist", "about", "index.html"),
     replacements: [
       [
-        "About Muhammad Haris Aslam | GCC Commercial Executive",
-        "Muhammad Haris Aslam | GCC Commercial Growth Executive"
+        "About Muhammad Haris Aslam | GCC Operator",
+        "Muhammad Haris Aslam | GCC Growth & Transformation Executive"
       ],
       [
-        "Profile of Muhammad Haris Aslam, a GCC commercial operator and transformation leader across digital commerce, retail, marketplaces, enterprise technology, fintech and AI.",
-        "Muhammad Haris Aslam is a GCC commercial and transformation executive across digital commerce, marketplaces, retail turnaround, AI, fintech, enterprise technology and growth."
-      ]
-    ]
-  },
-  {
-    file: join(root, "dist", "insights", "distributor-cash-allocation-operating-system-ai", "index.html"),
-    replacements: [
-      [
-        "A practical AI operating framework for GCC distributors connecting inventory, supplier terms, customer credit and net-net contribution-with human-controlled decision rights.",
-        "How GCC distributors can use AI to link inventory, supplier terms, customer credit and net-net contribution while keeping decision rights with people."
+        "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.",
+        "Muhammad Haris Aslam is a GCC operator and advisor across digital commerce, marketplaces, retail turnaround, AI, fintech, enterprise technology and growth."
       ]
     ]
   }
