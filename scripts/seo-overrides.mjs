@@ -9,12 +9,12 @@ const overrides = [
     file: join(root, "dist", "about", "index.html"),
     replacements: [
       [
-        "About Muhammad Haris Aslam | GCC Operator",
-        "Muhammad Haris Aslam | GCC Growth & Transformation Executive"
+        "Muhammad Haris Aslam | GCC Commercial & Transformation Executive",
+        "Muhammad Haris Aslam | GCC Commercial, Growth & Transformation Executive"
       ],
       [
-        "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.",
-        "Muhammad Haris Aslam is a GCC operator and advisor across digital commerce, marketplaces, retail turnaround, AI, fintech, enterprise technology and growth."
+        "Muhammad Haris Aslam is a GCC commercial and transformation executive with experience across digital commerce, retail, marketplaces, enterprise technology, fintech and AI.",
+        "Muhammad Haris Aslam is a GCC commercial and transformation executive across digital commerce, marketplaces, retail turnaround, AI, fintech, enterprise technology and growth."
       ]
     ]
   },
