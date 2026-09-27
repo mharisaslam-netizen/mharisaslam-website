@@ -2,10 +2,10 @@ export const uaeMarketPage = {
   path: "/markets/uae",
   type: "WebPage",
   kind: "market",
-  title: "UAE Growth & Digital Transformation Advisor | Haris Aslam",
-  description: "Operator-led advisory for UAE CEOs, family businesses and investors on retail growth, digital commerce, AI, marketplaces, fintech and enterprise transformation.",
+  title: "UAE Retail & Digital Transformation Advisor | Haris Aslam",
+  description: "Operator-led UAE advisory for CEOs and family businesses on retail transformation, trade management, digital commerce, AI, marketplaces and GCC growth.",
   eyebrow: "United Arab Emirates · growth · retail · digital transformation",
-  h1: "UAE growth and transformation built around commercial economics.",
+  h1: "UAE retail and digital transformation built around contribution and cash.",
   intro: "An operator-led perspective for CEOs, founders, family businesses, boards, investors and transformation leaders who need growth, retail, digital commerce, AI or enterprise transformation translated into an executable operating model.",
   service: {
     name: "UAE Growth & Digital Transformation Advisory",
