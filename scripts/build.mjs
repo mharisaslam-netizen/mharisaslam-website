@@ -7,7 +7,19 @@ import { executiveProfilePage } from "../src/executive-profile-page.mjs";
 import { uaeMarketPage } from "../src/uae-market-page.mjs";
 import { saudiMarketPage } from "../src/saudi-market-page.mjs";
 
-const allPages = [advisoryPage, executiveProfilePage, uaeMarketPage, saudiMarketPage, ...pages];
+const basePages = [advisoryPage, executiveProfilePage, uaeMarketPage, saudiMarketPage, ...pages];
+const expertiseIndexPage = {
+  path: "/expertise-index",
+  type: "CollectionPage",
+  kind: "expertise-index",
+  title: "GCC Expertise, Use Cases & Insights Index | Haris Aslam",
+  description: "Explore Muhammad Haris Aslam's GCC advisory expertise, use cases, operating cases, market-entry work, AI, commerce, fintech, retail and transformation insights.",
+  eyebrow: "Expertise index",
+  h1: "GCC expertise, operating cases and insights",
+  intro: "A structured directory of advisory themes, operating cases, market perspectives and practical insights across the GCC.",
+  body: expertiseIndexBody(basePages)
+};
+const allPages = [...basePages, expertiseIndexPage];
 const primaryNavigation = [navigation[0], ["GCC Growth", advisoryPage.path], ["Executive Profile", executiveProfilePage.path], ...navigation.slice(1)];
 const commercialBridgePaths = new Set(["/", "/about", "/track-record", "/use-cases", "/ai-transformation", "/insights", "/insights/saudi-market-entry-retail-commerce-economics", "/markets/uae"]);
 
@@ -108,7 +120,7 @@ function advisoryConversion(page) {
   return `<section class="section" aria-labelledby="advisory-contact"><div class="section-heading"><p class="eyebrow">Executive engagement</p><h2 id="advisory-contact">Discuss a high-consequence growth or transformation mandate.</h2></div><div class="report-prose"><p>The strongest fit is a cross-functional problem where commercial economics, operating ownership, technology and execution need to move together. Initial discussion can focus on the decision, value pool, evidence available and the operating questions that need to be resolved.</p></div><div class="hero-actions"><a class="button" href="/contact">Start a conversation</a><a class="button button-secondary" href="/track-record">Review operating evidence</a></div></section>`;
 }
 function footer() {
-  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation">GCC Growth</a><a href="/markets/saudi-arabia">Saudi Growth</a><a href="/markets/uae">UAE Growth</a><a href="/gcc-executive-profile">Executive Profile</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
+  return `<footer class="site-footer"><div class="footer-inner"><div class="footer-top"><div class="footer-title">Muhammad Haris Aslam<br>GCC operator and business builder.</div><nav class="footer-links" aria-label="Explore"><p>Explore</p><a href="/gcc-growth-transformation">GCC Growth</a><a href="/markets/saudi-arabia">Saudi Growth</a><a href="/markets/uae">UAE Growth</a><a href="/gcc-executive-profile">Executive Profile</a><a href="/track-record">Track Record</a><a href="/use-cases">Use Cases</a><a href="/ai-transformation">AI & Transformation</a><a href="/insights">Insights</a><a href="/expertise-index">Expertise Index</a></nav><nav class="footer-links" aria-label="Priority expertise"><p>Priority expertise</p><a href="/use-cases/retail-group-transformation">Retail transformation</a><a href="/use-cases/saudi-market-entry-distribution">Saudi market entry</a><a href="/use-cases/enterprise-ai-transformation-practice">Enterprise AI</a><a href="/use-cases/warehouse-working-capital-3pl">Working capital & logistics</a><a href="/use-cases/enterprise-software-marketplace">Enterprise marketplace</a><a href="/use-cases/leading-saudi-bank-commerce-ecosystem">Saudi banking ecosystem</a><a href="/use-cases/vocational-training-and-employer-platform">AI & workforce skills</a><a href="/use-cases/telco-commerce-loyalty-and-payments-ecosystem">Telco commerce & payments</a></nav><nav class="footer-links" aria-label="Connect"><p>Connect</p><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href="${site.linkedin}" rel="me noopener">LinkedIn</a><a href="mailto:${site.email}">${site.email}</a></nav></div><div class="footer-meta"><span>© ${new Date().getUTCFullYear()} ${site.name}</span><span>GCC operating experience</span></div></div></footer>`;
 }
 function render404() {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | ${site.shortName}</title><meta name="robots" content="noindex,follow"><link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/assets/favicon.png" type="image/png"></head><body>${header("")}<main id="main" class="not-found"><p class="error-code">404 · PAGE NOT FOUND</p><h1>Page not found</h1><p>Try the homepage, GCC growth perspective, track record or use cases.</p><p><a class="button" href="/">Return home</a></p></main>${footer()}</body></html>`;
@@ -164,6 +176,28 @@ function schemaGraph(page, url, crumbs) {
   }
   return { "@context":"https://schema.org", "@graph":graph };
 }
+function expertiseIndexBody(sourcePages) {
+  const visible = sourcePages.filter(page => page.path !== "/privacy");
+  const groups = [
+    ["GCC advisory and market growth", visible.filter(page => ["/gcc-growth-transformation","/gcc-executive-profile","/markets/saudi-arabia","/markets/uae","/about","/contact"].includes(page.path))],
+    ["Track record", visible.filter(page => page.path.startsWith("/track-record"))],
+    ["AI and transformation", visible.filter(page => page.path === "/ai-transformation" || page.path === "/ai-commerce" || page.path === "/career-runway" || (page.path.startsWith("/use-cases/") && /ai-|enterprise-ai|automation|skills|vocational/i.test(page.path)))],
+    ["Retail, commerce and marketplaces", visible.filter(page => page.path.startsWith("/use-cases/") && /retail|commerce|marketplace|gifting|seller|category|pricing|clearance|fragrance|chocolate|store|cvm|loyalty/i.test(page.path))],
+    ["Fintech, banking and payments", visible.filter(page => page.path.startsWith("/use-cases/") && /bank|payment|fintech|remittance|card|loyalty|rent-as-a-utility/i.test(page.path))],
+    ["Enterprise technology and operating models", visible.filter(page => page.path.startsWith("/use-cases/") && /enterprise|erp|software|app-studio|facilities|construction|oil-and-gas|staffing|technical-resource|partnership/i.test(page.path))],
+    ["Logistics, fulfilment and working capital", visible.filter(page => page.path.startsWith("/use-cases/") && /warehouse|logistics|courier|last-mile|fulfilment|working-capital/i.test(page.path))],
+    ["Market entry and ventures", visible.filter(page => page.path.startsWith("/use-cases/") && /market-entry|go-to-market|venture|saudi|qatar|oman|wedding|repair|heritage/i.test(page.path))],
+    ["Insights", visible.filter(page => page.path.startsWith("/insights"))],
+    ["All use cases", visible.filter(page => page.path === "/use-cases" || page.path.startsWith("/use-cases/"))]
+  ];
+  const rendered = groups.map(([heading, items]) => {
+    const unique = [...new Map(items.map(item => [item.path, item])).values()];
+    if (!unique.length) return "";
+    return `<section class="section"><div class="section-heading"><h2>${escapeHtml(heading)}</h2></div><div class="report-prose"><ul>${unique.map(item => `<li><a href="${item.path}"><strong>${escapeHtml(pageLabel(item))}</strong></a> - ${escapeHtml(item.description || item.intro || "")}</li>`).join("")}</ul></div></section>`;
+  }).join("");
+  return `<div class="hero-actions"><a class="button" href="/use-cases">Browse use cases</a><a class="button button-secondary" href="/insights">Read insights</a></div>${rendered}`;
+}
+
 function sitemap() {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc></url>`).join("\n")}\n</urlset>\n`;
 }
