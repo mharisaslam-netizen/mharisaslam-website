@@ -13,7 +13,7 @@ const expertiseIndexPage = {
   type: "CollectionPage",
   kind: "expertise-index",
   title: "GCC Expertise, Use Cases & Insights Index | Haris Aslam",
-  description: "Explore GCC advisory expertise, use cases, operating cases, market-entry work, AI, commerce, fintech, retail, logistics and transformation insights by Muhammad Haris Aslam.",
+  description: "Explore Haris Aslam's GCC advisory expertise, use cases and insights across AI, commerce, fintech, retail, logistics, market entry and transformation.",
   eyebrow: "Expertise index",
   h1: "GCC expertise, operating cases and insights",
   intro: "A structured directory of advisory themes, operating cases, market perspectives and practical insights across the GCC.",
