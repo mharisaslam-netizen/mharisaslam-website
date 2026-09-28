@@ -5,15 +5,16 @@ import {
   parseCookies,
   sessionCookie
 } from "../../lib/linkedin-session.js";
+import { globalGrowthsSessionCookie } from "../../lib/global-growths-linkedin-session.js";
 
-function page(title, message) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><style>body{font-family:Arial,sans-serif;background:#f5f2ea;color:#10242b;margin:0;padding:48px}main{max-width:720px;margin:auto;background:white;padding:36px;border:1px solid #d9dfdc}h1{margin-top:0}a{color:#087f78;font-weight:700}</style></head><body><main><h1>${title}</h1><p>${message}</p><p><a href="/">Return to mharisaslam.com</a></p></main></body></html>`;
+function page(title, message, href = "/", linkLabel = "Return to mharisaslam.com") {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>${title}</title><style>body{font-family:Arial,sans-serif;background:#f5f2ea;color:#10242b;margin:0;padding:48px}main{max-width:720px;margin:auto;background:white;padding:36px;border:1px solid #d9dfdc}h1{margin-top:0}a{color:#087f78;font-weight:700}</style></head><body><main><h1>${title}</h1><p>${message}</p><p><a href="${href}">${linkLabel}</a></p></main></body></html>`;
 }
 
-function htmlResponse(title, message, status = 200, cookies = []) {
-  const headers = new Headers({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+function htmlResponse(title, message, status = 200, cookies = [], href = "/", linkLabel = "Return to mharisaslam.com") {
+  const headers = new Headers({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow, noarchive" });
   for (const cookie of cookies) headers.append("Set-Cookie", cookie);
-  return new Response(page(title, message), { status, headers });
+  return new Response(page(title, message, href, linkLabel), { status, headers });
 }
 
 export async function GET(request) {
@@ -32,9 +33,18 @@ export async function GET(request) {
   const returnedState = url.searchParams.get("state");
   const code = url.searchParams.get("code");
   const oauthError = url.searchParams.get("error");
+  const globalGrowths = Boolean(returnedState && returnedState.startsWith("gg."));
 
   if (oauthError) {
-    return htmlResponse("LinkedIn authorization was not completed", "LinkedIn returned an authorization error. No publishing connection was saved.", 400, [clearStateCookie()]);
+    const detail = url.searchParams.get("error_description") || "LinkedIn returned an authorization error.";
+    return htmlResponse(
+      globalGrowths ? "Global Growths LinkedIn authorization was not completed" : "LinkedIn authorization was not completed",
+      detail + " No publishing connection was saved.",
+      400,
+      [clearStateCookie()],
+      globalGrowths ? "/api/linkedin/global-growths/publisher" : "/",
+      globalGrowths ? "Return to Global Growths Publisher" : "Return to mharisaslam.com"
+    );
   }
 
   if (!code || !expectedState || !returnedState || expectedState !== returnedState) {
@@ -54,7 +64,10 @@ export async function GET(request) {
       })
     });
 
-    if (!tokenResponse.ok) throw new Error("Token exchange failed");
+    if (!tokenResponse.ok) {
+      const detail = await tokenResponse.text().catch(() => "");
+      throw new Error("Token exchange failed" + (detail ? ": " + detail.slice(0, 300) : ""));
+    }
     const token = await tokenResponse.json();
 
     const profileResponse = await fetch("https://api.linkedin.com/v2/userinfo", {
@@ -69,17 +82,38 @@ export async function GET(request) {
       expiresAt: Date.now() + expiresIn * 1000,
       memberSub: profile.sub || null,
       name: profile.name || [profile.given_name, profile.family_name].filter(Boolean).join(" ") || null,
-      email: profile.email || null
+      email: profile.email || null,
+      publisher: globalGrowths ? "global-growths" : "personal"
     };
 
     const encrypted = encryptSession(payload, sessionSecret);
+
+    if (globalGrowths) {
+      return htmlResponse(
+        "Global Growths LinkedIn connected",
+        `Global Growths Publisher is connected through ${payload.name || "your LinkedIn account"}. No post has been published. Publishing still requires explicit approval.`,
+        200,
+        [clearStateCookie(), globalGrowthsSessionCookie(encrypted, Math.min(expiresIn, 5184000))],
+        "/api/linkedin/global-growths/publisher",
+        "Open Global Growths Publisher"
+      );
+    }
+
     return htmlResponse(
       "LinkedIn connected",
       `Haris Content Publisher is connected to ${payload.name || "your LinkedIn account"}. No post has been published. Publishing will still require your approval.`,
       200,
       [clearStateCookie(), sessionCookie(encrypted, Math.min(expiresIn, 5184000))]
     );
-  } catch {
-    return htmlResponse("LinkedIn connection failed", "The authorization response was received, but the secure token exchange could not be completed. No post was published.", 502, [clearStateCookie()]);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "The secure token exchange could not be completed.";
+    return htmlResponse(
+      globalGrowths ? "Global Growths LinkedIn connection failed" : "LinkedIn connection failed",
+      detail + " No post was published.",
+      502,
+      [clearStateCookie()],
+      globalGrowths ? "/api/linkedin/global-growths/connect" : "/api/linkedin/connect",
+      "Try again"
+    );
   }
 }
