@@ -19,9 +19,9 @@ export function GET(request) {
       organizationId,
       organizationUrn: `urn:li:organization:${organizationId}`,
       configured: Boolean(
-        process.env.LINKEDIN_CLIENT_ID &&
-        process.env.LINKEDIN_CLIENT_SECRET &&
-        process.env.LINKEDIN_REDIRECT_URI &&
+        (process.env.GLOBAL_GROWTHS_LINKEDIN_CLIENT_ID || process.env.LINKEDIN_CLIENT_ID) &&
+        (process.env.GLOBAL_GROWTHS_LINKEDIN_CLIENT_SECRET || process.env.LINKEDIN_CLIENT_SECRET) &&
+        (process.env.GLOBAL_GROWTHS_LINKEDIN_REDIRECT_URI || process.env.LINKEDIN_REDIRECT_URI) &&
         process.env.LINKEDIN_SESSION_SECRET
       )
     },

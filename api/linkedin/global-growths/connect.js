@@ -1,12 +1,20 @@
 import { randomState, stateCookie } from "../../../lib/linkedin-session.js";
 
 export function GET() {
-  const clientId = process.env.LINKEDIN_CLIENT_ID;
-  const redirectUri = process.env.LINKEDIN_REDIRECT_URI;
+  const clientId =
+    process.env.GLOBAL_GROWTHS_LINKEDIN_CLIENT_ID ||
+    process.env.LINKEDIN_CLIENT_ID;
+  const redirectUri =
+    process.env.GLOBAL_GROWTHS_LINKEDIN_REDIRECT_URI ||
+    process.env.LINKEDIN_REDIRECT_URI;
 
   if (!clientId || !redirectUri) {
     return Response.json(
-      { ok: false, error: "LinkedIn OAuth is not configured yet." },
+      {
+        ok: false,
+        error:
+          "Global Growths LinkedIn OAuth is not configured yet. Set GLOBAL_GROWTHS_LINKEDIN_CLIENT_ID and GLOBAL_GROWTHS_LINKEDIN_REDIRECT_URI."
+      },
       { status: 503, headers: { "Cache-Control": "no-store" } }
     );
   }

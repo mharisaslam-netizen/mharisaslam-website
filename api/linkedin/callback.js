@@ -18,15 +18,6 @@ function htmlResponse(title, message, status = 200, cookies = [], href = "/", li
 }
 
 export async function GET(request) {
-  const clientId = process.env.LINKEDIN_CLIENT_ID;
-  const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
-  const redirectUri = process.env.LINKEDIN_REDIRECT_URI;
-  const sessionSecret = process.env.LINKEDIN_SESSION_SECRET;
-
-  if (!clientId || !clientSecret || !redirectUri || !sessionSecret) {
-    return htmlResponse("LinkedIn connection is not configured", "The secure server settings are not complete yet.", 503);
-  }
-
   const url = new URL(request.url);
   const cookies = parseCookies(request.headers.get("cookie") || "");
   const expectedState = cookies[STATE_COOKIE];
@@ -34,6 +25,28 @@ export async function GET(request) {
   const code = url.searchParams.get("code");
   const oauthError = url.searchParams.get("error");
   const globalGrowths = Boolean(returnedState && returnedState.startsWith("gg."));
+
+  const clientId = globalGrowths
+    ? (process.env.GLOBAL_GROWTHS_LINKEDIN_CLIENT_ID || process.env.LINKEDIN_CLIENT_ID)
+    : process.env.LINKEDIN_CLIENT_ID;
+  const clientSecret = globalGrowths
+    ? (process.env.GLOBAL_GROWTHS_LINKEDIN_CLIENT_SECRET || process.env.LINKEDIN_CLIENT_SECRET)
+    : process.env.LINKEDIN_CLIENT_SECRET;
+  const redirectUri = globalGrowths
+    ? (process.env.GLOBAL_GROWTHS_LINKEDIN_REDIRECT_URI || process.env.LINKEDIN_REDIRECT_URI)
+    : process.env.LINKEDIN_REDIRECT_URI;
+  const sessionSecret = process.env.LINKEDIN_SESSION_SECRET;
+
+  if (!clientId || !clientSecret || !redirectUri || !sessionSecret) {
+    return htmlResponse(
+      globalGrowths ? "Global Growths LinkedIn connection is not configured" : "LinkedIn connection is not configured",
+      "The secure server settings are not complete yet.",
+      503,
+      [],
+      globalGrowths ? "/api/linkedin/global-growths/publisher" : "/",
+      globalGrowths ? "Return to Global Growths Publisher" : "Return to mharisaslam.com"
+    );
+  }
 
   if (oauthError) {
     const detail = url.searchParams.get("error_description") || "LinkedIn returned an authorization error.";
