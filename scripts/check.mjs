@@ -38,6 +38,20 @@ const developmentNotes = [
   /preserv(?:ed|ing) pages?/i,
   /source discovery/i
 ];
+
+const solicitationSignals = [
+  /executive[- ]search/i,
+  /search firms?/i,
+  /recruiter/i,
+  /boards?\s*&\s*executive search/i,
+  /ceo\s*&\s*advisory mandates?/i,
+  /for a serious mandate/i,
+  /discuss a(?:\s+[a-z-]+){0,5}\s+mandate/i,
+  /advisory engagement/i,
+  /leadership fit/i,
+  /recruiter search terms?/i,
+  /executive titles? (?:are|most|adjacent)/i
+];
 const forbiddenCaseNames = /\bSAB\b|Bank Dhofar|Floward|\bBDO\b|KalSoft|Al Raid|Vodafone|VOPAY|Salman Corporation|Miraq|\bKSM\b/i;
 const currentEmployerNames = /MARQA|Vodafone Qatar/i;
 const permittedRoleSentence = "Currently working on strategic digital-commerce, marketplace and operating-model transformation within a major telecom operator in Qatar.";
@@ -94,6 +108,7 @@ for (const file of htmlFiles) {
   }
 
   for (const regex of jobSignals) if (regex.test(html)) errors.push(`${route}: job-seeking signal ${regex}`);
+  for (const regex of solicitationSignals) if (regex.test(html)) errors.push(`${route}: solicitation/recruiter signal ${regex}`);
   for (const regex of rejectedLanguage) if (regex.test(html)) errors.push(`${route}: rejected language ${regex}`);
   for (const regex of developmentNotes) if (regex.test(html)) errors.push(`${route}: public development note ${regex}`);
   if (currentEmployerNames.test(html)) errors.push(`${route}: current-employer name exposed`);
