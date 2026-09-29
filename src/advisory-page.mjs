@@ -1,16 +1,16 @@
 export const advisoryPage = {
   path: "/gcc-growth-transformation",
   type: "WebPage",
-  kind: "advisory",
+  kind: "gcc-growth",
   title: "GCC Growth & Transformation | Saudi & UAE | Haris Aslam",
-  description: "Operator-led growth and transformation advisory for Saudi Arabia, UAE and the GCC: market entry, turnaround, digital commerce, AI, fintech, marketplaces and execution.",
+  description: "Operator-led perspective on growth and transformation across Saudi Arabia, the UAE and the GCC, connecting market entry, turnaround, digital commerce, AI, fintech, marketplaces and execution.",
   eyebrow: "Saudi Arabia · UAE · GCC growth & transformation",
   h1: "GCC growth and transformation for Saudi Arabia, the UAE and the wider Gulf.",
-  intro: "Operator-led advisory for CEOs, founders, family businesses, boards and investors who need a growth, market-entry or transformation thesis translated into economics, operating ownership and execution.",
+  intro: "An operator-led perspective on how growth, market entry and transformation connect commercial economics, operating ownership, technology and execution across GCC markets.",
   faq: [
     {
-      question: "Who is this GCC growth and transformation advisory for?",
-      answer: "The strongest fit is a CEO, founder, family-business owner, board, investor or transformation leader facing a cross-functional growth problem with meaningful commercial consequence. Typical mandates include market entry, turnaround, digital commerce, marketplaces, AI operating models, fintech and payments, enterprise transformation, logistics and new-venture design."
+      question: "What does this GCC growth and transformation perspective cover?",
+      answer: "The perspective covers cross-functional growth and transformation questions including market entry, turnaround, digital commerce, marketplaces, AI operating models, fintech and payments, enterprise transformation, logistics and new-venture design."
     },
     {
       question: "What does GCC growth and transformation work involve?",
@@ -21,8 +21,8 @@ export const advisoryPage = {
       answer: "The practical questions include route-to-market, commercial economics, distribution and e-commerce, marketplace models, partner architecture, operating setup and investment gates. Strategy blueprints are clearly separated from proven operating results, and local legal or regulatory advice remains with qualified specialists."
     },
     {
-      question: "What kinds of UAE growth and transformation mandates fit this model?",
-      answer: "Relevant UAE mandates include regional growth strategy, digital commerce, retail profitability, marketplace economics, AI workflow redesign, fintech and payment propositions, enterprise transformation and operating models that can use the UAE as a base for wider GCC expansion."
+      question: "Which UAE growth and transformation questions does this perspective cover?",
+      answer: "Relevant UAE questions include regional growth strategy, digital commerce, retail profitability, marketplace economics, AI workflow redesign, fintech and payment propositions, enterprise transformation and operating models that can use the UAE as a base for wider GCC expansion."
     },
     {
       question: "What is different about an operator-led transformation lens?",
@@ -37,20 +37,20 @@ export const advisoryPage = {
       answer: "The operating perspective covers Saudi Arabia, the United Arab Emirates, Qatar, Oman, Kuwait and Bahrain, with particular attention to the different commercial economics, partner structures and execution realities of each market."
     },
     {
-      question: "What can an engagement produce?",
-      answer: "Depending on the mandate, outputs can include a commercial diagnostic, quantified value thesis, market-entry economics, operating-model design, partner architecture, technology and data requirements, execution roadmap, management cadence and board or CEO decision pack. Outcomes are tied to the evidence available and are not presented as guaranteed results."
+      question: "What does a decision-ready transformation model make explicit?",
+      answer: "A decision-ready model can make the commercial thesis, market-entry economics, operating-model design, partner architecture, technology and data requirements, execution roadmap, management cadence and decision gates explicit. Modeled outcomes remain scenarios rather than guaranteed results."
     }
   ],
   body: `
     <div class="hero-actions">
-      <a class="button" href="/contact">Discuss a mandate</a>
-      <a class="button button-secondary" href="/track-record">Review operating evidence</a>
+      <a class="button" href="/track-record">Review operating evidence</a>
+      <a class="button button-secondary" href="/use-cases">Explore use cases</a>
     </div>
 
     <section class="section">
-      <div class="section-heading"><p class="eyebrow">Commercial mandate</p><h2>When the problem is too important to stay inside one function</h2></div>
+      <div class="section-heading"><p class="eyebrow">Operating perspective</p><h2>When the problem is too important to stay inside one function</h2></div>
       <div class="report-prose">
-        <p>This advisory is designed for high-consequence growth and transformation questions where strategy, economics, technology and execution have to move together. The buyer may be a CEO entering Saudi Arabia, a family business resetting profitability, a board assessing a new growth engine, an investor testing an operating thesis, or a transformation leader trying to turn a digital or AI programme into measurable business value.</p>
+        <p>The most consequential growth and transformation questions are cross-functional: strategy, economics, technology and execution have to move together. The operating lens applies whether the context is Saudi market entry, family-business profitability, a new growth engine, an investment thesis or a digital and AI programme that needs measurable business value.</p>
         <p>The first objective is not to create a longer strategy document. It is to make the decision clearer: where the value sits, which assumptions matter, what operating model is required, which capabilities must exist, how much capital and management attention the move consumes, and what evidence should be visible before the next investment gate.</p>
       </div>
       <div class="card-grid">
@@ -61,12 +61,12 @@ export const advisoryPage = {
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>What an engagement can make decision-ready</h2></div>
+      <div class="section-heading"><h2>What a decision-ready transformation model makes explicit</h2></div>
       <div class="card-grid">
         <div class="work-card"><span class="card-label">Commercial case</span><h3>Quantified value thesis</h3><p>Revenue, margin, cash, investment, CAC, working capital, partner economics and sensitivities are made explicit enough for a CEO or board to challenge.</p></div>
         <div class="work-card"><span class="card-label">Operating model</span><h3>Ownership, capabilities and decision rights</h3><p>Define who owns the outcome, which teams and partners are required, where authority sits and which routines have to change for the model to work.</p></div>
         <div class="work-card"><span class="card-label">Technology & data</span><h3>Architecture tied to the business decision</h3><p>Translate the operating need into technology, data, AI, integration and source-of-truth requirements instead of starting with a tool or platform.</p></div>
-        <div class="work-card"><span class="card-label">Execution</span><h3>Sequenced gates and management cadence</h3><p>Break the mandate into reversible tests, launch decisions, scale thresholds and measurable checkpoints so capital follows evidence.</p></div>
+        <div class="work-card"><span class="card-label">Execution</span><h3>Sequenced gates and management cadence</h3><p>Break the programme into reversible tests, launch decisions, scale thresholds and measurable checkpoints so capital follows evidence.</p></div>
       </div>
     </section>
 
@@ -128,31 +128,31 @@ export const advisoryPage = {
       <div class="card-grid">
         <a class="work-card" href="/track-record"><span class="card-label">Operating record</span><h3>Named roles and ventures</h3><p>Review the experience behind the perspective and the evidence boundaries attached to each role.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases"><span class="card-label">Use-case library</span><h3>Commercial models across sectors</h3><p>Explore business problems across banking, telecom, retail, marketplaces, logistics, enterprise technology, ventures and AI.</p><span class="card-link">Browse use cases <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/gcc-executive-profile"><span class="card-label">Board & executive search</span><h3>Leadership fit and operating scope</h3><p>For boards, investors and executive-search firms assessing leadership fit, review the GCC executive profile and operating scope.</p><span class="card-link">View executive profile <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/gcc-executive-profile"><span class="card-label">Operating profile</span><h3>Capability map and GCC scope</h3><p>Review the structured operating profile across transformation, commerce, technology, fintech, logistics, AI and venture building.</p><span class="card-link">View operating profile <span aria-hidden="true">→</span></span></a>
       </div>
     </section>
 
     <section class="section">
       <div class="section-heading"><h2>Frequently asked questions</h2></div>
       <div class="report-prose">
-        <h3>Who is this GCC growth and transformation advisory for?</h3>
-        <p>The strongest fit is a CEO, founder, family-business owner, board, investor or transformation leader dealing with a cross-functional problem where commercial economics, operating ownership, technology and execution all matter.</p>
+        <h3>What does this GCC growth and transformation perspective cover?</h3>
+        <p>It covers cross-functional growth and transformation questions where commercial economics, operating ownership, technology and execution all matter.</p>
         <h3>What does GCC growth and transformation work involve?</h3>
         <p>It connects strategy to the operating system required to make it real: customer proposition, economics, organization, technology, data, partners, decision rights and measurement. The lens is most useful when the problem crosses several functions and cannot be solved by one department alone.</p>
         <h3>Which questions matter in Saudi Arabia market entry and growth?</h3>
         <p>Route-to-market, distribution and e-commerce, marketplaces, local operating requirements, partner design, commercial modelling and scale gates all matter. Legal and regulatory decisions remain with qualified local specialists.</p>
-        <h3>What kinds of UAE growth mandates fit this model?</h3>
-        <p>Regional growth strategy, digital commerce, retail profitability, AI workflow redesign, platform economics, fintech propositions and enterprise transformation are strong fits when the objective is to connect strategy with operating ownership and execution.</p>
+        <h3>Which UAE growth questions are covered?</h3>
+        <p>Regional growth strategy, digital commerce, retail profitability, AI workflow redesign, platform economics, fintech propositions and enterprise transformation are examined through the same operating lens.</p>
         <h3>What is different about an operator-led transformation lens?</h3>
         <p>The emphasis is practical: make the economics visible, design the operating model, define who owns the decisions and stay close enough to implementation to know whether the model is working.</p>
         <h3>How can AI fit into growth or transformation?</h3>
         <p>AI matters where it changes economics, operating speed or service quality. Practical examples include catalogue quality, demand and inventory exceptions, customer-care triage, marketplace trust, finance reconciliation, last-mile exception handling, procurement analysis and management decision support.</p>
-        <h3>What can an engagement produce?</h3>
-        <p>Depending on the mandate, outputs can include a commercial diagnostic, quantified value thesis, market-entry economics, operating-model design, partner architecture, technology and data requirements, execution roadmap, management cadence and a board or CEO decision pack. Outcomes depend on the evidence and operating context and are not presented as guaranteed results.</p>
+        <h3>What does a decision-ready model make explicit?</h3>
+        <p>A strong model makes the commercial thesis, market-entry economics, operating-model design, partner architecture, technology and data requirements, execution roadmap, management cadence and decision gates explicit. Modeled outcomes remain scenarios rather than guaranteed results.</p>
       </div>
       <div class="hero-actions">
-        <a class="button" href="/contact">Discuss a mandate</a>
-        <a class="button button-secondary" href="/use-cases">Explore use cases</a>
+        <a class="button" href="/use-cases">Explore use cases</a>
+        <a class="button button-secondary" href="/insights">Read insights</a>
       </div>
     </section>
   `
