@@ -1043,7 +1043,7 @@ const privacy = {
   `
 };
 
-const contact = { path: "/contact", type: "ContactPage", kind: "contact", title: "Contact Muhammad Haris Aslam", description: "Professional contact details for Muhammad Haris Aslam.", eyebrow: "Contact", h1: "Professional contact", intro: "Email and LinkedIn for professional correspondence and general business discussion.", body: `${section("Contact", `<div class="contact-grid"><div><span>Email</span><a href="mailto:${site.email}">${site.email}</a></div><div><span>LinkedIn</span><a href="${site.linkedin}" rel="me noopener">Connect with Haris <span aria-hidden="true">↗</span></a></div></div>`)}` };
+const contact = { path: "/contact", type: "ContactPage", kind: "contact", title: "Contact Muhammad Haris Aslam", description: "Professional contact details for Muhammad Haris Aslam, including email and LinkedIn for business correspondence.", eyebrow: "Contact", h1: "Professional contact", intro: "Email and LinkedIn for professional correspondence and general business discussion.", body: `${section("Contact", `<div class="contact-grid"><div><span>Email</span><a href="mailto:${site.email}">${site.email}</a></div><div><span>LinkedIn</span><a href="${site.linkedin}" rel="me noopener">Connect with Haris <span aria-hidden="true">↗</span></a></div></div>`)}` };
 
 const existingCasePages = [...useCases.map(useCasePage), ...aiProjects.filter(item => item.slug !== "ai-commerce-command-center").map(useCasePage)];
 const addedCasePages = expansionPages(existingCasePages.map(page => page.path));
