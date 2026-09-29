@@ -3,24 +3,19 @@ export const saudiMarketPage = {
   path: "/markets/saudi-arabia",
   type: "WebPage",
   kind: "market",
-  title: "Saudi Arabia Growth & Market Entry Advisor | Haris Aslam",
-  description: "Operator-led advisory for Saudi CEOs, family businesses and investors on market entry, growth, retail, digital commerce, AI, fintech and transformation.",
+  title: "Saudi Arabia Growth & Market Entry | Haris Aslam",
+  description: "Operator-led perspective on Saudi market entry, growth, retail, digital commerce, AI, fintech and transformation, grounded in contribution, cash and execution.",
   eyebrow: "Saudi Arabia · growth · market entry · transformation",
   h1: "Saudi growth and market entry built around contribution, cash and execution.",
-  intro: "An operator-led perspective for CEOs, founders, family businesses, boards, investors and transformation leaders who need Saudi growth ambition translated into a commercially executable operating model.",
-  service: {
-    name: "Saudi Arabia Growth & Market Entry Advisory",
-    serviceType: "Growth, market-entry, retail, digital commerce and transformation advisory",
-    areaServed: ["Saudi Arabia"]
-  },
+  intro: "An operator-led perspective on how Saudi growth ambition connects to route-to-market choices, contribution, cash, technology, operating ownership and execution.",
   faq: [
     {
-      question: "What does a Saudi Arabia growth and market-entry advisor help with?",
+      question: "What does a Saudi Arabia growth and market-entry perspective examine?",
       answer: "The work is most useful when demand, route to market, partner economics, margin, working capital, technology and execution must be solved together. Typical questions include market entry, distribution, retail growth, digital commerce, marketplaces, enterprise transformation, AI, fintech, logistics and venture design."
     },
     {
-      question: "Who is this Saudi advisory perspective designed for?",
-      answer: "It is designed for CEOs, founders, family-business owners, boards, investors and transformation leaders facing a high-consequence growth or operating decision. The emphasis is on commercial economics, operating ownership and execution rather than generic market commentary."
+      question: "Which operating questions does the Saudi perspective focus on?",
+      answer: "The perspective focuses on high-consequence growth and operating questions where demand, commercial economics, operating ownership, technology and execution need to be considered together."
     },
     {
       question: "How should a Saudi market-entry business case be structured?",
@@ -40,21 +35,21 @@ export const saudiMarketPage = {
     },
     {
       question: "Does Muhammad Haris Aslam claim a Saudi office or achieved Saudi client results?",
-      answer: "No Saudi office or legal entity is claimed on this page, and no achieved Saudi client result is presented unless it is part of the public operating record. Proposed models, diagnostics and outcome ranges are clearly treated as advisory or illustrative work."
+      answer: "No Saudi office or legal entity is claimed on this page, and no achieved Saudi client result is presented unless it is part of the public operating record. Proposed models, diagnostics and outcome ranges are clearly treated as modeled or illustrative analysis."
     },
     {
-      question: "What can a Saudi advisory engagement produce?",
-      answer: "Depending on the mandate, outputs can include a commercial diagnostic, market-entry thesis, route-to-market design, partner economics, operating model, digital or AI roadmap, working-capital model, scenario analysis, execution gates, management cadence and a board or CEO decision pack. Results depend on context and implementation and are never guaranteed."
+      question: "What does a decision-ready Saudi operating model make explicit?",
+      answer: "A decision-ready model makes the market-entry thesis, route-to-market design, partner economics, operating model, digital or AI architecture, working-capital model, scenario analysis, execution gates, management cadence and decision logic explicit. Modeled outcomes remain scenarios rather than guaranteed results."
     }
   ],
   body: `
     <div class="hero-actions">
-      <a class="button" href="/contact">Discuss a Saudi mandate</a>
-      <a class="button button-secondary" href="/use-cases/saudi-market-entry-distribution">View Saudi market-entry model</a>
+      <a class="button" href="/use-cases/saudi-market-entry-distribution">Explore Saudi market-entry model</a>
+      <a class="button button-secondary" href="/gcc-growth-transformation">Explore GCC perspective</a>
     </div>
 
     <section class="section">
-      <div class="section-heading"><p class="eyebrow">Commercial mandate</p><h2>Saudi scale is attractive only when the operating economics survive scale.</h2></div>
+      <div class="section-heading"><p class="eyebrow">Operating perspective</p><h2>Saudi scale is attractive only when the operating economics survive scale.</h2></div>
       <div class="report-prose">
         <p>Saudi Arabia can justify serious growth ambition, but ambition alone does not answer the operating questions that determine whether a business creates value. A strong market-entry thesis still has to resolve route to market, partner economics, landed cost, local execution, inventory, working capital, service, technology, governance and the capital required before the model reaches repeatable contribution.</p>
         <p>The useful executive question is therefore not simply “should we enter Saudi Arabia?” It is “what must be true for this Saudi model to produce durable contribution and cash, and which assumptions should be proven before more capital is committed?” That framing keeps market size, revenue and strategic excitement connected to the economics of execution.</p>
@@ -128,9 +123,9 @@ export const saudiMarketPage = {
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>A serious Saudi mandate should finish with decision-ready outputs</h2></div>
+      <div class="section-heading"><h2>A decision-ready Saudi operating model should make the economics explicit</h2></div>
       <div class="report-prose">
-        <p>The objective is not a market-entry presentation. It is an operating decision pack that management can use. Depending on the mandate, outputs can include a quantified commercial diagnostic, market and customer thesis, route-to-market options, partner economics, landed-cost model, trade-term normalization, working-capital requirement, organization and governance design, digital or AI architecture, execution roadmap and a set of explicit scale gates.</p>
+        <p>The objective is not a market-entry presentation. It is a decision-ready operating model that makes the commercial thesis, route-to-market options, partner economics, landed cost, trade terms, working-capital requirement, organization, governance, digital or AI architecture, execution roadmap and scale gates explicit.</p>
         <p>A useful first phase can be narrow: define the decision, collect the commercial facts, normalize the economics, identify the assumptions that matter most and agree what evidence would justify the next investment. That creates a stronger basis for board approval, partner negotiation or operating execution than a large transformation programme launched before the economics are visible.</p>
         <p>Modeled outcomes are scenarios, not promises. Legal, tax, regulatory, cybersecurity and other specialist questions remain with qualified advisers.</p>
       </div>
@@ -143,15 +138,15 @@ export const saudiMarketPage = {
       </div>
       <div class="card-grid">
         <a class="work-card" href="/track-record"><span class="card-label">Operating evidence</span><h3>Named roles and ventures</h3><p>Review the public operating record and the evidence boundaries attached to each experience.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/gcc-executive-profile"><span class="card-label">Executive search & boards</span><h3>Leadership scope across the GCC</h3><p>For boards, investors and executive-search firms assessing operating fit, review the executive profile and transformation scope.</p><span class="card-link">View executive profile <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/gcc-growth-transformation"><span class="card-label">Regional context</span><h3>Saudi Arabia inside a GCC growth system</h3><p>Compare the Saudi market-entry lens with the broader GCC growth, transformation and operating-model perspective.</p><span class="card-link">View GCC growth advisory <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/gcc-executive-profile"><span class="card-label">Operating profile</span><h3>Capability map across the GCC</h3><p>Review the operating profile across transformation, commerce, technology, fintech, logistics, AI and venture building.</p><span class="card-link">View operating profile <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/gcc-growth-transformation"><span class="card-label">Regional context</span><h3>Saudi Arabia inside a GCC growth system</h3><p>Compare the Saudi market-entry lens with the broader GCC growth, transformation and operating-model perspective.</p><span class="card-link">Explore GCC perspective <span aria-hidden="true">→</span></span></a>
       </div>
     </section>
 
     <section class="section">
       <div class="section-heading"><h2>Frequently asked questions</h2></div>
       <div class="report-prose">
-        <h3>What does a Saudi growth and market-entry advisor help with?</h3><p>The strongest mandates connect demand, route to market, partner economics, contribution, working capital, technology and execution. The work can span distribution, retail, digital commerce, marketplaces, AI, fintech, logistics, enterprise transformation and new ventures.</p>
+        <h3>What does the Saudi growth and market-entry perspective focus on?</h3><p>The strongest questions connect demand, route to market, partner economics, contribution, working capital, technology and execution. The perspective spans distribution, retail, digital commerce, marketplaces, AI, fintech, logistics, enterprise transformation and new ventures.</p>
         <h3>How should a Saudi market-entry business case be evaluated?</h3><p>Start with the customer and route to market, then test landed economics, working capital, local capability and scale gates. Revenue should be judged beside contribution and cash rather than in isolation.</p>
         <h3>Can the work support family businesses and diversified groups?</h3><p>Yes. The operating lens is particularly relevant when growth spans multiple channels, business units, partners or technologies and management needs a common economic model, clearer ownership and an execution cadence.</p>
         <h3>How is AI treated in transformation work?</h3><p>AI is treated as a governed operating lever. Priority goes to workflows with measurable business value, reliable source systems, narrow permissions and accountable human authority.</p>
@@ -160,8 +155,8 @@ export const saudiMarketPage = {
     </section>
 
     <div class="hero-actions">
-      <a class="button" href="/contact">Discuss a Saudi growth or market-entry mandate</a>
-      <a class="button button-secondary" href="/gcc-executive-profile">Executive profile</a>
+      <a class="button" href="/use-cases/saudi-market-entry-distribution">Explore Saudi market-entry model</a>
+      <a class="button button-secondary" href="/gcc-executive-profile">Operating profile</a>
     </div>
   `
 };
