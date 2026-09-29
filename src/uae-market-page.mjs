@@ -2,24 +2,19 @@ export const uaeMarketPage = {
   path: "/markets/uae",
   type: "WebPage",
   kind: "market",
-  title: "UAE Growth & Digital Transformation Advisor | Haris Aslam",
-  description: "Operator-led advisory for UAE CEOs, family businesses and investors on retail growth, digital commerce, AI, marketplaces, fintech and enterprise transformation.",
+  title: "UAE Growth & Digital Transformation | Haris Aslam",
+  description: "Operator-led perspective on UAE retail growth, digital commerce, AI, marketplaces, fintech and enterprise transformation, grounded in commercial economics and operating models.",
   eyebrow: "United Arab Emirates · growth · retail · digital transformation",
   h1: "UAE growth and transformation built around commercial economics.",
-  intro: "An operator-led perspective for CEOs, founders, family businesses, boards, investors and transformation leaders who need growth, retail, digital commerce, AI or enterprise transformation translated into an executable operating model.",
-  service: {
-    name: "UAE Growth & Digital Transformation Advisory",
-    serviceType: "Growth, retail, digital commerce and transformation advisory",
-    areaServed: ["United Arab Emirates"]
-  },
+  intro: "An operator-led perspective on how UAE growth, retail, digital commerce, AI and enterprise transformation connect to commercial economics, operating ownership and execution.",
   faq: [
     {
-      question: "What does a UAE growth and digital transformation advisor help with?",
+      question: "What does a UAE growth and digital transformation perspective examine?",
       answer: "The work is most useful when growth, profitability, technology and execution are connected. Typical questions include retail and commercial transformation, digital commerce, marketplace economics, AI operating models, fintech and payments, enterprise technology, logistics, working capital, GCC expansion and new-venture design."
     },
     {
-      question: "Who is the UAE advisory perspective designed for?",
-      answer: "It is designed for CEOs, founders, family-business owners, boards, investors, transformation leaders and senior operators facing a high-consequence commercial decision. The emphasis is on operating economics, ownership and execution rather than generic strategy."
+      question: "Which operating questions does the UAE perspective focus on?",
+      answer: "The perspective focuses on high-consequence commercial questions where growth, profitability, operating ownership, technology and execution need to be considered together rather than as separate workstreams."
     },
     {
       question: "Can the work support UAE retail transformation and trade management?",
@@ -39,21 +34,21 @@ export const uaeMarketPage = {
     },
     {
       question: "Does Muhammad Haris Aslam claim a UAE office or achieved UAE client results?",
-      answer: "No UAE office or legal entity is claimed on this page, and no achieved client result is presented unless it is part of the public operating record. Proposed models, diagnostics and outcome ranges are clearly treated as advisory or illustrative work."
+      answer: "No UAE office or legal entity is claimed on this page, and no achieved client result is presented unless it is part of the public operating record. Proposed models, diagnostics and outcome ranges are clearly treated as modeled or illustrative analysis."
     },
     {
-      question: "What can a UAE advisory engagement produce?",
-      answer: "Depending on the mandate, outputs can include a commercial diagnostic, quantified value thesis, operating-model design, market or channel economics, technology and data requirements, partner architecture, execution roadmap, management cadence and board or CEO decision pack. Results depend on the evidence, business context and implementation quality and are never guaranteed."
+      question: "What does a decision-ready UAE operating model make explicit?",
+      answer: "A decision-ready model makes the commercial thesis, operating-model design, market or channel economics, technology and data requirements, partner architecture, execution roadmap, management cadence and decision gates explicit. Modeled outcomes remain scenarios rather than guaranteed results."
     }
   ],
   body: `
     <div class="hero-actions">
-      <a class="button" href="/contact">Discuss a UAE mandate</a>
-      <a class="button button-secondary" href="/gcc-growth-transformation">View GCC growth advisory</a>
+      <a class="button" href="/gcc-growth-transformation">Explore GCC growth &amp; transformation</a>
+      <a class="button button-secondary" href="/use-cases">Explore use cases</a>
     </div>
 
     <section class="section">
-      <div class="section-heading"><p class="eyebrow">Commercial mandate</p><h2>Where UAE growth questions become operating-model questions</h2></div>
+      <div class="section-heading"><p class="eyebrow">Operating perspective</p><h2>Where UAE growth questions become operating-model questions</h2></div>
       <div class="report-prose">
         <p>The UAE can be an attractive market, a regional operating base, a partner ecosystem and a launchpad into the wider GCC. Those advantages do not remove the need for commercial discipline. A strong proposition can still fail if acquisition cost is too high, inventory absorbs too much cash, fulfilment is structurally expensive, partner economics are unclear or technology is designed separately from the operating model.</p>
         <p>The useful starting point is therefore not “what should the strategy be?” but “what has to be true for this model to create durable commercial value?” That means connecting demand, revenue quality, margin, stock, cash, service, technology, ownership and execution into the same decision.</p>
@@ -129,7 +124,7 @@ export const uaeMarketPage = {
       </div>
       <div class="card-grid">
         <a class="work-card" href="/track-record"><span class="card-label">Operating evidence</span><h3>Named roles and ventures</h3><p>Review the public operating record and the evidence boundaries attached to each experience.</p><span class="card-link">View track record <span aria-hidden="true">→</span></span></a>
-        <a class="work-card" href="/gcc-executive-profile"><span class="card-label">Executive search & boards</span><h3>Leadership scope across the GCC</h3><p>For boards, investors and executive-search firms assessing operating fit, review the executive profile and transformation scope.</p><span class="card-link">View executive profile <span aria-hidden="true">→</span></span></a>
+        <a class="work-card" href="/gcc-executive-profile"><span class="card-label">Operating profile</span><h3>Capability map across the GCC</h3><p>Review the operating profile across transformation, commerce, technology, fintech, logistics, AI and venture building.</p><span class="card-link">View operating profile <span aria-hidden="true">→</span></span></a>
         <a class="work-card" href="/use-cases"><span class="card-label">Use-case library</span><h3>Commercial models across sectors</h3><p>Explore operating problems across retail, banking, telecom, marketplaces, logistics, enterprise technology, ventures and AI.</p><span class="card-link">Browse use cases <span aria-hidden="true">→</span></span></a>
       </div>
     </section>
@@ -137,7 +132,7 @@ export const uaeMarketPage = {
     <section class="section">
       <div class="section-heading"><h2>Frequently asked questions</h2></div>
       <div class="report-prose">
-        <h3>What does a UAE growth and digital transformation advisor help with?</h3><p>High-value work usually sits across growth, profitability, operating model and technology. The mandate can cover retail transformation, digital commerce, marketplaces, AI, fintech, enterprise technology, logistics, GCC expansion or new ventures.</p>
+        <h3>What does the UAE growth and digital transformation perspective focus on?</h3><p>The most important questions sit across growth, profitability, operating model and technology. The perspective covers retail transformation, digital commerce, marketplaces, AI, fintech, enterprise technology, logistics, GCC expansion and new ventures.</p>
         <h3>Can this support UAE retail trade management?</h3><p>Yes. The focus is on connecting pricing, margin, promotions, inventory, procurement, channel economics, working capital and execution so that trade decisions are visible in contribution and cash.</p>
         <h3>Can a UAE platform be used for wider GCC expansion?</h3><p>Yes, but each market should preserve its own demand, landed cost, partner, service and investment assumptions. Saudi Arabia should be tested as its own scale thesis rather than as a simple extension of the UAE.</p>
         <h3>How is AI treated in transformation work?</h3><p>AI is treated as an operating-model lever. The priority is governed automation and decision support tied to reliable source systems, clear permissions and accountable human authority.</p>
@@ -146,8 +141,8 @@ export const uaeMarketPage = {
     </section>
 
     <div class="hero-actions">
-      <a class="button" href="/contact">Discuss a UAE growth or transformation mandate</a>
-      <a class="button button-secondary" href="/gcc-executive-profile">Executive profile</a>
+      <a class="button" href="/gcc-growth-transformation">Explore GCC perspective</a>
+      <a class="button button-secondary" href="/gcc-executive-profile">Operating profile</a>
     </div>
   `
 };
