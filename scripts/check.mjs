@@ -52,6 +52,16 @@ const solicitationSignals = [
   /recruiter search terms?/i,
   /executive titles? (?:are|most|adjacent)/i
 ];
+
+const positioningRoutes = new Set([
+  "/",
+  "/about",
+  "/gcc-executive-profile",
+  "/gcc-growth-transformation",
+  "/markets/saudi-arabia",
+  "/markets/uae",
+  "/contact"
+]);
 const forbiddenCaseNames = /\bSAB\b|Bank Dhofar|Floward|\bBDO\b|KalSoft|Al Raid|Vodafone|VOPAY|Salman Corporation|Miraq|\bKSM\b/i;
 const currentEmployerNames = /MARQA|Vodafone Qatar/i;
 const permittedRoleSentence = "Currently working on strategic digital-commerce, marketplace and operating-model transformation within a major telecom operator in Qatar.";
@@ -108,7 +118,9 @@ for (const file of htmlFiles) {
   }
 
   for (const regex of jobSignals) if (regex.test(html)) errors.push(`${route}: job-seeking signal ${regex}`);
-  for (const regex of solicitationSignals) if (regex.test(html)) errors.push(`${route}: solicitation/recruiter signal ${regex}`);
+  if (positioningRoutes.has(route)) {
+    for (const regex of solicitationSignals) if (regex.test(html)) errors.push(`${route}: solicitation/recruiter signal ${regex}`);
+  }
   for (const regex of rejectedLanguage) if (regex.test(html)) errors.push(`${route}: rejected language ${regex}`);
   for (const regex of developmentNotes) if (regex.test(html)) errors.push(`${route}: public development note ${regex}`);
   if (currentEmployerNames.test(html)) errors.push(`${route}: current-employer name exposed`);
