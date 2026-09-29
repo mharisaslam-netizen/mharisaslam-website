@@ -10,11 +10,11 @@ const overrides = [
     replacements: [
       [
         "About Muhammad Haris Aslam | GCC Operator",
-        "Muhammad Haris Aslam | GCC Growth & Transformation Executive"
+        "Muhammad Haris Aslam | GCC Operating Profile"
       ],
       [
         "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.",
-        "Muhammad Haris Aslam is a GCC operator and advisor across digital commerce, marketplaces, retail turnaround, AI, fintech, enterprise technology and growth."
+        "Muhammad Haris Aslam is a GCC operator and business builder across digital commerce, retail, marketplaces, enterprise technology, fintech, logistics and applied AI."
       ]
     ]
   }
