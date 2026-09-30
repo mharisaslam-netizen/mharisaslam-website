@@ -69,7 +69,9 @@ export type AuthorityArticle = {
 
 export type ChannelPackage = {
   linkedinPost: string;
+  linkedinHashtags: string[];
   xPost: string;
+  xHashtags: string[];
   xThread: string[];
   mediumTitle: string;
   mediumSubtitle: string;
