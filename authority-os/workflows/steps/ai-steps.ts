@@ -344,21 +344,25 @@ export async function channelsStep(
 
   if (result.xHashtags.length) {
     const hashtagLine = result.xHashtags.join(" ");
-    const candidate = result.xPost.trim() + "\n\n" + hashtagLine;
+    const bodyWithoutUrl = result.xPost
+      .replace(canonicalUrl, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+    const fixedTail =
+      "\n\n" + canonicalUrl + "\n\n" + hashtagLine;
+    const maxBodyLength = Math.max(
+      40,
+      280 - fixedTail.length
+    );
+    const body =
+      bodyWithoutUrl.length > maxBodyLength
+        ? bodyWithoutUrl
+            .slice(0, maxBodyLength - 1)
+            .trimEnd()
+            .replace(/[,:;\-]+$/, "") + "…"
+        : bodyWithoutUrl;
 
-    if (candidate.length <= 280) {
-      result.xPost = candidate;
-    } else {
-      const room =
-        Math.max(
-          60,
-          280 - hashtagLine.length - 2
-        );
-      result.xPost =
-        result.xPost.trim().slice(0, room).trimEnd() +
-        "\n\n" +
-        hashtagLine;
-    }
+    result.xPost = body + fixedTail;
   }
 
   return result;
