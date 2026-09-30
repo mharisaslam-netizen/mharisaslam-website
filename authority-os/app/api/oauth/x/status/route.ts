@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  decryptXRefreshToken,
+  decryptXTokenSession,
   X_REFRESH_COOKIE
 } from "../../../../../lib/x-cookie";
 
@@ -12,14 +12,32 @@ export async function GET(request: Request) {
     .split(";")
     .map((part) => part.trim())
     .find((part) => part.startsWith(X_REFRESH_COOKIE + "="));
-  const raw = cookie ? decodeURIComponent(cookie.slice(cookie.indexOf("=") + 1)) : "";
-  const refreshToken = decryptXRefreshToken(raw);
+
+  const raw = cookie
+    ? decodeURIComponent(cookie.slice(cookie.indexOf("=") + 1))
+    : "";
+  const session = decryptXTokenSession(raw);
+
+  const accessTokenReady = Boolean(
+    session?.accessToken &&
+      session?.expiresAt &&
+      session.expiresAt > Date.now() + 30_000
+  );
 
   return NextResponse.json(
     {
-      connected: Boolean(refreshToken),
-      browserTokenReady: Boolean(refreshToken),
-      serverFallbackConfigured: Boolean(process.env.X_REFRESH_TOKEN?.trim())
+      connected: Boolean(session?.refreshToken),
+      browserTokenReady: Boolean(session?.refreshToken),
+      accessTokenReady,
+      sessionVersion: Number(session?.version || 0),
+      sessionMode: !session
+        ? "NONE"
+        : session.version >= 2
+          ? "DURABLE"
+          : "LEGACY_REFRESH_ONLY",
+      serverFallbackConfigured: Boolean(
+        process.env.X_REFRESH_TOKEN?.trim()
+      )
     },
     { headers: { "Cache-Control": "no-store" } }
   );
