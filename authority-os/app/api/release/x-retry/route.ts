@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 import { getRun } from "workflow/api";
 import { verifyReleaseApprovalToken } from "../../../../lib/release-auth";
 import { verifyLiveUrl } from "../../../../lib/connectors/verify";
-import { publishXPost } from "../../../../lib/connectors/x";
 import {
-  decryptXRefreshToken,
-  encryptXRefreshToken,
+  publishXPost,
+  XTokenLifecycleError
+} from "../../../../lib/connectors/x";
+import {
+  decryptXTokenSession,
+  encryptXTokenSession,
+  type XTokenSession,
   X_REFRESH_COOKIE
 } from "../../../../lib/x-cookie";
 
@@ -85,51 +89,89 @@ export async function POST(request: Request) {
     }
 
     const cookie = request.headers.get("cookie") || "";
-    const encryptedRefresh = cookieValue(cookie, X_REFRESH_COOKIE);
-    const cookieRefresh = decryptXRefreshToken(encryptedRefresh);
-
-    if (!cookieRefresh) {
-      return NextResponse.json(
-        {
-          error:
-            "The new X authorization is not available in this browser session. Reconnect X, then return here and retry."
-        },
-        { status: 409 }
-      );
-    }
+    const encryptedSession = cookieValue(cookie, X_REFRESH_COOKIE);
+    const cookieSession = decryptXTokenSession(encryptedSession);
 
     const draft = String(channels.xPost || "").trim();
     const text = draft.includes(canonicalUrl)
       ? draft
       : draft + "\n\n" + canonicalUrl;
 
-    const published = await publishXPost({
-      text,
-      refreshToken: cookieRefresh
-    });
+    let nextXTokenSession: XTokenSession | null = null;
 
-    const { nextRefreshToken, ...safePublished } = published;
-    const response = NextResponse.json({
-      x: safePublished,
-      canonicalUrl,
-      retriedAt: new Date().toISOString()
-    });
+    try {
+      const published = await publishXPost({
+        text,
+        tokenSession: cookieSession
+      });
 
-    if (nextRefreshToken) {
-      response.cookies.set(
-        X_REFRESH_COOKIE,
-        encryptXRefreshToken(String(nextRefreshToken)),
+      nextXTokenSession = published.nextTokenSession || null;
+      const { nextTokenSession, ...safePublished } = published;
+      const response = NextResponse.json({
+        x: safePublished,
+        canonicalUrl,
+        retriedAt: new Date().toISOString()
+      });
+
+      if (nextXTokenSession) {
+        response.cookies.set(
+          X_REFRESH_COOKIE,
+          encryptXTokenSession(nextXTokenSession),
+          {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 24 * 180
+          }
+        );
+      }
+
+      return response;
+    } catch (error) {
+      if (
+        error instanceof XTokenLifecycleError &&
+        error.tokenSession
+      ) {
+        nextXTokenSession = error.tokenSession;
+      }
+
+      const response = NextResponse.json(
         {
-          httpOnly: true,
-          secure: true,
-          sameSite: "lax",
-          path: "/",
-          maxAge: 60 * 60 * 24 * 180
+          error:
+            error instanceof Error
+              ? error.message
+              : "X retry failed.",
+          requiresReconnect:
+            error instanceof XTokenLifecycleError
+              ? error.requiresReconnect
+              : false
+        },
+        {
+          status:
+            error instanceof XTokenLifecycleError &&
+            error.requiresReconnect
+              ? 409
+              : 502
         }
       );
-    }
 
-    return response;
+      if (nextXTokenSession) {
+        response.cookies.set(
+          X_REFRESH_COOKIE,
+          encryptXTokenSession(nextXTokenSession),
+          {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 24 * 180
+          }
+        );
+      }
+
+      return response;
+    }
   } catch (error) {
     return NextResponse.json(
       {
