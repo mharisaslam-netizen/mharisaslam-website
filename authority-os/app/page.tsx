@@ -428,28 +428,62 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
 
-    const refreshXConnection = () => {
-      fetch("/api/oauth/x/status", { cache: "no-store" })
-        .then((response) => response.json())
-        .then((data) => {
-          if (!cancelled) setXConnection(data);
-        })
-        .catch(() => {});
+    const refreshXConnection = async () => {
+      try {
+        const response = await fetch("/api/oauth/x/status", {
+          cache: "no-store"
+        });
+        const data = await response.json();
+        if (!cancelled) setXConnection(data);
+        return data;
+      } catch {
+        return null;
+      }
     };
 
     const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") refreshXConnection();
+      if (document.visibilityState === "visible") {
+        void refreshXConnection();
+      }
+    };
+
+    const onXConnected = async (event: MessageEvent) => {
+      if (
+        event.origin !== window.location.origin ||
+        event.data?.type !== "authority-os-x-connected"
+      ) {
+        return;
+      }
+
+      const data = await refreshXConnection();
+      const xBlocked =
+        String(releaseResult?.x?.status || "").toUpperCase() ===
+        "BLOCKED";
+
+      if (
+        !cancelled &&
+        data?.browserTokenReady &&
+        xBlocked &&
+        sessionId &&
+        !retryingX
+      ) {
+        window.setTimeout(() => {
+          if (!cancelled) void retryXAfterReconnect();
+        }, 350);
+      }
     };
 
     window.addEventListener("focus", refreshXConnection);
+    window.addEventListener("message", onXConnected);
     document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       cancelled = true;
       window.removeEventListener("focus", refreshXConnection);
+      window.removeEventListener("message", onXConnected);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, []);
+  }, [sessionId, releaseResult?.x?.status, retryingX]);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -774,14 +808,36 @@ export default function Home() {
       });
       const data = await response.json();
       if (!response.ok || !data?.x) {
-        throw new Error(data.error || "X retry failed.");
+        const retryError: any = new Error(
+          data.error || "X retry failed."
+        );
+        retryError.requiresReconnect = Boolean(
+          data.requiresReconnect
+        );
+        throw retryError;
       }
 
       setReleaseResult((current) => {
+        const remainingFailed = Array.isArray(
+          current?.failedChannels
+        )
+          ? current!.failedChannels!.filter(
+              (channel) => channel !== "x"
+            )
+          : [];
+
+        const completed = remainingFailed.length === 0;
         const next = {
           ...(current || {}),
-          x: data.x
+          x: data.x,
+          failedChannels: remainingFailed,
+          retryable: !completed,
+          status: completed ? "COMPLETED" : "PARTIAL",
+          ...(completed
+            ? { completedAt: new Date().toISOString() }
+            : {})
         } as ReleaseResult;
+
         window.localStorage.setItem(
           "authority-os-release-result-" + sessionId,
           JSON.stringify(next)
@@ -792,24 +848,54 @@ export default function Home() {
       setXConnection((current) => ({
         ...(current || {}),
         connected: true,
-        browserTokenReady: true
+        browserTokenReady: true,
+        accessTokenReady: true,
+        sessionMode: "DURABLE",
+        sessionVersion: 2
       }));
-    } catch (error) {
+    } catch (error: any) {
+      const requiresReconnect = Boolean(
+        error?.requiresReconnect
+      );
+
       setReleaseResult((current) => {
         const next = {
           ...(current || {}),
+          status: "PARTIAL",
+          retryable: true,
+          failedChannels: Array.from(
+            new Set([
+              ...(current?.failedChannels || []),
+              "x"
+            ])
+          ),
           x: {
             ...(current?.x || {}),
             status: "BLOCKED",
-            error: error instanceof Error ? error.message : "X retry failed."
+            error:
+              error instanceof Error
+                ? error.message
+                : "X retry failed.",
+            requiresReconnect
           }
         } as ReleaseResult;
+
         window.localStorage.setItem(
           "authority-os-release-result-" + sessionId,
           JSON.stringify(next)
         );
         return next;
       });
+
+      if (requiresReconnect) {
+        setXConnection((current) => ({
+          ...(current || {}),
+          connected: false,
+          browserTokenReady: false,
+          accessTokenReady: false,
+          sessionMode: "EXPIRED"
+        }));
+      }
     } finally {
       setRetryingX(false);
     }
@@ -1296,10 +1382,25 @@ export default function Home() {
                             <div className="release-error-detail">
                               <strong>X error</strong>
                               <span>{String(releaseResult.x.error)}</span>
-                              {xConnection?.browserTokenReady ? (
+                              {releaseResult.x?.requiresReconnect ||
+                              !xConnection?.browserTokenReady ? (
                                 <>
                                   <span>
-                                    X is reconnected. The BLOCKED label above is the result of the earlier release attempt and will remain until that X step is retried.
+                                    This X authorization is no longer valid. Reconnect once; the new durable token session will be stored safely and this approved X step will retry automatically.
+                                  </span>
+                                  <a
+                                    className="preview-action secondary-link"
+                                    href="/api/oauth/x/start"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    Reconnect X once
+                                  </a>
+                                </>
+                              ) : (
+                                <>
+                                  <span>
+                                    X authorization is available. Retry only the blocked X step; the website, WordPress and indexing work will not be repeated.
                                   </span>
                                   <button
                                     className="preview-action"
@@ -1309,15 +1410,6 @@ export default function Home() {
                                     {retryingX ? "RETRYING X…" : "Retry X now"}
                                   </button>
                                 </>
-                              ) : (
-                                <a
-                                  className="preview-action secondary-link"
-                                  href="/api/oauth/x/start"
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  Reconnect X
-                                </a>
                               )}
                             </div>
                           ) : null}

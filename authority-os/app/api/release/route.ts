@@ -7,10 +7,14 @@ import {
   publishStagedWordPressPost,
   triggerJetpackPublicize
 } from "../../../lib/connectors/wordpress";
-import { publishXPost } from "../../../lib/connectors/x";
 import {
-  decryptXRefreshToken,
-  encryptXRefreshToken,
+  publishXPost,
+  XTokenLifecycleError
+} from "../../../lib/connectors/x";
+import {
+  decryptXTokenSession,
+  encryptXTokenSession,
+  type XTokenSession,
   X_REFRESH_COOKIE
 } from "../../../lib/x-cookie";
 import { submitIndexNow } from "../../../lib/connectors/indexnow";
@@ -287,7 +291,7 @@ export async function POST(request: Request) {
       );
     }
 
-    let nextXRefreshToken: string | null = null;
+    let nextXTokenSession: XTokenSession | null = null;
 
     if (selections.x) {
       parallelTasks.push(
@@ -298,22 +302,35 @@ export async function POST(request: Request) {
             : draft + "\n\n" + canonicalUrl;
 
           const cookie = request.headers.get("cookie") || "";
-          const encryptedRefresh = cookieValue(cookie, X_REFRESH_COOKIE);
-          const cookieRefresh = decryptXRefreshToken(encryptedRefresh);
+          const encryptedSession = cookieValue(cookie, X_REFRESH_COOKIE);
+          const cookieSession = decryptXTokenSession(encryptedSession);
 
           try {
             const published = await publishXPost({
               text,
-              ...(cookieRefresh ? { refreshToken: cookieRefresh } : {})
+              tokenSession: cookieSession
             });
-            nextXRefreshToken =
-              String(published.nextRefreshToken || "").trim() || null;
-            const { nextRefreshToken, ...safePublished } = published;
+            nextXTokenSession = published.nextTokenSession || null;
+            const { nextTokenSession, ...safePublished } = published;
             result.x = safePublished;
           } catch (error) {
+            if (
+              error instanceof XTokenLifecycleError &&
+              error.tokenSession
+            ) {
+              nextXTokenSession = error.tokenSession;
+            }
+
             result.x = {
               status: "BLOCKED",
-              error: error instanceof Error ? error.message : String(error)
+              error:
+                error instanceof Error
+                  ? error.message
+                  : String(error),
+              requiresReconnect:
+                error instanceof XTokenLifecycleError
+                  ? error.requiresReconnect
+                  : false
             };
           }
         })()
@@ -437,10 +454,10 @@ export async function POST(request: Request) {
       ...(overallStatus === "COMPLETED" ? { completedAt } : {})
     });
 
-    if (nextXRefreshToken) {
+    if (nextXTokenSession) {
       response.cookies.set(
         X_REFRESH_COOKIE,
-        encryptXRefreshToken(nextXRefreshToken),
+        encryptXTokenSession(nextXTokenSession),
         {
           httpOnly: true,
           secure: true,
