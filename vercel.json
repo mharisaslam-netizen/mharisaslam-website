@@ -374,7 +374,8 @@
   "git": {
     "deploymentEnabled": {
       "authority-os-v1": false,
-      "authority-os-release-resilience-fix": false
+      "authority-os-release-resilience-fix": false,
+      "authority-os-x-token-lifecycle-fix": false
     }
   }
 }
