@@ -396,6 +396,7 @@ export default function Home() {
   const [indexingMonitor, setIndexingMonitor] = useState<Record<string, any> | null>(null);
   const [xConnection, setXConnection] = useState<Record<string, any> | null>(null);
   const [retryingX, setRetryingX] = useState(false);
+  const [xReconnectReturned, setXReconnectReturned] = useState(false);
 
   useEffect(() => {
     fetch("/api/integrations")
@@ -408,7 +409,11 @@ export default function Home() {
       .then((d) => setXConnection(d))
       .catch(() => {});
 
-    const urlSession = new URLSearchParams(window.location.search).get("session");
+    const params = new URLSearchParams(window.location.search);
+    const urlSession = params.get("session");
+    if (params.get("x_connected") === "1") {
+      setXReconnectReturned(true);
+    }
     const savedSession = window.localStorage.getItem("authority-os-active-session");
     const sessionToResume = urlSession || savedSession;
 
@@ -435,10 +440,7 @@ export default function Home() {
         });
         const data = await response.json();
         if (!cancelled) setXConnection(data);
-        return data;
-      } catch {
-        return null;
-      }
+      } catch {}
     };
 
     const onVisibilityChange = () => {
@@ -447,43 +449,15 @@ export default function Home() {
       }
     };
 
-    const onXConnected = async (event: MessageEvent) => {
-      if (
-        event.origin !== window.location.origin ||
-        event.data?.type !== "authority-os-x-connected"
-      ) {
-        return;
-      }
-
-      const data = await refreshXConnection();
-      const xBlocked =
-        String(releaseResult?.x?.status || "").toUpperCase() ===
-        "BLOCKED";
-
-      if (
-        !cancelled &&
-        data?.browserTokenReady &&
-        xBlocked &&
-        sessionId &&
-        !retryingX
-      ) {
-        window.setTimeout(() => {
-          if (!cancelled) void retryXAfterReconnect();
-        }, 350);
-      }
-    };
-
     window.addEventListener("focus", refreshXConnection);
-    window.addEventListener("message", onXConnected);
     document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       cancelled = true;
       window.removeEventListener("focus", refreshXConnection);
-      window.removeEventListener("message", onXConnected);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [sessionId, releaseResult?.x?.status, retryingX]);
+  }, []);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -900,6 +874,35 @@ export default function Home() {
       setRetryingX(false);
     }
   }
+
+  useEffect(() => {
+    if (
+      !xReconnectReturned ||
+      !sessionId ||
+      !xConnection?.browserTokenReady ||
+      String(releaseResult?.x?.status || "").toUpperCase() !== "BLOCKED" ||
+      retryingX
+    ) {
+      return;
+    }
+
+    setXReconnectReturned(false);
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("x_connected");
+    window.history.replaceState({}, "", cleanUrl.toString());
+
+    const timer = window.setTimeout(() => {
+      void retryXAfterReconnect();
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [
+    xReconnectReturned,
+    sessionId,
+    xConnection?.browserTokenReady,
+    releaseResult?.x?.status,
+    retryingX
+  ]);
 
   async function publishApprovedChannels() {
     if (!sessionId || !releaseToken || !liveConfirmation || publishingLive) return;
@@ -1390,9 +1393,13 @@ export default function Home() {
                                   </span>
                                   <a
                                     className="preview-action secondary-link"
-                                    href="/api/oauth/x/start"
-                                    target="_blank"
-                                    rel="noreferrer"
+                                    href={
+                                      "/api/oauth/x/start" +
+                                      (sessionId
+                                        ? "?session=" +
+                                          encodeURIComponent(sessionId)
+                                        : "")
+                                    }
                                   >
                                     Reconnect X once
                                   </a>
