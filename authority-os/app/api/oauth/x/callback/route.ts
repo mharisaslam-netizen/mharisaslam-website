@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import {
   encryptXTokenSession,
   X_REFRESH_COOKIE
@@ -119,26 +120,31 @@ export async function GET(request: Request) {
   const destination = new URL(safeReturn, base);
   destination.searchParams.set("x_connected", "1");
 
-  const response = Response.redirect(destination.toString(), 302);
-  response.headers.append(
-    "Set-Cookie",
-    X_REFRESH_COOKIE +
-      "=" +
-      encryptXTokenSession(tokenSession) +
-      "; Path=/; Max-Age=15552000; HttpOnly; Secure; SameSite=Lax"
+  const response = NextResponse.redirect(destination);
+  response.cookies.set(
+    X_REFRESH_COOKIE,
+    encryptXTokenSession(tokenSession),
+    {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 180
+    }
   );
-  response.headers.append(
-    "Set-Cookie",
-    "x_oauth_state=; Path=/api/oauth/x; Max-Age=0; HttpOnly; Secure; SameSite=Lax"
-  );
-  response.headers.append(
-    "Set-Cookie",
-    "x_oauth_verifier=; Path=/api/oauth/x; Max-Age=0; HttpOnly; Secure; SameSite=Lax"
-  );
-  response.headers.append(
-    "Set-Cookie",
-    "x_oauth_return=; Path=/api/oauth/x; Max-Age=0; HttpOnly; Secure; SameSite=Lax"
-  );
+  for (const name of [
+    "x_oauth_state",
+    "x_oauth_verifier",
+    "x_oauth_return"
+  ]) {
+    response.cookies.set(name, "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/api/oauth/x",
+      maxAge: 0
+    });
+  }
 
   return response;
 }
