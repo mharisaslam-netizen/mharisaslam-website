@@ -655,5 +655,149 @@ export const deepInsights = [
       }
     ],
     "seoTitle": "GCC Enterprise AI Operating Model | Haris Aslam"
+  },
+  {
+    "slug": "payment-volume-versus-net-revenue",
+    "title": "Payment Volume Versus Net Revenue: The Fintech Economics Bridge",
+    "metaDescription": "A practical fintech economics model linking payment volume, gross fees, pass-through costs, net revenue, gross profit and contribution.",
+    "lead": "Payment volume is useful for understanding activity and scale. It is not the same thing as revenue, gross profit or economic contribution.",
+    "category": "Payments & fintech economics",
+    "readMinutes": 12,
+    "datePublished": "2026-09-30",
+    "visual": [
+      "Payment volume",
+      "Gross fees",
+      "Pass-through and partner cost",
+      "Net revenue",
+      "Gross profit",
+      "Contribution"
+    ],
+    "operatingLens": "Can management explain, by customer and product, how payment activity converts into retained revenue, gross profit and contribution after partner, risk, service and operating costs?",
+    "sections": [
+      {
+        "heading": "Payment volume is a scale metric, not an earnings metric",
+        "paragraphs": [
+          "Payments businesses naturally talk about volume because it shows activity flowing through the platform. Total payment volume, processed volume or gross payment volume can be useful indicators of customer adoption, transaction growth and infrastructure scale. The mistake begins when leadership treats that volume as if it were revenue.",
+          "Only a fraction of payment value becomes a provider's economic pool. Commercial pricing, card or account rails, scheme and network charges, banking partners, incentives, foreign-exchange economics, fraud and losses, support and product costs all sit between the value moved and the economics retained.",
+          "That is why a board or investment case should show a bridge rather than one headline number: payment volume, monetized volume, gross fees, pass-through and partner costs, net revenue, gross profit and contribution. Each stage answers a different question, and mixing them creates false confidence."
+        ]
+      },
+      {
+        "heading": "The first bridge should move from activity to retained economics",
+        "paragraphs": [
+          "A practical operating model starts with the amount of payment activity that actually reaches the platform. It then separates products and customer segments because acquiring, account-to-account payments, payouts, foreign exchange, value-added services and platform services can carry very different economics.",
+          "From there, calculate the contractual fee pool: percentage fees, fixed transaction fees, subscription or platform charges, foreign-exchange spreads and other eligible service revenue. Then separate amounts that economically belong to networks, banks, partners or other third parties. What remains is the provider's net revenue or equivalent retained revenue measure, subject to the company's accounting policy.",
+          "The final step is contribution. Direct servicing costs, losses, customer support, onboarding, technology usage and other variable operating costs should be visible before management decides that a segment is attractive. A product can have strong volume growth and still destroy value if the retained economics do not cover the cost to serve."
+        ],
+        "bullets": [
+          "Volume explains activity.",
+          "Gross fees explain monetization before pass-through economics.",
+          "Net revenue explains what the provider reports or retains after the relevant deductions under its model.",
+          "Gross profit and contribution explain whether the activity creates economic value."
+        ]
+      },
+      {
+        "heading": "Public payments reporting shows why the distinction matters",
+        "paragraphs": [
+          "Adyen provides a useful public illustration of the scale difference. For full-year 2025, the company reported processed volume of €1,394.3 billion and net revenue of €2,364.2 million. Those figures should not be used as a universal take-rate benchmark because Adyen's customer mix, product scope, pricing and accounting are company-specific. They do show why processed volume and revenue belong in different rows of an operating model.",
+          "The same principle applies to any bank, fintech, payment gateway or embedded-finance platform. Two businesses can process the same volume and produce materially different economics because transaction mix, domestic versus cross-border activity, funding source, customer pricing, value-added services and partner structure differ.",
+          "For management purposes, the most useful question is not 'How much volume did we process?' but 'Which volume produced durable net revenue and contribution, and why?'"
+        ]
+      },
+      {
+        "heading": "Revenue recognition can change the size of the reported top line",
+        "paragraphs": [
+          "Payments and platform models also need a clean accounting view. IFRS 15 requires an entity to assess whether it is acting as a principal or an agent when another party is involved in providing goods or services to a customer. A principal controls the specified good or service before transfer and generally recognizes the gross consideration as revenue. An agent arranges for another party to provide the good or service and generally recognizes its fee or commission.",
+          "This means two commercially similar flows can look very different in reported revenue depending on the nature of the promise and control in the arrangement. The accounting conclusion should therefore be documented alongside the commercial model rather than reverse-engineered from the desired revenue presentation.",
+          "For executives, the implication is simple: keep payment volume, gross customer charges, pass-through amounts, recognized revenue and economic contribution separate. That preserves comparability even when accounting presentation differs across products or entities."
+        ]
+      },
+      {
+        "heading": "Take rate is useful only when the numerator and denominator are disciplined",
+        "paragraphs": [
+          "Take rate is often calculated as revenue divided by payment volume. It can be a helpful directional metric, but it is easy to misuse. The denominator may include volume that carries very little monetization, while the numerator may combine processing revenue with subscriptions, foreign exchange, value-added services or other income.",
+          "A falling blended take rate is not automatically bad if low-cost enterprise volume is growing profitably. A rising take rate is not automatically good if it is driven by expensive incentives, high-loss segments or temporary pricing. The metric needs to be decomposed by product, market, customer segment and transaction type.",
+          "I prefer to track at least three views: contractual monetization rate, net-revenue yield and contribution yield. The first shows pricing; the second shows retained revenue; the third shows the economics after direct cost to serve. Together they explain whether scale is improving or diluting the business."
+        ]
+      },
+      {
+        "heading": "Build the P&L by product and customer cohort",
+        "paragraphs": [
+          "Blended company-level averages can hide weak economics. Enterprise acquiring, SME payments, platform payments, cross-border transactions, instant payouts and value-added services can differ materially in pricing, risk, implementation effort and ongoing support.",
+          "The operating model should therefore allocate volume, revenue and direct cost at the lowest level that management can act on. Customer cohort, product, corridor, funding method and channel are often useful dimensions. The purpose is not accounting complexity for its own sake; it is to identify which growth should be accelerated, repriced, redesigned or stopped.",
+          "This is especially important during GCC market entry or enterprise scaling, where commercial teams may win large logos before the true integration, compliance, servicing and partner economics are visible. A strong deal is one that survives the full contribution bridge, not simply one that adds headline volume."
+        ]
+      },
+      {
+        "heading": "The board scorecard should connect scale, quality and economics",
+        "paragraphs": [
+          "A payments dashboard should avoid celebrating one metric in isolation. Volume, authorization or success rate, active customers, net revenue, gross profit, contribution, losses, support load and cash or settlement exposure should sit together.",
+          "For enterprise customers, the scorecard should also show implementation status, concentration, pricing exceptions, service-level performance and the share of economics coming from durable contracted services versus temporary incentives. This makes the quality of growth visible.",
+          "The management rhythm then becomes more useful: commercial teams own healthy monetization and customer expansion, product and operations own reliability and cost to serve, finance owns the revenue and contribution bridge, and risk owns the loss and control boundaries."
+        ],
+        "bullets": [
+          "Processed or total payment volume",
+          "Active merchants or enterprise customers",
+          "Transaction success and failure rate",
+          "Gross fees and net revenue",
+          "Net-revenue yield and contribution yield",
+          "Fraud, credit or operational loss where relevant",
+          "Support and exception cost",
+          "Customer concentration and pricing exceptions"
+        ]
+      },
+      {
+        "heading": "A 90-day management reset can make the economics decision-ready",
+        "paragraphs": [
+          "The first 30 days should define one agreed metric dictionary and rebuild the bridge for the largest products and customers. Finance, commercial, product and operations should agree what sits in payment volume, gross fees, pass-through cost, net revenue and contribution.",
+          "Days 31 to 60 should identify the value leakage: underpriced customers, expensive routing, high exception rates, loss-heavy segments, manual servicing or products where ancillary revenue is masking weak core economics. Each issue should have an owner and a quantified range rather than a generic efficiency target.",
+          "Days 61 to 90 should convert the analysis into commercial and operating actions: repricing, routing changes, product packaging, service redesign, partner renegotiation, tighter risk policy or selective exit. The goal is not to maximize take rate. It is to improve durable contribution while protecting customer value and strategic scale."
+        ]
+      }
+    ],
+    "takeaways": [
+      "Do not use payment volume as a proxy for revenue or profit.",
+      "Separate customer charges, pass-through economics, recognized revenue and contribution.",
+      "Use company-level take rate only as a starting point; manage economics by product and customer cohort.",
+      "Document principal-versus-agent conclusions alongside the commercial model.",
+      "Scale volume only when retained revenue, service quality, risk and contribution remain healthy."
+    ],
+    "faq": [
+      {
+        "question": "What is the difference between payment volume and net revenue?",
+        "answer": "Payment volume measures the value of transactions processed or facilitated. Net revenue is the provider's retained or reported revenue after the relevant pass-through economics and accounting treatment. They answer different questions and should never be used interchangeably."
+      },
+      {
+        "question": "Is take rate the same as profit margin?",
+        "answer": "No. Take rate usually compares revenue with payment volume. Profit margin reflects costs as well. A business can have an attractive take rate and weak contribution if partner, loss, support or servicing costs are high."
+      },
+      {
+        "question": "Why does principal-versus-agent accounting matter in payments?",
+        "answer": "It affects whether certain consideration is recognized gross or net. Under IFRS 15 the conclusion depends on the nature of the promise and whether the entity controls the specified good or service before transfer, not on which presentation makes revenue look larger."
+      }
+    ],
+    "sources": [
+      {
+        "title": "Adyen publishes H2 2025 financial results",
+        "publisher": "Adyen",
+        "url": "https://www.adyen.com/press-and-media/adyen-publishes-h2-2025-financial-results-3pgu2"
+      },
+      {
+        "title": "Adyen publishes 2025 Annual Report",
+        "publisher": "Adyen",
+        "url": "https://www.adyen.com/press-and-media/adyen-publishes-2025-annual-report"
+      },
+      {
+        "title": "Post-implementation Review of IFRS 15 Revenue from Contracts with Customers",
+        "publisher": "IFRS Foundation",
+        "url": "https://www.ifrs.org/content/dam/ifrs/project/pir-ifrs-15/rfi-iasb-2023-4-pir-ifrs-15.pdf"
+      },
+      {
+        "title": "Pricing & Fees",
+        "publisher": "Stripe",
+        "url": "https://stripe.com/pricing"
+      }
+    ],
+    "seoTitle": "Payment Volume vs Net Revenue | Fintech Economics | Haris Aslam"
   }
 ];
