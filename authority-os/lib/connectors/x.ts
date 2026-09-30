@@ -1,15 +1,41 @@
-export async function xAccessToken(refreshTokenOverride?: string) {
+import type { XTokenSession } from "../x-cookie";
+
+export class XTokenLifecycleError extends Error {
+  tokenSession?: XTokenSession;
+  requiresReconnect: boolean;
+
+  constructor(
+    message: string,
+    options?: {
+      tokenSession?: XTokenSession;
+      requiresReconnect?: boolean;
+    }
+  ) {
+    super(message);
+    this.name = "XTokenLifecycleError";
+    this.tokenSession = options?.tokenSession;
+    this.requiresReconnect = Boolean(options?.requiresReconnect);
+  }
+}
+
+function clientCredentials() {
   const clientId = process.env.X_CLIENT_ID?.trim();
   const clientSecret = process.env.X_CLIENT_SECRET?.trim();
-  const refreshToken =
-    String(refreshTokenOverride || "").trim() ||
-    process.env.X_REFRESH_TOKEN?.trim();
 
-  if (!clientId || !clientSecret || !refreshToken) {
-    throw new Error("X OAuth credentials are not configured.");
+  if (!clientId || !clientSecret) {
+    throw new XTokenLifecycleError(
+      "X OAuth client credentials are not configured.",
+      { requiresReconnect: false }
+    );
   }
 
+  return { clientId, clientSecret };
+}
+
+async function refreshWithToken(refreshToken: string) {
+  const { clientId, clientSecret } = clientCredentials();
   const basic = Buffer.from(clientId + ":" + clientSecret).toString("base64");
+
   const response = await fetch("https://api.x.com/2/oauth2/token", {
     method: "POST",
     headers: {
@@ -25,18 +51,74 @@ export async function xAccessToken(refreshTokenOverride?: string) {
   });
 
   const data = await response.json().catch(() => ({}));
-  if (!response.ok || !data.access_token) {
-    throw new Error("X token refresh failed (" + response.status + "): " + JSON.stringify(data).slice(0, 500));
+  if (!response.ok || !data?.access_token) {
+    return {
+      ok: false as const,
+      status: response.status,
+      detail: JSON.stringify(data).slice(0, 500)
+    };
   }
 
+  const expiresIn = Number(data.expires_in || 0);
   return {
-    accessToken: String(data.access_token),
-    refreshToken: data.refresh_token ? String(data.refresh_token) : refreshToken,
-    expiresIn: Number(data.expires_in || 0),
-    scope: String(data.scope || "")
+    ok: true as const,
+    session: {
+      version: 2,
+      accessToken: String(data.access_token),
+      refreshToken: data.refresh_token
+        ? String(data.refresh_token)
+        : refreshToken,
+      expiresAt: expiresIn
+        ? Date.now() + expiresIn * 1000
+        : Date.now() + 60 * 60 * 1000,
+      scope: String(data.scope || ""),
+      obtainedAt: Date.now()
+    } satisfies XTokenSession
   };
 }
 
+async function resolveXTokenSession(
+  input?: XTokenSession | null
+): Promise<XTokenSession> {
+  const now = Date.now();
+  if (
+    input?.accessToken &&
+    input?.expiresAt &&
+    input.expiresAt > now + 90_000
+  ) {
+    return input;
+  }
+
+  const candidates = [
+    input?.refreshToken?.trim(),
+    process.env.X_REFRESH_TOKEN?.trim()
+  ].filter((value, index, values): value is string =>
+    Boolean(value) && values.indexOf(value) === index
+  );
+
+  if (!candidates.length) {
+    throw new XTokenLifecycleError(
+      "X authorization is not available. Reconnect X once to create a fresh durable session.",
+      { requiresReconnect: true }
+    );
+  }
+
+  let lastFailure = "";
+  for (const refreshToken of candidates) {
+    const refreshed = await refreshWithToken(refreshToken);
+    if (refreshed.ok) return refreshed.session;
+    lastFailure =
+      "X token refresh failed (" +
+      refreshed.status +
+      "): " +
+      refreshed.detail;
+  }
+
+  throw new XTokenLifecycleError(
+    "X authorization has expired or was invalidated. Reconnect X once; Authority OS will then keep the access and rotated refresh tokens together so this does not recur after a failed publish.",
+    { requiresReconnect: true }
+  );
+}
 
 function normalizeTweetText(value: string) {
   return String(value || "")
@@ -70,7 +152,8 @@ async function findExistingXPost(accessToken: string, text: string) {
 
     const expected = normalizeTweetText(text);
     const existing = recent.data.find(
-      (tweet: any) => normalizeTweetText(String(tweet?.text || "")) === expected
+      (tweet: any) =>
+        normalizeTweetText(String(tweet?.text || "")) === expected
     );
     if (!existing?.id) return null;
 
@@ -79,44 +162,53 @@ async function findExistingXPost(accessToken: string, text: string) {
       text: String(existing.text || text)
     };
   } catch {
-    // Duplicate protection is best-effort. A read failure must not block a
-    // legitimate approved publish attempt.
     return null;
   }
 }
 
 export async function publishXPost(input: {
   text: string;
+  tokenSession?: XTokenSession | null;
   refreshToken?: string;
 }) {
   const text = String(input.text || "").trim();
   if (!text) throw new Error("X post text is empty.");
 
-  const token = await xAccessToken(input.refreshToken);
+  const tokenSession = await resolveXTokenSession(
+    input.tokenSession ||
+      (input.refreshToken
+        ? { version: 1, refreshToken: input.refreshToken }
+        : null)
+  );
 
-  // Release retries are intentionally idempotent. If the exact approved post
-  // already exists among the account's recent tweets, return it instead of
-  // creating a duplicate.
-  const existing = await findExistingXPost(token.accessToken, text);
+  const accessToken = String(tokenSession.accessToken || "");
+  if (!accessToken) {
+    throw new XTokenLifecycleError(
+      "X access token could not be resolved.",
+      {
+        tokenSession,
+        requiresReconnect: true
+      }
+    );
+  }
+
+  const existing = await findExistingXPost(accessToken, text);
   if (existing) {
     return {
       status: "LIVE",
       id: existing.id,
       text: existing.text,
       postUrl: "https://x.com/i/web/status/" + existing.id,
-      scope: token.scope,
+      scope: tokenSession.scope || "",
       alreadyPublished: true,
-      refreshTokenRotated:
-        Boolean(token.refreshToken) &&
-        token.refreshToken !== String(input.refreshToken || process.env.X_REFRESH_TOKEN || ""),
-      nextRefreshToken: token.refreshToken
+      nextTokenSession: tokenSession
     };
   }
 
   const response = await fetch("https://api.x.com/2/tweets", {
     method: "POST",
     headers: {
-      Authorization: "Bearer " + token.accessToken,
+      Authorization: "Bearer " + accessToken,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ text }),
@@ -125,11 +217,19 @@ export async function publishXPost(input: {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data?.data?.id) {
-    throw new Error(
+    // Critical lifecycle protection: if a refresh happened immediately before
+    // this publish attempt, the rotated refresh token must still be returned
+    // to the caller even though the tweet itself failed. Older Authority OS
+    // versions lost that token here, which invalidated the browser session.
+    throw new XTokenLifecycleError(
       "X publish failed (" +
         response.status +
         "): " +
-        JSON.stringify(data).slice(0, 800)
+        JSON.stringify(data).slice(0, 800),
+      {
+        tokenSession,
+        requiresReconnect: false
+      }
     );
   }
 
@@ -139,11 +239,8 @@ export async function publishXPost(input: {
     id,
     text: String(data.data.text || text),
     postUrl: "https://x.com/i/web/status/" + id,
-    scope: token.scope,
+    scope: tokenSession.scope || "",
     alreadyPublished: false,
-    refreshTokenRotated:
-      Boolean(token.refreshToken) &&
-      token.refreshToken !== String(input.refreshToken || process.env.X_REFRESH_TOKEN || ""),
-    nextRefreshToken: token.refreshToken
+    nextTokenSession: tokenSession
   };
 }
