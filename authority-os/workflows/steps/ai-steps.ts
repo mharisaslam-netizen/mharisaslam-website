@@ -211,7 +211,7 @@ export async function flagshipStep(
       "Use Haris's natural operator voice: simple English, clear logic, commercial, practical and non-hyped.",
       "Prefer short sentences and direct explanations. Avoid dramatic language, grand claims, theatrical hooks, artificial tension, motivational phrasing and consultant jargon when plain English works.",
       "Sound like a senior operator explaining a business idea to another senior operator, not like a copywriter or an AI-generated thought-leadership post.",
-      "The article must be substantial, typically 1,800 to 2,800 words across sections."
+      "The article must be substantial, typically 1,800 to 2,800 words across sections.",
       "Do not invent clients, revenue, implementation results or confidential employer detail.",
       "All dated and factual claims must be supported by the provided evidence URLs.",
       "Include a useful framework, takeaways, FAQs and sources."
