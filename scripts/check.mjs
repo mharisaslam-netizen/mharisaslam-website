@@ -141,21 +141,32 @@ if (pages.length < 95) errors.push(`release must have at least 95 indexable rout
 
 const home = await readFile(join(root, "index.html"), "utf8");
 for (const sentence of [
-  "Building growth engines, fixing business economics and turning ideas into operating models.",
-  "GCC operator and business builder working across commerce, retail, marketplaces, enterprise technology, fintech and AI."
+  "Commerce, growth and transformation. From business model to daily execution.",
+  "An operator's perspective on the economics, systems and decisions behind digital commerce, retail, marketplaces and applied AI in the GCC."
 ]) if (!home.includes(sentence)) errors.push(`home missing required copy: ${sentence}`);
-for (const heading of ["Build New Businesses", "Transform Existing Businesses", "Create New Revenue Pools", "Redesign for AI", "Selected business problems", "Operating evidence", "AI Commerce Command Center", "Insights"]) {
+for (const heading of ["Does growth earn its cost?", "Where is cash getting trapped?", "What must be true before scale?", "Which decisions can be improved?", "Selected business problems", "Operating evidence", "AI Commerce Command Center", "Insights"]) {
   if (!home.includes(heading)) errors.push(`home missing section ${heading}`);
 }
 for (const marker of ["v3-home-hero", "v3-capability-system", "v3-sector-ribbon", "v3-case-editorial", "v3-value-band", "v3-evidence-band", "v3-ai-products", "v3-insight-ledger"]) {
   if (!home.includes(marker)) errors.push(`home missing visual module ${marker}`);
 }
-for (const credential of ["17+ years", "GCC", "Founder", "Operator", "Transformation", "Venture Building"]) {
+for (const credential of ["Commerce economics", "Operating models", "GCC growth", "Applied AI"]) {
   if (!home.includes(credential)) errors.push(`home missing credential ${credential}`);
 }
 
+const expertisePage = await pageHtml("/gcc-executive-profile");
+count(expertisePage, /class="expertise-detail"/g, 4, "/gcc-executive-profile", "expertise areas");
+count(expertisePage, /class="expertise-reading"/g, 4, "/gcc-executive-profile", "contextual reading groups");
+for (const href of [
+  "/track-record/roumaan", "/track-record/salman-miraq", "/track-record/floward-oman", "/track-record/upapp-factory",
+  "/insights/marketplace-economics-gmv-revenue-contribution-gcc",
+  "/insights/distributor-cash-allocation-operating-system-ai",
+  "/insights/saudi-market-entry-retail-commerce-economics",
+  "/insights/ai-transformation-gcc-enterprise-operating-model"
+]) if (!expertisePage.includes(`href="${href}"`)) errors.push(`/gcc-executive-profile: missing contextual evidence link ${href}`);
+
 const trackIndex = await pageHtml("/track-record");
-for (const sentence of ["Building, launching and transforming businesses.", "Selected operating roles and ventures where Haris held direct responsibility for building, growth, transformation or investment."]) {
+for (const sentence of ["The work behind the perspective.", "Four operating contexts, connected by the same discipline: customer demand, contribution, delivery and cash."]) {
   if (!trackIndex.includes(sentence)) errors.push(`/track-record: missing required copy ${sentence}`);
 }
 for (const marker of ["p-track-hero", "p-record-stories", "p-record-story", "p-capital-band"]) {
