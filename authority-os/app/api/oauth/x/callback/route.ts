@@ -1,11 +1,19 @@
-import { encryptXRefreshToken, X_REFRESH_COOKIE } from "../../../../../lib/x-cookie";
+import {
+  encryptXTokenSession,
+  X_REFRESH_COOKIE
+} from "../../../../../lib/x-cookie";
 
 export const runtime = "nodejs";
 
 function html(title: string, body: string) {
   return new Response(
-    `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>body{background:#081019;color:#f2f5f7;font-family:system-ui;padding:40px;max-width:900px;margin:auto}code,textarea{width:100%;box-sizing:border-box;background:#0f1822;color:#f2f5f7;border:1px solid #263645;border-radius:10px;padding:12px}textarea{min-height:120px}.box{border:1px solid #263645;border-radius:16px;padding:20px;background:#0f1822}</style></head><body><h1>${title}</h1><div class="box">${body}</div></body></html>`,
-    { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } }
+    `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>body{background:#081019;color:#f2f5f7;font-family:system-ui;padding:40px;max-width:900px;margin:auto}code{background:#0f1822;color:#f2f5f7;border:1px solid #263645;border-radius:10px;padding:4px 7px}.box{border:1px solid #263645;border-radius:16px;padding:20px;background:#0f1822}</style></head><body><h1>${title}</h1><div class="box">${body}</div></body></html>`,
+    {
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-store"
+      }
+    }
   );
 }
 
@@ -20,15 +28,29 @@ export async function GET(request: Request) {
   const state = url.searchParams.get("state");
   const error = url.searchParams.get("error");
 
-  if (error) return html("X connection declined", `<p>X returned: <code>${error}</code></p>`);
-  if (!code || !state) return html("X connection failed", "<p>Missing authorization code or state.</p>");
+  if (error) {
+    return html(
+      "X connection declined",
+      `<p>X returned: <code>${error}</code></p>`
+    );
+  }
+
+  if (!code || !state) {
+    return html(
+      "X connection failed",
+      "<p>Missing authorization code or state.</p>"
+    );
+  }
 
   const cookie = request.headers.get("cookie") || "";
   const expectedState = cookieValue(cookie, "x_oauth_state");
   const verifier = cookieValue(cookie, "x_oauth_verifier");
 
   if (!expectedState || expectedState !== state || !verifier) {
-    return html("X connection failed", "<p>Security state or PKCE verifier check failed. Restart the X connection flow.</p>");
+    return html(
+      "X connection failed",
+      "<p>Security state or PKCE verifier check failed. Restart the X connection flow.</p>"
+    );
   }
 
   const clientId = process.env.X_CLIENT_ID?.trim();
@@ -36,7 +58,10 @@ export async function GET(request: Request) {
   const base = process.env.AUTHORITY_OS_BASE_URL?.replace(/\/$/, "");
 
   if (!clientId || !clientSecret || !base) {
-    return html("X connection failed", "<p>X OAuth client credentials are not configured in Vercel.</p>");
+    return html(
+      "X connection failed",
+      "<p>X OAuth client credentials are not configured in Vercel.</p>"
+    );
   }
 
   const redirectUri = base + "/api/oauth/x/callback";
@@ -60,34 +85,57 @@ export async function GET(request: Request) {
   });
 
   const token = await tokenResponse.json().catch(() => ({}));
-  if (!tokenResponse.ok || !token?.refresh_token) {
+  if (
+    !tokenResponse.ok ||
+    !token?.access_token ||
+    !token?.refresh_token
+  ) {
     return html(
       "X connection failed",
-      `<p>Token exchange did not return a refresh token.</p>
+      `<p>Token exchange did not return the durable access and refresh token pair Authority OS requires.</p>
        <p>Client ID used by Authority OS: <code>${clientId}</code></p>
        <p>Redirect URI used: <code>${redirectUri}</code></p>
        <pre><code>${JSON.stringify(token, null, 2).replace(/</g, "&lt;")}</code></pre>`
     );
   }
 
-  const safeToken = String(token.refresh_token)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;");
+  const expiresIn = Number(token.expires_in || 0);
+  const tokenSession = {
+    version: 2,
+    accessToken: String(token.access_token),
+    refreshToken: String(token.refresh_token),
+    expiresAt: expiresIn
+      ? Date.now() + expiresIn * 1000
+      : Date.now() + 60 * 60 * 1000,
+    scope: String(token.scope || ""),
+    obtainedAt: Date.now()
+  };
 
   const response = html(
     "X authorization complete",
-    `<p>Authority OS now has approval-gated X access with offline refresh capability.</p>
-     <p>The current refresh token is stored in an encrypted, secure browser cookie so future approved releases can handle X token rotation automatically.</p>
-     <p>No Vercel update is required for normal publishing now; Authority OS will rotate the token inside this secure browser session. The existing Vercel value remains only a fallback.</p>
-     <details><summary>Show current refresh token (normally not needed)</summary><textarea readonly onclick="this.select()">${safeToken}</textarea></details>
-     <p>Do not paste the token into ChatGPT. Nothing has been posted to X.</p>`
+    `<p>Authority OS now has a durable approval-gated X session.</p>
+     <p>The access token and rotating refresh token are stored together in one encrypted secure browser cookie. Authority OS will reuse the access token until refresh is actually needed and will preserve any rotated refresh token even if a publish attempt later fails.</p>
+     <p>You can close this tab. If you opened X reconnect from the release console, Authority OS will retry that approved X step automatically.</p>
+     <script>
+       try {
+         if (window.opener) {
+           window.opener.postMessage(
+             { type: "authority-os-x-connected" },
+             window.location.origin
+           );
+         }
+         setTimeout(function () { window.close(); }, 1200);
+       } catch (e) {}
+     </script>`
   );
+
   response.headers.append(
     "Set-Cookie",
     X_REFRESH_COOKIE +
       "=" +
-      encryptXRefreshToken(String(token.refresh_token)) +
+      encryptXTokenSession(tokenSession) +
       "; Path=/; Max-Age=15552000; HttpOnly; Secure; SameSite=Lax"
   );
+
   return response;
 }
