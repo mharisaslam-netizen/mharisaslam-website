@@ -134,9 +134,19 @@ export const channelsSchema = {
   type: "object",
   properties: {
     linkedinPost: { type: "string" },
-    linkedinHashtags: { type: "array", items: { type: "string" } },
+    linkedinHashtags: {
+      type: "array",
+      minItems: 4,
+      maxItems: 6,
+      items: { type: "string" }
+    },
     xPost: { type: "string" },
-    xHashtags: { type: "array", items: { type: "string" } },
+    xHashtags: {
+      type: "array",
+      minItems: 2,
+      maxItems: 3,
+      items: { type: "string" }
+    },
     xThread: { type: "array", items: { type: "string" } },
     mediumTitle: { type: "string" },
     mediumSubtitle: { type: "string" },
