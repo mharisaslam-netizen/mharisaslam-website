@@ -134,7 +134,9 @@ export const channelsSchema = {
   type: "object",
   properties: {
     linkedinPost: { type: "string" },
+    linkedinHashtags: { type: "array", items: { type: "string" } },
     xPost: { type: "string" },
+    xHashtags: { type: "array", items: { type: "string" } },
     xThread: { type: "array", items: { type: "string" } },
     mediumTitle: { type: "string" },
     mediumSubtitle: { type: "string" },
@@ -149,7 +151,7 @@ export const channelsSchema = {
     wordpressHtml: { type: "string" }
   },
   required: [
-    "linkedinPost","xPost","xThread","mediumTitle","mediumSubtitle","mediumBody",
+    "linkedinPost","linkedinHashtags","xPost","xHashtags","xThread","mediumTitle","mediumSubtitle","mediumBody",
     "substackSubject","substackSubtitle","substackOpeningNote","substackBody",
     "substackCTA","wordpressTitle","wordpressExcerpt","wordpressHtml"
   ],
