@@ -208,7 +208,9 @@ export async function flagshipStep(
     [
       "You are the Flagship Writer for Haris Authority OS.",
       "Write a board-level, evidence-grounded article for mharisaslam.com.",
-      "Use a practical operator voice: clear, commercial and non-hyped.",
+      "Use Haris's natural operator voice: simple English, clear logic, commercial, practical and non-hyped.",
+      "Prefer short sentences and direct explanations. Avoid dramatic language, grand claims, theatrical hooks, artificial tension, motivational phrasing and consultant jargon when plain English works.",
+      "Sound like a senior operator explaining a business idea to another senior operator, not like a copywriter or an AI-generated thought-leadership post.",
       "The article must be substantial, typically 1,800 to 2,800 words across sections.",
       "Do not invent clients, revenue, implementation results or confidential employer detail.",
       "All dated and factual claims must be supported by the provided evidence URLs.",
@@ -252,9 +254,14 @@ export async function channelsStep(
     [
       "You are the Channel Adaptation Agent.",
       "Adapt the flagship idea natively for each channel rather than copying it verbatim.",
-      "LinkedIn should be executive and conversational.",
-      "X must be concise enough to leave room for the canonical website URL; keep the standalone copy under roughly 210 characters before the URL.",
-      "Medium should read like an editorial adaptation and Substack like an executive newsletter.",
+      "Write in Haris's natural voice: simple English, short sentences, practical business logic and a calm senior-operator tone.",
+      "Avoid drama, exaggerated hooks, artificial suspense, motivational language, generic AI phrasing, consultant jargon and lines that sound written for engagement rather than substance.",
+      "LinkedIn should feel like Haris wrote it himself: direct, useful and conversational, with normal paragraph breaks and no theatrical opening.",
+      "Generate 4 to 6 topic-specific LinkedIn hashtags in linkedinHashtags. Choose them yourself from the actual subject; do not reuse a fixed list blindly.",
+      "X must be concise. Keep the standalone copy under roughly 150 characters before the canonical URL and hashtags.",
+      "Generate only 2 to 3 highly relevant X hashtags in xHashtags.",
+      "Return hashtags as clean topic labels, with or without a leading #. Do not place hashtags inside linkedinPost or xPost; Authority OS will append them consistently.",
+      "Medium should read like a clear editorial adaptation and Substack like a straightforward executive newsletter.",
       "The WordPress derivative should be shorter and differently structured from the canonical article.",
       "Every outward-facing channel should contain a clear route back to the canonical mharisaslam.com article.",
       "Never claim that anything is published."
@@ -266,6 +273,30 @@ export async function channelsStep(
   );
 
   const canonicalUrl = "https://www.mharisaslam.com/insights/" + article.slug;
+
+  const cleanHashtag = (value: string) => {
+    const compact = String(value || "")
+      .trim()
+      .replace(/^#+/, "")
+      .replace(/[^A-Za-z0-9_]/g, "");
+    return compact ? "#" + compact : "";
+  };
+
+  const uniqueHashtags = (values: string[], limit: number) =>
+    Array.from(
+      new Set(
+        (values || [])
+          .map(cleanHashtag)
+          .filter(Boolean)
+      )
+    ).slice(0, limit);
+
+  result.linkedinHashtags = uniqueHashtags(
+    result.linkedinHashtags,
+    6
+  );
+  result.xHashtags = uniqueHashtags(result.xHashtags, 3);
+
   const hasCanonical = (value: string) =>
     value.includes(canonicalUrl) || value.includes("mharisaslam.com/insights/" + article.slug);
 
@@ -302,6 +333,36 @@ export async function channelsStep(
     result.wordpressHtml =
       result.wordpressHtml.trim() +
       '<p><a href="' + canonicalUrl + '">Read the full framework on mharisaslam.com</a></p>';
+  }
+
+  if (result.linkedinHashtags.length) {
+    result.linkedinPost =
+      result.linkedinPost.trim() +
+      "\n\n" +
+      result.linkedinHashtags.join(" ");
+  }
+
+  if (result.xHashtags.length) {
+    const hashtagLine = result.xHashtags.join(" ");
+    const bodyWithoutUrl = result.xPost
+      .replace(canonicalUrl, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+    const fixedTail =
+      "\n\n" + canonicalUrl + "\n\n" + hashtagLine;
+    const maxBodyLength = Math.max(
+      40,
+      280 - fixedTail.length
+    );
+    const body =
+      bodyWithoutUrl.length > maxBodyLength
+        ? bodyWithoutUrl
+            .slice(0, maxBodyLength - 1)
+            .trimEnd()
+            .replace(/[,:;\-]+$/, "") + "…"
+        : bodyWithoutUrl;
+
+    result.xPost = body + fixedTail;
   }
 
   return result;

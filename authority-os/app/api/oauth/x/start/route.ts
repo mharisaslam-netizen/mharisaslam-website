@@ -11,7 +11,7 @@ function base64url(buffer: Buffer) {
     .replace(/\//g, "_");
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const clientId = process.env.X_CLIENT_ID?.trim();
   const base = process.env.AUTHORITY_OS_BASE_URL?.replace(/\/$/, "");
 
@@ -26,6 +26,13 @@ export async function GET() {
   const verifier = base64url(randomBytes(64));
   const challenge = base64url(createHash("sha256").update(verifier).digest());
   const redirectUri = base + "/api/oauth/x/callback";
+  const requestUrl = new URL(request.url);
+  const requestedSession = String(
+    requestUrl.searchParams.get("session") || ""
+  ).trim();
+  const returnPath = requestedSession.startsWith("wrun_")
+    ? "/?session=" + encodeURIComponent(requestedSession)
+    : "/";
 
   const scopes = [
     "tweet.read",
@@ -53,6 +60,13 @@ export async function GET() {
     maxAge: 600
   });
   response.cookies.set("x_oauth_verifier", verifier, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/api/oauth/x",
+    maxAge: 600
+  });
+  response.cookies.set("x_oauth_return", returnPath, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",

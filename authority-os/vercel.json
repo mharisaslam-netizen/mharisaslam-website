@@ -4,7 +4,8 @@
     "deploymentEnabled": {
       "*": false,
       "authority-os-v1": true,
-      "authority-os-x-token-lifecycle-fix": true
+      "authority-os-x-token-lifecycle-fix": true,
+      "authority-os-reconnect-and-voice-fix": true
     }
   }
 }

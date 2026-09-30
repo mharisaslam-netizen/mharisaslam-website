@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import {
   encryptXTokenSession,
   X_REFRESH_COOKIE
@@ -45,6 +46,7 @@ export async function GET(request: Request) {
   const cookie = request.headers.get("cookie") || "";
   const expectedState = cookieValue(cookie, "x_oauth_state");
   const verifier = cookieValue(cookie, "x_oauth_verifier");
+  const returnPath = cookieValue(cookie, "x_oauth_return") || "/";
 
   if (!expectedState || expectedState !== state || !verifier) {
     return html(
@@ -111,31 +113,38 @@ export async function GET(request: Request) {
     obtainedAt: Date.now()
   };
 
-  const response = html(
-    "X authorization complete",
-    `<p>Authority OS now has a durable approval-gated X session.</p>
-     <p>The access token and rotating refresh token are stored together in one encrypted secure browser cookie. Authority OS will reuse the access token until refresh is actually needed and will preserve any rotated refresh token even if a publish attempt later fails.</p>
-     <p>You can close this tab. If you opened X reconnect from the release console, Authority OS will retry that approved X step automatically.</p>
-     <script>
-       try {
-         if (window.opener) {
-           window.opener.postMessage(
-             { type: "authority-os-x-connected" },
-             window.location.origin
-           );
-         }
-         setTimeout(function () { window.close(); }, 1200);
-       } catch (e) {}
-     </script>`
-  );
+  const safeReturn =
+    returnPath.startsWith("/?session=wrun_")
+      ? returnPath
+      : "/";
+  const destination = new URL(safeReturn, base);
+  destination.searchParams.set("x_connected", "1");
 
-  response.headers.append(
-    "Set-Cookie",
-    X_REFRESH_COOKIE +
-      "=" +
-      encryptXTokenSession(tokenSession) +
-      "; Path=/; Max-Age=15552000; HttpOnly; Secure; SameSite=Lax"
+  const response = NextResponse.redirect(destination);
+  response.cookies.set(
+    X_REFRESH_COOKIE,
+    encryptXTokenSession(tokenSession),
+    {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 180
+    }
   );
+  for (const name of [
+    "x_oauth_state",
+    "x_oauth_verifier",
+    "x_oauth_return"
+  ]) {
+    response.cookies.set(name, "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/api/oauth/x",
+      maxAge: 0
+    });
+  }
 
   return response;
 }
