@@ -4,17 +4,30 @@ const SOURCES = [
   { name: "Arabian Business", domain: "arabianbusiness.com", market: "GCC", feeds: ["https://www.arabianbusiness.com/feed", "https://www.arabianbusiness.com/feed/"] },
   { name: "Gulf Business", domain: "gulfbusiness.com", market: "GCC", feeds: ["https://gulfbusiness.com/feed/", "https://gulfbusiness.com/feed"] },
   { name: "ZAWYA", domain: "zawya.com", market: "MENA / GCC", feeds: ["https://www.zawya.com/sitemaps/en/rss"] },
-  { name: "Arab News", domain: "arabnews.com", market: "Saudi Arabia / GCC", feeds: ["https://www.arabnews.com/rss.xml", "https://www.arabnews.com/rss", "https://www.arabnews.com/economy?service=rss"] },
+  { name: "Arab News", domain: "arabnews.com", market: "Saudi Arabia / GCC", feeds: ["https://www.arabnews.com/economy?service=rss", "https://www.arabnews.com/rss.xml", "https://www.arabnews.com/rss"] },
   { name: "Economy Middle East", domain: "economymiddleeast.com", market: "GCC", feeds: ["https://economymiddleeast.com/feed/", "https://economymiddleeast.com/feed"] },
   { name: "PR Newswire", domain: "prnewswire.com", market: "Global / GCC relevance", feeds: ["https://www.prnewswire.com/rss/news-releases-list.rss"] },
   { name: "TechCrunch", domain: "techcrunch.com", market: "Global technology", feeds: ["https://techcrunch.com/feed/"] },
   { name: "PYMNTS", domain: "pymnts.com", market: "Payments / commerce", feeds: ["https://www.pymnts.com/feed/", "https://www.pymnts.com/feed/rss/"] }
 ];
 
-const KEYWORDS = [
-  "commerce","ecommerce","e-commerce","marketplace","retail","fintech","payment","payments",
-  "artificial intelligence","agentic"," ai ","logistics","working capital","digital economy",
-  "digital transformation","enterprise technology","market entry","startup","funding","banking"
+const TOPIC_GROUPS = {
+  commerce: ["commerce","ecommerce","e-commerce","marketplace","retail","shopping","merchant","seller","checkout"],
+  fintech: ["fintech","payment","payments","banking","bank","wallet","open finance","embedded finance","lending","credit","working capital"],
+  ai: ["agentic","artificial intelligence"," ai ","ai agent","ai agents","automation","machine learning"],
+  operations: ["logistics","warehouse","supply chain","delivery","last-mile","fulfilment","fulfillment","inventory"],
+  enterprise: ["enterprise software","enterprise technology","cloud","saas","api","digital transformation","digital economy"]
+};
+
+const BUSINESS_CONTEXT = [
+  "business","company","companies","startup","start-up","enterprise","platform","software","technology",
+  "merchant","retail","bank","fintech","payment","commerce","logistics","funding","raises","round","investment",
+  "partnership","launch","revenue","market","infrastructure","api","data","capital","customer","customers"
+];
+
+const EXCLUDE_TERMS = [
+  "football","soccer","cricket","sport","sports","celebrity","movie","music","hijab","religion",
+  "election","war","military","crime","court","weather","tourism","travel guide","united nations","guterres"
 ];
 
 const decode = value => String(value || "")
@@ -96,13 +109,34 @@ async function fetchText(url, ms = 4500) {
   }
 }
 
-const score = item => {
-  const haystack = (" " + item.title + " " + item.description + " ").toLowerCase();
-  return KEYWORDS.reduce((total, keyword) => total + (haystack.includes(keyword) ? 1 : 0), 0);
+const countHits = (text, terms) => terms.reduce((total, term) => total + (text.includes(term) ? 1 : 0), 0);
+
+const relevance = item => {
+  const title = (" " + item.title + " ").toLowerCase();
+  const body = (" " + item.title + " " + item.description + " ").toLowerCase();
+
+  if (EXCLUDE_TERMS.some(term => body.includes(term))) return { score: 0, categoryHits: 0, businessHits: 0 };
+
+  const titleGroups = Object.values(TOPIC_GROUPS).filter(terms => terms.some(term => title.includes(term))).length;
+  const bodyGroups = Object.values(TOPIC_GROUPS).filter(terms => terms.some(term => body.includes(term))).length;
+  const businessHits = countHits(body, BUSINESS_CONTEXT);
+
+  // A story must be about one of Haris's expertise themes and have a real business / operating context.
+  if (bodyGroups === 0 || businessHits === 0) return { score: 0, categoryHits: bodyGroups, businessHits };
+  if (titleGroups === 0 && bodyGroups < 2) return { score: 0, categoryHits: bodyGroups, businessHits };
+
+  return {
+    score: (titleGroups * 5) + (bodyGroups * 3) + Math.min(businessHits, 5),
+    categoryHits: bodyGroups,
+    businessHits
+  };
 };
 
 const rankedRelevant = items => [...items]
-  .map(item => ({ ...item, relevance: score(item) }))
+  .map(item => {
+    const r = relevance(item);
+    return { ...item, relevance: r.score };
+  })
   .filter(item => item.relevance > 0)
   .sort((a, b) => (b.relevance - a.relevance) || (Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0)));
 
@@ -136,14 +170,16 @@ function ogValue(html, property) {
 async function directFeedItems(source) {
   if (!source.feeds?.length) return [];
   const attempts = await Promise.all(source.feeds.map(url => fetchText(url)));
+  const pool = [];
   for (const attempt of attempts) {
     if (!attempt.ok) continue;
     const items = itemsFromFeed(attempt.text);
-    if (!items.length) continue;
-    const ranked = rankedRelevant(items.slice(0, 30)).slice(0, 3);
-    if (ranked.length) return ranked.map(item => ({ ...item, source: source.name, domain: source.domain, market: source.market, via: "publisher" }));
+    if (items.length) pool.push(...items.slice(0, 30));
   }
-  return [];
+  if (!pool.length) return [];
+  return rankedRelevant(pool)
+    .slice(0, 3)
+    .map(item => ({ ...item, source: source.name, domain: source.domain, market: source.market, via: "publisher" }));
 }
 
 async function googleFallbackItems(source) {
