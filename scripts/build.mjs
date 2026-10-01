@@ -24,6 +24,14 @@ const primaryNavigation = [navigation[0], ["GCC Growth", advisoryPage.path], ["E
 const commercialBridgePaths = new Set(["/", "/about", "/track-record", "/use-cases", "/ai-transformation", "/insights", "/insights/saudi-market-entry-retail-commerce-economics", "/markets/uae"]);
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+const assetVersion = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || "local").slice(0, 12);
+const versionUiAssets = html => html
+  .replaceAll('/assets/site.css"', `/assets/site.css?v=${assetVersion}"`)
+  .replaceAll('/assets/v3-pilot.css"', `/assets/v3-pilot.css?v=${assetVersion}"`)
+  .replaceAll('/assets/v4-expansion.css"', `/assets/v4-expansion.css?v=${assetVersion}"`)
+  .replaceAll('/assets/pilot.css"', `/assets/pilot.css?v=${assetVersion}"`)
+  .replaceAll('/assets/site-ui.js"', `/assets/site-ui.js?v=${assetVersion}"`)
+  .replaceAll('/assets/news-feed.js"', `/assets/news-feed.js?v=${assetVersion}"`);
 const out = join(root, "dist");
 await rm(out, { recursive: true, force: true });
 await mkdir(join(out, "assets"), { recursive: true });
@@ -37,10 +45,10 @@ try { await cp(join(root, "public", "mharisaslam-indexnow-2026-7f3d9a4c2b8e6d1f.
 for (const page of allPages) {
   const file = page.path === "/" ? join(out, "index.html") : join(out, page.path.slice(1), "index.html");
   await mkdir(dirname(file), { recursive: true });
-  await writeFile(file, render(page), "utf8");
+  await writeFile(file, versionUiAssets(render(page)), "utf8");
 }
 
-await writeFile(join(out, "404.html"), render404(), "utf8");
+await writeFile(join(out, "404.html"), versionUiAssets(render404()), "utf8");
 await writeFile(join(out, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/linkedin/\n\nSitemap: ${site.origin}/sitemap.xml\n`, "utf8");
 await writeFile(join(out, "sitemap.xml"), sitemap(), "utf8");
 await writeFile(join(out, "llms.txt"), llmsTxt(), "utf8");
