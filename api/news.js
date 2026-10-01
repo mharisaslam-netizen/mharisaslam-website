@@ -1,20 +1,20 @@
 const SOURCES = [
-  { name: "Wamda", domain: "wamda.com", market: "MENA" },
-  { name: "The National", domain: "thenationalnews.com", market: "UAE / GCC" },
-  { name: "Arabian Business", domain: "arabianbusiness.com", market: "GCC" },
-  { name: "Gulf Business", domain: "gulfbusiness.com", market: "GCC" },
-  { name: "ZAWYA", domain: "zawya.com", market: "MENA / GCC" },
-  { name: "Arab News", domain: "arabnews.com", market: "Saudi Arabia / GCC" },
-  { name: "Economy Middle East", domain: "economymiddleeast.com", market: "GCC" },
-  { name: "PR Newswire", domain: "prnewswire.com", market: "Global / GCC relevance" },
-  { name: "TechCrunch", domain: "techcrunch.com", market: "Global technology" },
-  { name: "PYMNTS", domain: "pymnts.com", market: "Payments / commerce" }
+  { name: "Wamda", domain: "wamda.com", market: "MENA", feeds: ["https://www.wamda.com/feed/all", "https://www.wamda.com/feed", "https://www.wamda.com/en/feed/all"] },
+  { name: "The National", domain: "thenationalnews.com", market: "UAE / GCC", feeds: ["https://www.thenationalnews.com/rss", "https://www.thenationalnews.com/rss/"] },
+  { name: "Arabian Business", domain: "arabianbusiness.com", market: "GCC", feeds: ["https://www.arabianbusiness.com/feed", "https://www.arabianbusiness.com/feed/"] },
+  { name: "Gulf Business", domain: "gulfbusiness.com", market: "GCC", feeds: ["https://gulfbusiness.com/feed/", "https://gulfbusiness.com/feed"] },
+  { name: "ZAWYA", domain: "zawya.com", market: "MENA / GCC", feeds: ["https://www.zawya.com/sitemaps/en/rss"] },
+  { name: "Arab News", domain: "arabnews.com", market: "Saudi Arabia / GCC", feeds: ["https://www.arabnews.com/rss.xml", "https://www.arabnews.com/rss", "https://www.arabnews.com/economy?service=rss"] },
+  { name: "Economy Middle East", domain: "economymiddleeast.com", market: "GCC", feeds: ["https://economymiddleeast.com/feed/", "https://economymiddleeast.com/feed"] },
+  { name: "PR Newswire", domain: "prnewswire.com", market: "Global / GCC relevance", feeds: ["https://www.prnewswire.com/rss/news-releases-list.rss"] },
+  { name: "TechCrunch", domain: "techcrunch.com", market: "Global technology", feeds: ["https://techcrunch.com/feed/"] },
+  { name: "PYMNTS", domain: "pymnts.com", market: "Payments / commerce", feeds: ["https://www.pymnts.com/feed/", "https://www.pymnts.com/feed/rss/"] }
 ];
 
-const TOPICS = [
-  '"digital commerce"', "ecommerce", "marketplace", "retail", "fintech", "payments",
-  '"artificial intelligence"', '"agentic AI"', '"agentic commerce"', "logistics",
-  '"working capital"', '"enterprise technology"', '"market entry"'
+const KEYWORDS = [
+  "commerce","ecommerce","e-commerce","marketplace","retail","fintech","payment","payments",
+  "artificial intelligence","agentic"," ai ","logistics","working capital","digital economy",
+  "digital transformation","enterprise technology","market entry","startup","funding","banking"
 ];
 
 const decode = value => String(value || "")
@@ -30,19 +30,49 @@ const decode = value => String(value || "")
 const stripHtml = value => decode(String(value || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));
 
 const field = (xml, tag) => {
-  const match = xml.match(new RegExp("<" + tag + "(?:\\s[^>]*)?>([\\s\\S]*?)<\\/" + tag + ">", "i"));
+  const match = xml.match(new RegExp("<" + tag.replace(":", "\\:") + "(?:\\s[^>]*)?>([\\s\\S]*?)<\\/" + tag.replace(":", "\\:") + ">", "i"));
   return match ? decode(match[1]) : "";
 };
 
-const itemsFromRss = xml => [...String(xml || "").matchAll(/<item\b[\s\S]*?<\/item>/gi)].map(match => {
-  const block = match[0];
+const attr = (xml, tag, name) => {
+  const match = xml.match(new RegExp("<" + tag.replace(":", "\\:") + "\\b[^>]*\\s" + name + "=[\"']([^\"']+)[\"'][^>]*>", "i"));
+  return match ? decode(match[1]) : "";
+};
+
+const imageFromBlock = block => {
+  const media = attr(block, "media:content", "url") || attr(block, "media:thumbnail", "url");
+  if (media) return media;
+  const enclosure = block.match(/<enclosure\b[^>]*url=["']([^"']+)["'][^>]*type=["']image\//i);
+  if (enclosure) return decode(enclosure[1]);
+  const html = field(block, "content:encoded") || field(block, "description") || field(block, "content") || field(block, "summary");
+  const img = html.match(/<img\b[^>]*src=["']([^"']+)["']/i);
+  return img ? decode(img[1]) : "";
+};
+
+const sourceUrlFromBlock = block => attr(block, "source", "url");
+
+const itemFromBlock = block => {
+  let link = field(block, "link");
+  if (!link) link = attr(block, "link", "href");
+  const title = stripHtml(field(block, "title"));
+  const description = field(block, "description") || field(block, "summary") || field(block, "content:encoded") || field(block, "content");
+  const publishedAt = stripHtml(field(block, "pubDate") || field(block, "published") || field(block, "updated") || field(block, "dc:date"));
   return {
-    title: stripHtml(field(block, "title")).replace(/\s+-\s+[^-]+$/, "").trim(),
-    link: stripHtml(field(block, "link")),
-    publishedAt: stripHtml(field(block, "pubDate")),
-    description: stripHtml(field(block, "description"))
+    title,
+    link: stripHtml(link),
+    description: stripHtml(description),
+    image: imageFromBlock(block),
+    publishedAt,
+    sourceUrl: sourceUrlFromBlock(block)
   };
-}).filter(item => item.title && item.link);
+};
+
+const itemsFromFeed = xml => {
+  const source = String(xml || "");
+  const rss = [...source.matchAll(/<item\b[\s\S]*?<\/item>/gi)].map(match => itemFromBlock(match[0]));
+  if (rss.length) return rss.filter(item => item.title && item.link);
+  return [...source.matchAll(/<entry\b[\s\S]*?<\/entry>/gi)].map(match => itemFromBlock(match[0])).filter(item => item.title && item.link);
+};
 
 const timeoutSignal = ms => {
   const controller = new AbortController();
@@ -50,32 +80,30 @@ const timeoutSignal = ms => {
   return { signal: controller.signal, clear: () => clearTimeout(id) };
 };
 
-async function fetchText(url, ms = 5000) {
+async function fetchText(url, ms = 4500) {
   const t = timeoutSignal(ms);
   try {
     const response = await fetch(url, {
       redirect: "follow",
       signal: t.signal,
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; HarisAslamNews/1.0; +https://www.mharisaslam.com/)"
-      }
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; HarisAslamNews/1.0; +https://www.mharisaslam.com/)" }
     });
-    return { ok: response.ok, url: response.url, text: await response.text() };
+    return { ok: response.ok, url: response.url, contentType: response.headers.get("content-type") || "", text: await response.text() };
   } catch {
-    return { ok: false, url, text: "" };
+    return { ok: false, url, contentType: "", text: "" };
   } finally {
     t.clear();
   }
 }
 
-const escapeRegExp = value => value.replace(/[.*+?^()|[\]{}\\-]/g, "\\$&");
+const score = item => {
+  const haystack = (" " + item.title + " " + item.description + " ").toLowerCase();
+  return KEYWORDS.reduce((total, keyword) => total + (haystack.includes(keyword) ? 1 : 0), 0);
+};
 
-function directUrlFromGoogle(html, domain) {
-  const clean = String(html || "").replace(/\\u003d/g, "=").replace(/\\u0026/g, "&").replace(/\\\//g, "/");
-  const pattern = new RegExp('https?:\\/\\/(?:www\\.)?' + escapeRegExp(domain) + '[^"\\s<>&]+', "i");
-  const match = clean.match(pattern);
-  return match ? decodeURIComponent(match[0].replace(/\\u0026/g, "&")) : "";
-}
+const pickRelevant = items => [...items]
+  .map(item => ({ ...item, relevance: score(item) }))
+  .sort((a, b) => (b.relevance - a.relevance) || (Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0)))[0] || null;
 
 function ogValue(html, property) {
   const patterns = [
@@ -90,19 +118,37 @@ function ogValue(html, property) {
   return "";
 }
 
-async function enrich(candidate) {
-  let articleUrl = candidate.link;
-  let image = "";
-  let summary = candidate.description;
-
-  const google = await fetchText(candidate.link, 4500);
-  if (google.ok) {
-    if (!google.url.includes("news.google.com")) articleUrl = google.url;
-    else articleUrl = directUrlFromGoogle(google.text, candidate.domain) || candidate.link;
+async function directFeedItem(source) {
+  if (!source.feeds?.length) return null;
+  const attempts = await Promise.all(source.feeds.map(url => fetchText(url)));
+  for (const attempt of attempts) {
+    if (!attempt.ok) continue;
+    const items = itemsFromFeed(attempt.text);
+    if (!items.length) continue;
+    const item = pickRelevant(items.slice(0, 20));
+    if (item) return { ...item, source: source.name, domain: source.domain, market: source.market, via: "publisher" };
   }
+  return null;
+}
 
-  if (articleUrl && !articleUrl.includes("news.google.com")) {
-    const article = await fetchText(articleUrl, 4500);
+async function googleFallback(source) {
+  const topic = '(commerce OR ecommerce OR marketplace OR retail OR fintech OR payments OR "artificial intelligence" OR agentic OR logistics OR banking OR startup)';
+  const url = "https://news.google.com/rss/search?q=" + encodeURIComponent(topic + " site:" + source.domain) + "&hl=en&gl=AE&ceid=AE:en";
+  const feed = await fetchText(url);
+  if (!feed.ok) return null;
+  const items = itemsFromFeed(feed.text).filter(item => !item.sourceUrl || item.sourceUrl.includes(source.domain));
+  const item = pickRelevant(items.slice(0, 20));
+  return item ? { ...item, source: source.name, domain: source.domain, market: source.market, via: "google" } : null;
+}
+
+async function enrich(item) {
+  if (!item) return null;
+  let image = item.image || "";
+  let summary = item.description || "";
+  let url = item.link;
+
+  if (item.via === "publisher" && url && !image) {
+    const article = await fetchText(url, 4000);
     if (article.ok) {
       image = ogValue(article.text, "og:image") || ogValue(article.text, "twitter:image");
       summary = ogValue(article.text, "og:description") || ogValue(article.text, "description") || summary;
@@ -110,40 +156,26 @@ async function enrich(candidate) {
   }
 
   return {
-    source: candidate.source,
-    market: candidate.market,
-    domain: candidate.domain,
-    title: candidate.title,
-    url: articleUrl,
-    googleUrl: candidate.link,
+    source: item.source,
+    market: item.market,
+    domain: item.domain,
+    title: item.title,
+    url,
     image,
     summary: stripHtml(summary).slice(0, 220),
-    publishedAt: candidate.publishedAt
+    publishedAt: item.publishedAt,
+    via: item.via
   };
 }
 
 async function latestForSource(source) {
-  const query = "(" + TOPICS.join(" OR ") + ") site:" + source.domain;
-  const url = "https://news.google.com/rss/search?q=" + encodeURIComponent(query) +
-    "&hl=en&gl=AE&ceid=AE:en";
-  const feed = await fetchText(url, 5000);
-  if (!feed.ok) return null;
-  const item = itemsFromRss(feed.text)[0];
-  return item ? { ...item, source: source.name, domain: source.domain, market: source.market } : null;
+  const direct = await directFeedItem(source);
+  return enrich(direct || await googleFallback(source));
 }
 
 export async function GET() {
-  const candidates = (await Promise.all(SOURCES.map(latestForSource))).filter(Boolean);
-
-  const enriched = [];
-  for (let i = 0; i < candidates.length; i += 5) {
-    const batch = await Promise.all(candidates.slice(i, i + 5).map(enrich));
-    enriched.push(...batch);
-  }
-
-  const news = enriched
-    .filter(item => item.title)
-    .sort((a, b) => Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0));
+  const results = (await Promise.all(SOURCES.map(latestForSource))).filter(Boolean);
+  const news = results.sort((a, b) => Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0));
 
   return Response.json(
     {
