@@ -27,7 +27,9 @@ const BUSINESS_CONTEXT = [
 
 const EXCLUDE_TERMS = [
   "football","soccer","cricket","sport","sports","celebrity","movie","music","hijab","religion",
-  "election","war","military","crime","court","weather","tourism","travel guide","united nations","guterres"
+  "election","war","military","crime","court","weather","tourism","travel guide","united nations","guterres",
+  "residences","residence","properties","real estate","villa","apartment","hearing glasses","smart glasses",
+  "names to lead","appointed to lead","appoints","liquidated funds","interim payments"
 ];
 
 const decode = value => String(value || "")
@@ -142,11 +144,30 @@ const rankedRelevant = items => [...items]
 
 const classifyTopic = item => {
   const text = (" " + item.title + " " + item.summary + " ").toLowerCase();
-  if (text.includes("agentic") || text.includes("artificial intelligence") || text.includes(" ai ")) return "AI & Agentic";
-  if (text.includes("payment") || text.includes("fintech") || text.includes("bank") || text.includes("finance")) return "Payments & Fintech";
+
+  if (text.includes("agentic") || text.includes("ai agent") || text.includes("ai agents")) return "AI & Agentic";
+
+  if (text.includes("artificial intelligence") || text.includes(" ai ")) {
+    const aiContext = [
+      "commerce","ecommerce","e-commerce","retail","merchant","payment","fintech","banking",
+      "enterprise","software","platform","marketplace","cloud","data centre","data center","workflow",
+      "operations","productivity","customer","logistics","supply chain","founder","funding"
+    ];
+    if (aiContext.some(term => text.includes(term))) return "AI & Agentic";
+  }
+
+  const financialTech = [
+    "fintech","digital payment","digital payments","e-payments","payment platform","payments platform",
+    "payment infrastructure","payments infrastructure","payment method","payment methods","merchant payment",
+    "merchant payments","wallet","open finance","embedded finance","working capital","paymob","binance pay"
+  ];
+  if (financialTech.some(term => text.includes(term))) return "Payments & Fintech";
+
   if (text.includes("ecommerce") || text.includes("e-commerce") || text.includes("commerce") || text.includes("marketplace") || text.includes("retail")) return "Commerce & Retail";
-  if (text.includes("logistics") || text.includes("warehouse") || text.includes("working capital") || text.includes("supply chain")) return "Logistics & Operations";
-  return "GCC Business";
+  if (text.includes("logistics") || text.includes("warehouse") || text.includes("working capital") || text.includes("supply chain") || text.includes("fulfilment") || text.includes("fulfillment")) return "Logistics & Operations";
+  if (text.includes("enterprise software") || text.includes("enterprise technology") || text.includes("digital transformation") || text.includes("saas") || text.includes("cloud platform")) return "Enterprise Technology";
+
+  return null;
 };
 
 const isGccItem = item => {
@@ -233,6 +254,7 @@ export async function GET() {
       topic: classifyTopic(item),
       isGcc: isGccItem(item)
     }))
+    .filter(item => item.topic)
     .filter(item => {
       const key = item.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
       if (!key || seen.has(key)) return false;
