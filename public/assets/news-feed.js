@@ -1,7 +1,10 @@
 (() => {
   const grid = document.querySelector("[data-live-news-grid]");
   const meta = document.querySelector("[data-live-news-meta]");
+  const filters = [...document.querySelectorAll("[data-news-filter]")];
   if (!grid) return;
+  let stories = [];
+  let activeFilter = "Latest";
 
   const sourcePalette = {
     "Wamda": "wm",
@@ -64,7 +67,7 @@
     const sourceName = document.createElement("span");
     sourceName.textContent = item.source;
     const detail = document.createElement("small");
-    detail.textContent = [item.market, dateText(item.publishedAt)].filter(Boolean).join(" · ");
+    detail.textContent = [item.market, item.topic, dateText(item.publishedAt)].filter(Boolean).join(" · ");
     source.append(sourceName, detail);
 
     const h3 = document.createElement("h3");
@@ -81,13 +84,32 @@
     return a;
   };
 
+  const render = () => {
+    const filtered = stories.filter(item => {
+      if (activeFilter === "Latest") return true;
+      if (activeFilter === "GCC") return item.isGcc;
+      return item.topic === activeFilter;
+    }).slice(0, 12);
+    grid.replaceChildren(...filtered.map(card));
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="live-news-unavailable"><strong>No matching stories yet.</strong><span>The feed will update automatically as publishers release new coverage.</span></div>';
+    }
+  };
+
+  filters.forEach(button => button.addEventListener("click", () => {
+    activeFilter = button.dataset.newsFilter;
+    filters.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+    render();
+  }));
+
   fetch("/api/news", { headers: { "Accept": "application/json" } })
     .then(response => response.ok ? response.json() : Promise.reject(new Error("news")))
     .then(data => {
       if (!Array.isArray(data.news) || !data.news.length) throw new Error("empty");
-      grid.replaceChildren(...data.news.slice(0, 10).map(card));
+      stories = data.news;
+      render();
       if (meta) {
-        meta.textContent = "Automatically refreshed from " + data.sourceCount + " selected publishers";
+        meta.textContent = data.news.length + " current stories · refreshed from " + data.sourceCount + " selected publishers";
       }
     })
     .catch(() => {
