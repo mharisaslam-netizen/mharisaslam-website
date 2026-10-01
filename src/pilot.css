@@ -294,3 +294,34 @@
 .p-case-ai{background:linear-gradient(145deg,#eefcff,#fff)!important}
 .p-case-feature:hover{transform:translateY(-5px)}
 @media(max-width:760px){.p-record-rail{grid-template-columns:1fr!important}.pilot-page .brand-wordmark{grid-template-columns:1fr!important}.pilot-page .brand-wordmark i{display:none}}
+
+
+/* Track-record readability pass */
+.pilot-page{
+  --p-teal:#087f8c;
+  --p-muted:#566078;
+  font-family:"Aptos","Segoe UI Variable Text","Inter","Helvetica Neue",Arial,sans-serif;
+}
+.pilot-page h1,.pilot-page h2,.pilot-page h3,.pilot-page h4{
+  font-family:"Aptos Display","Segoe UI Variable Display","Inter","Helvetica Neue",Arial,sans-serif;
+  font-weight:700;
+}
+.pilot-page .desktop-nav a{color:#353b57!important}
+.pilot-page .desktop-nav a:hover,.pilot-page .desktop-nav a[aria-current="page"]{color:#5547d6!important}
+.pilot-page .p-label{color:#087f8c}
+.pilot-page .p-section-head>p,
+.pilot-page .p-record-copy small,
+.pilot-page .p-record-copy em{color:#566078!important}
+.pilot-page .p-record-rail>a strong{color:#20243a!important}
+.pilot-page .p-link{color:#39415b}
+.pilot-page .p-link span{color:#5547d6}
+.pilot-page .p-hero p,.pilot-page .p-bank-hero p{color:#e2e7f5!important}
+.pilot-page .p-hero .p-label,.pilot-page .p-bank-hero .p-label{color:#8beff6!important}
+.pilot-page .p-hero-proof span{color:#c7cfdf!important}
+.pilot-page .p-hero-proof b{color:#fff!important}
+.pilot-page .p-button-ghost{color:#fff!important}
+.pilot-page .p-value-band p,.pilot-page .p-transformation-band p,.pilot-page .p-contact-band p,.pilot-page .p-ai-delivery p{color:#dbe1f1!important}
+.pilot-page .p-value-band h2,.pilot-page .p-transformation-band h2,.pilot-page .p-contact-band h2,.pilot-page .p-ai-delivery h2{color:#fff!important}
+.pilot-page .p-case-bank h3,.pilot-page .p-case-bank p,.pilot-page .p-case-bank .p-inline-link{color:#fff!important}
+.pilot-page .p-case-bank p{color:#d7ddef!important}
+.pilot-page a:focus-visible,.pilot-page button:focus-visible,.pilot-page summary:focus-visible{outline:3px solid #ffd34d!important;outline-offset:4px!important}
