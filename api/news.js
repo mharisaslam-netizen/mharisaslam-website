@@ -101,9 +101,24 @@ const score = item => {
   return KEYWORDS.reduce((total, keyword) => total + (haystack.includes(keyword) ? 1 : 0), 0);
 };
 
-const pickRelevant = items => [...items]
+const rankedRelevant = items => [...items]
   .map(item => ({ ...item, relevance: score(item) }))
-  .sort((a, b) => (b.relevance - a.relevance) || (Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0)))[0] || null;
+  .filter(item => item.relevance > 0)
+  .sort((a, b) => (b.relevance - a.relevance) || (Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0)));
+
+const classifyTopic = item => {
+  const text = (" " + item.title + " " + item.summary + " ").toLowerCase();
+  if (text.includes("agentic") || text.includes("artificial intelligence") || text.includes(" ai ")) return "AI & Agentic";
+  if (text.includes("payment") || text.includes("fintech") || text.includes("bank") || text.includes("finance")) return "Payments & Fintech";
+  if (text.includes("ecommerce") || text.includes("e-commerce") || text.includes("commerce") || text.includes("marketplace") || text.includes("retail")) return "Commerce & Retail";
+  if (text.includes("logistics") || text.includes("warehouse") || text.includes("working capital") || text.includes("supply chain")) return "Logistics & Operations";
+  return "GCC Business";
+};
+
+const isGccItem = item => {
+  const text = (" " + item.title + " " + item.summary + " " + item.market + " ").toLowerCase();
+  return ["gcc","mena","saudi","qatar","uae","emirates","oman","bahrain","kuwait","riyadh","dubai","doha","muscat"].some(term => text.includes(term));
+};
 
 function ogValue(html, property) {
   const patterns = [
@@ -118,27 +133,26 @@ function ogValue(html, property) {
   return "";
 }
 
-async function directFeedItem(source) {
-  if (!source.feeds?.length) return null;
+async function directFeedItems(source) {
+  if (!source.feeds?.length) return [];
   const attempts = await Promise.all(source.feeds.map(url => fetchText(url)));
   for (const attempt of attempts) {
     if (!attempt.ok) continue;
     const items = itemsFromFeed(attempt.text);
     if (!items.length) continue;
-    const item = pickRelevant(items.slice(0, 20));
-    if (item) return { ...item, source: source.name, domain: source.domain, market: source.market, via: "publisher" };
+    const ranked = rankedRelevant(items.slice(0, 30)).slice(0, 3);
+    if (ranked.length) return ranked.map(item => ({ ...item, source: source.name, domain: source.domain, market: source.market, via: "publisher" }));
   }
-  return null;
+  return [];
 }
 
-async function googleFallback(source) {
+async function googleFallbackItems(source) {
   const topic = '(commerce OR ecommerce OR marketplace OR retail OR fintech OR payments OR "artificial intelligence" OR agentic OR logistics OR banking OR startup)';
   const url = "https://news.google.com/rss/search?q=" + encodeURIComponent(topic + " site:" + source.domain) + "&hl=en&gl=AE&ceid=AE:en";
   const feed = await fetchText(url);
-  if (!feed.ok) return null;
+  if (!feed.ok) return [];
   const items = itemsFromFeed(feed.text).filter(item => !item.sourceUrl || item.sourceUrl.includes(source.domain));
-  const item = pickRelevant(items.slice(0, 20));
-  return item ? { ...item, source: source.name, domain: source.domain, market: source.market, via: "google" } : null;
+  return rankedRelevant(items.slice(0, 30)).slice(0, 3).map(item => ({ ...item, source: source.name, domain: source.domain, market: source.market, via: "google" }));
 }
 
 async function enrich(item) {
@@ -169,13 +183,28 @@ async function enrich(item) {
 }
 
 async function latestForSource(source) {
-  const direct = await directFeedItem(source);
-  return enrich(direct || await googleFallback(source));
+  const direct = await directFeedItems(source);
+  const candidates = direct.length ? direct : await googleFallbackItems(source);
+  return (await Promise.all(candidates.map(enrich))).filter(Boolean);
 }
 
 export async function GET() {
-  const results = (await Promise.all(SOURCES.map(latestForSource))).filter(Boolean);
-  const news = results.sort((a, b) => Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0));
+  const nested = await Promise.all(SOURCES.map(latestForSource));
+  const seen = new Set();
+  const news = nested.flat()
+    .map(item => ({
+      ...item,
+      topic: classifyTopic(item),
+      isGcc: isGccItem(item)
+    }))
+    .filter(item => {
+      const key = item.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((a, b) => Date.parse(b.publishedAt || 0) - Date.parse(a.publishedAt || 0))
+    .slice(0, 24);
 
   return Response.json(
     {
