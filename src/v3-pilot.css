@@ -547,3 +547,22 @@
 .v3-page a:focus-visible,.v3-page button:focus-visible,.v3-page summary:focus-visible{
   outline:3px solid #ffd34d!important;outline-offset:4px!important
 }
+
+
+/* Final contrast audit fixes */
+.v4-home-bio aside{background:linear-gradient(145deg,#4f46e5,#6d28d9 58%,#087f8c)!important}
+.v4-home-rent figure strong{color:#11152f!important}
+.v3-value-map>div.accent,
+.v3-value-map>div.accent span,
+.v3-value-map>div.accent b{color:#17182b!important}
+.home-news-filter-row button[aria-pressed="true"]{background:linear-gradient(135deg,#4f46e5,#6d28d9)!important;color:#fff!important}
+.v3-home-close{background:
+  radial-gradient(circle at 88% 20%,rgba(255,211,77,.16),transparent 25%),
+  linear-gradient(135deg,#4338ca,#6d28d9 58%,#087f8c)!important}
+.v3-insights .v4-insights-hero{
+  background:
+    radial-gradient(circle at 90% 10%,rgba(255,211,77,.18),transparent 25%),
+    radial-gradient(circle at 12% 90%,rgba(34,211,238,.17),transparent 25%),
+    linear-gradient(135deg,#201853,#4c2d91 52%,#087f8c)!important
+}
+.v3-page ::selection{background:#d9d4ff;color:#11152f}
