@@ -109,7 +109,7 @@ function render(page) {
 
 function header(path) {
   const links = primaryNavigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
-  return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
+  return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" aria-label="Haris Aslam home" translate="no"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 52 52" role="img"><path d="M5 8v36M18 8v36M5 26h13M26 44L37 8l10 36M31 29h12" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="square" stroke-linejoin="miter"/></svg></span><span class="brand-wordmark"><b>HARIS</b><span>ASLAM</span></span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
 }
 function commercialBridge(path) {
   if (!commercialBridgePaths.has(path)) return "";
