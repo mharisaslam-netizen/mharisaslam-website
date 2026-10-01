@@ -419,3 +419,131 @@
   .v3-capability-system article{min-height:250px!important}
   .v3-use-index .v3-library-hero aside{padding:1rem!important}
 }
+
+
+/* Aesthetic + readability pass */
+.v3-page{
+  --v3-teal:#087f8c;
+  --v3-muted:#566078;
+  font-family:"Aptos","Segoe UI Variable Text","Inter","Helvetica Neue",Arial,sans-serif;
+  color:#15182b;
+}
+.v3-page h1,.v3-page h2,.v3-page h3,.v3-page h4{
+  font-family:"Aptos Display","Segoe UI Variable Display","Inter","Helvetica Neue",Arial,sans-serif;
+  font-weight:700;
+}
+.v3-page p,.v3-page li,.v3-page dd{letter-spacing:.002em}
+.v3-page .v3-section-intro>p,
+.v3-page .v3-case-tile p,
+.v3-page .v3-evidence-ledger a>small,
+.v3-page .v3-evidence-ledger a>i,
+.v3-page .v3-home-ai-layout aside>a>p,
+.v3-page .v4-home-bio>div>div p,
+.v3-page .v4-home-bio aside p,
+.v3-page .v4-insight-card p,
+.v3-page .v3-library-entry p,
+.v3-page .v3-library-tools p{color:#566078!important}
+.v3-page .v3-label{color:#087f8c}
+.v3-page .v3-link{color:#34405a}
+.v3-page .v3-link span{color:#5547d6}
+.v3-page .desktop-nav a{color:#353b57!important}
+.v3-page .desktop-nav a:hover,.v3-page .desktop-nav a[aria-current=page]{color:#5547d6!important}
+
+.v3-capability-system article:nth-child(1){background:linear-gradient(145deg,#4338ca,#5b4ce6)!important}
+.v3-capability-system article:nth-child(2){background:linear-gradient(145deg,#a63b4d,#c2415d)!important}
+.v3-capability-system article:nth-child(3){background:linear-gradient(145deg,#0b7285,#087f8c)!important}
+.v3-capability-system article:nth-child(4){background:linear-gradient(145deg,#6d28d9,#7e22ce)!important}
+.v3-capability-system article>span,
+.v3-capability-system article h3,
+.v3-capability-system article .v3-link{color:#fff!important}
+.v3-capability-system article p{color:#f3f5ff!important;opacity:.94}
+.v3-capability-system article:after{color:#fff!important}
+
+.v3-case-tile>div>span{color:#087f8c!important}
+.v3-case-tile.is-large>div>span{color:#8beff6!important}
+.v3-case-tile.is-large p{color:#e1e6f4!important}
+.v3-case-tile.is-large h3{color:#fff!important}
+.v4-home-rent p{color:#505970!important}
+.v4-home-rent a>div>b{color:#373d57!important}
+.v3-value-layout p{color:#d9dff0!important}
+.v3-value-map span{color:#d7dcef!important}
+.v3-value-map .accent span{color:#fff7ef!important}
+.v3-evidence-ledger a>strong{color:#1f233a!important}
+
+.v3-home-ai-layout aside>a:not(.v3-button){color:#1f243b!important}
+.v3-home-ai-layout aside>a>strong{color:#1f243b!important}
+.v3-home-ai-layout aside>a>span{color:#5547d6!important}
+.v3-command-decision{background:#f2f4ff!important;color:#1a203b!important}
+.v3-command-decision small{color:#5a627b!important}
+.v3-command-decision strong{color:#1a203b!important}
+.v3-product-ui,.v3-product-ui *{text-rendering:optimizeLegibility}
+.v3-product-ui>header{color:#fff!important}
+.v3-product-ui>header small{color:#cdd4e7!important}
+
+.home-live-news .v3-section-intro h2{color:#fff!important}
+.home-live-news .v3-section-intro p{color:#cbd3e3!important}
+.home-news-source-strip span{color:#d7deed!important;border-color:rgba(255,255,255,.20)!important}
+.home-news-filter-row button{color:#d9e0ef!important}
+.live-news-source{color:#aaf3f7!important}
+.live-news-source small{color:#b4bed2!important}
+.live-news-copy h3{color:#fff!important}
+.live-news-copy p{color:#d2d8e6!important}
+.live-news-copy b{color:#fff!important}
+.live-news-fallback span{color:#e4eaf4!important}
+
+.home-featured-thinking .v3-section-intro h2{color:#1d2238!important}
+.home-visual-story-copy h3{color:#20243a!important}
+.home-visual-story-copy p{color:#566078!important}
+.home-visual-story-copy small{color:#5547d6!important}
+.home-visual-story:first-child .home-visual-story-copy h3{color:#fff!important}
+.home-visual-story:first-child .home-visual-story-copy p{color:#d7dcee!important}
+.home-visual-story:first-child .home-visual-story-copy b{color:#fff!important}
+.home-visual-story:first-child .home-visual-story-copy small{color:#8beff6!important}
+
+.v3-insight-ledger .v3-section-intro h2{color:#20243a!important}
+.v3-insight-ledger>div>div>a strong{color:#20243a!important}
+.v3-insight-ledger a>small{color:#596278!important}
+.v3-insight-ledger a>span{color:#5547d6!important}
+.v3-insight-ledger a>i{color:#5547d6!important}
+
+.v3-home-close h2{color:#fff!important}
+.v3-home-close p{color:#f1f2ff!important}
+.v3-home-close .v3-link{color:#fff!important}
+.v3-home-close .v3-link span{color:#dffafe!important}
+
+.v3-use-index .v3-library-hero h1,
+.v3-use-index .v3-library-hero aside strong{color:#fff!important}
+.v3-use-index .v3-library-hero p,
+.v3-use-index .v3-library-hero aside p{color:#e1e6f4!important}
+.v3-use-index .v3-library-hero aside span{color:#aaf3f7!important}
+.v3-use-index .v3-library-entry h3{color:#20243a!important}
+.v3-use-index .v3-library-entry p,
+.v3-use-index .v3-library-entry dd{color:#586179!important}
+.v3-use-index .v3-filter-panel legend{color:#30364e!important}
+.v3-use-index .v3-filter-panel button{color:#3f465f!important}
+.v3-use-index .v3-filter-panel button[aria-pressed="true"]{color:#fff!important}
+
+.v3-ai .v3-ai-hero h1{color:#fff!important}
+.v3-ai .v3-ai-hero p{color:#e2e7f5!important}
+.v3-ai .v3-ai-principles span{color:#fff!important}
+.v3-ai .v3-ai-product h2{color:#20243a!important}
+.v3-ai .v3-ai-product header>p{color:#566078!important}
+.v3-ai .v3-ai-product dt{color:#5547d6!important}
+.v3-ai .v3-ai-product dd{color:#4e576f!important}
+.v3-ai .v3-ai-architecture h2{color:#fff!important}
+.v3-ai .v3-ai-architecture p{color:#d8deef!important}
+.v3-ai .v3-ai-delivery h2{color:#20243a!important}
+.v3-ai .v3-ai-delivery p,.v3-ai .v3-ai-delivery li{color:#525b73!important}
+
+.v3-insights .v4-insights-hero h1{color:#fff!important}
+.v3-insights .v4-insights-hero p{color:#edf0fb!important}
+.v3-insights .v4-insight-card h2{color:#20243a!important}
+.v3-insights .v4-insight-card p{color:#566078!important}
+.v3-insights .v4-insight-card .copy>span{color:#5547d6!important}
+.v3-insights .v4-insight-card b{color:#39415b!important}
+.v3-insights .v4-insight-method h2{color:#fff!important}
+.v3-insights .v4-insight-method p{color:#dfe4f3!important}
+
+.v3-page a:focus-visible,.v3-page button:focus-visible,.v3-page summary:focus-visible{
+  outline:3px solid #ffd34d!important;outline-offset:4px!important
+}
