@@ -8,6 +8,32 @@ import { uaeMarketPage } from "../src/uae-market-page.mjs";
 import { saudiMarketPage } from "../src/saudi-market-page.mjs";
 
 const basePages = [advisoryPage, executiveProfilePage, uaeMarketPage, saudiMarketPage, ...pages];
+const priorityIndexPaths = new Set([
+  "/",
+  "/about",
+  "/gcc-executive-profile",
+  "/gcc-growth-transformation",
+  "/markets/saudi-arabia",
+  "/markets/uae",
+  "/track-record",
+  "/track-record/roumaan",
+  "/track-record/upapp-factory",
+  "/track-record/floward-oman",
+  "/track-record/salman-miraq",
+  "/use-cases",
+  "/use-cases/leading-saudi-bank-commerce-ecosystem",
+  "/use-cases/retail-group-transformation",
+  "/use-cases/payments-embedded-finance-growth",
+  "/use-cases/warehouse-working-capital-3pl",
+  "/use-cases/saudi-market-entry-distribution",
+  "/use-cases/90-day-margin-to-cash-turnaround",
+  "/use-cases/rent-as-a-utility-qatar",
+  "/ai-transformation",
+  "/ai-commerce",
+  "/insights",
+  "/insights/payment-volume-versus-net-revenue",
+  "/insights/openai-dots-ecommerce-staff-assistant"
+]);
 const expertiseIndexPage = {
   path: "/expertise-index",
   type: "CollectionPage",
@@ -51,6 +77,7 @@ for (const page of allPages) {
 await writeFile(join(out, "404.html"), versionUiAssets(render404()), "utf8");
 await writeFile(join(out, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/linkedin/\n\nSitemap: ${site.origin}/sitemap.xml\n`, "utf8");
 await writeFile(join(out, "sitemap.xml"), sitemap(), "utf8");
+await writeFile(join(out, "sitemap-priority.xml"), prioritySitemap(), "utf8");
 await writeFile(join(out, "llms.txt"), llmsTxt(), "utf8");
 
 function render(page) {
@@ -178,6 +205,7 @@ function schemaGraph(page, url, crumbs) {
 function expertiseIndexBody(sourcePages) {
   const visible = sourcePages.filter(page => page.path !== "/privacy");
   const groups = [
+    ["Priority authority pages", visible.filter(page => priorityIndexPaths.has(page.path))],
     ["GCC growth and market perspectives", visible.filter(page => ["/gcc-growth-transformation","/gcc-executive-profile","/markets/saudi-arabia","/markets/uae","/about","/contact"].includes(page.path))],
     ["Track record", visible.filter(page => page.path.startsWith("/track-record"))],
     ["AI and transformation", visible.filter(page => page.path === "/ai-transformation" || page.path === "/ai-commerce" || page.path === "/career-runway" || (page.path.startsWith("/use-cases/") && /ai-|enterprise-ai|automation|skills|vocational/i.test(page.path)))],
@@ -189,8 +217,11 @@ function expertiseIndexBody(sourcePages) {
     ["Insights", visible.filter(page => page.path.startsWith("/insights"))],
     ["All use cases", visible.filter(page => page.path === "/use-cases" || page.path.startsWith("/use-cases/"))]
   ];
+  const seen = new Set();
   const rendered = groups.map(([heading, items]) => {
-    const unique = [...new Map(items.map(item => [item.path, item])).values()];
+    const unique = [...new Map(items.map(item => [item.path, item])).values()]
+      .filter(item => !seen.has(item.path));
+    for (const item of unique) seen.add(item.path);
     if (!unique.length) return "";
     return `<section class="section"><div class="section-heading"><h2>${escapeHtml(heading)}</h2></div><div class="report-prose"><ul>${unique.map(item => `<li><a href="${item.path}"><strong>${escapeHtml(pageLabel(item))}</strong></a> - ${escapeHtml(item.description || item.intro || "")}</li>`).join("")}</ul></div></section>`;
   }).join("");
@@ -199,6 +230,10 @@ function expertiseIndexBody(sourcePages) {
 
 function sitemap() {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc></url>`).join("\n")}\n</urlset>\n`;
+}
+function prioritySitemap() {
+  const priorityPages = allPages.filter(page => priorityIndexPaths.has(page.path));
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${priorityPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc></url>`).join("\n")}\n</urlset>\n`;
 }
 function llmsTxt() {
   const links = allPages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
