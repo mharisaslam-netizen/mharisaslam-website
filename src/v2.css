@@ -569,3 +569,55 @@ body:not(.v3-page):not(.pilot-page) .site-footer{background:linear-gradient(135d
 .ui-reveal.ui-visible{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.ui-reveal{opacity:1!important;transform:none!important;transition:none!important}}
 @media(max-width:760px){body:not(.v3-page):not(.pilot-page) .brand-wordmark{grid-template-columns:1fr!important}body:not(.v3-page):not(.pilot-page) .brand-wordmark i{display:none}}
+
+
+/* Shared-page readability pass */
+body:not(.v3-page):not(.pilot-page){
+  --text:#343a52;
+  --muted:#5a6279;
+  --accent:#5547d6;
+  --accent-dark:#4338ca;
+  --accent-wash:#f0edff;
+  font-family:"Aptos","Segoe UI Variable Text","Inter","Helvetica Neue",Arial,sans-serif;
+  color:#191d31;
+}
+body:not(.v3-page):not(.pilot-page) h1,
+body:not(.v3-page):not(.pilot-page) h2,
+body:not(.v3-page):not(.pilot-page) h3,
+body:not(.v3-page):not(.pilot-page) h4{
+  font-family:"Aptos Display","Segoe UI Variable Display","Inter","Helvetica Neue",Arial,sans-serif;
+  font-weight:700;
+}
+body:not(.v3-page):not(.pilot-page) .desktop-nav a{color:#353b57!important}
+body:not(.v3-page):not(.pilot-page) .desktop-nav a:hover,
+body:not(.v3-page):not(.pilot-page) .desktop-nav a[aria-current="page"]{color:#5547d6!important}
+body:not(.v3-page):not(.pilot-page) .hero-intro{color:#515a72!important}
+body:not(.v3-page):not(.pilot-page) .work-card p,
+body:not(.v3-page):not(.pilot-page) .visual-card p,
+body:not(.v3-page):not(.pilot-page) .record-card p,
+body:not(.v3-page):not(.pilot-page) .insight-card p,
+body:not(.v3-page):not(.pilot-page) .product-preview p,
+body:not(.v3-page):not(.pilot-page) .expertise-context p,
+body:not(.v3-page):not(.pilot-page) .article-lens p,
+body:not(.v3-page):not(.pilot-page) .article-copy,
+body:not(.v3-page):not(.pilot-page) .report-prose,
+body:not(.v3-page):not(.pilot-page) .report-list li{color:#3f465f!important}
+body:not(.v3-page):not(.pilot-page) .card-meta,
+body:not(.v3-page):not(.pilot-page) .record-card-meta,
+body:not(.v3-page):not(.pilot-page) .source-note,
+body:not(.v3-page):not(.pilot-page) .article-photo figcaption{color:#5b647b!important}
+body:not(.v3-page):not(.pilot-page) .card-label,
+body:not(.v3-page):not(.pilot-page) .eyebrow,
+body:not(.v3-page):not(.pilot-page) .article-lens span,
+body:not(.v3-page):not(.pilot-page) .report-section-head>span{color:#5547d6!important}
+body:not(.v3-page):not(.pilot-page) .impact-conclusion p{color:#f2f4ff!important}
+body:not(.v3-page):not(.pilot-page) .dark-section p,
+body:not(.v3-page):not(.pilot-page) .dark-band .report-prose,
+body:not(.v3-page):not(.pilot-page) .dark-band .report-prose p{color:#e0e5f1!important}
+body:not(.v3-page):not(.pilot-page) .site-footer,
+body:not(.v3-page):not(.pilot-page) .site-footer a{color:#edf0f8!important}
+body:not(.v3-page):not(.pilot-page) .footer-links p,
+body:not(.v3-page):not(.pilot-page) .footer-meta{color:#aeb7ca!important}
+body:not(.v3-page):not(.pilot-page) a:focus-visible,
+body:not(.v3-page):not(.pilot-page) button:focus-visible,
+body:not(.v3-page):not(.pilot-page) summary:focus-visible{outline:3px solid #ffcc45!important;outline-offset:4px!important}
