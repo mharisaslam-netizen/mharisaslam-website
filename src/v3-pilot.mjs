@@ -93,7 +93,7 @@ export function v3Home({ trackRecords, insights }) {
   const visualInsights = [
     "ai-agents-payment-exceptions-human-authority",
     "distributor-cash-allocation-operating-system-ai",
-    "openai-agents-api-ecommerce-pilot"
+    "payments-financial-infrastructure-gcc-localization"
   ].map(slug => insights.find(item => item.slug === slug)).filter(Boolean);
   const visualInsightCard = item => {
     const image = Array.isArray(item.visual) && item.visual[0]?.startsWith("/assets/") ? item.visual[0] : "";
