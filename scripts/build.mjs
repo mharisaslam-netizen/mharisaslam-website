@@ -103,13 +103,14 @@ function render(page) {
   ${commercialBridge(page.path)}
   ${advisoryConversion(page)}
   ${footer()}
+  <script src="/assets/site-ui.js" defer></script>
 </body>
 </html>`;
 }
 
 function header(path) {
   const links = primaryNavigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
-  return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" translate="no"><span class="brand-mark" aria-hidden="true">HA</span><span class="brand-name">Muhammad Haris Aslam</span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
+  return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" aria-label="Haris Aslam home" translate="no"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 64 64" role="img"><path d="M13 14v36M13 32h17M30 14v36" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round"/><path d="M35 50L47 14l12 36M40 37h14" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="brand-wordmark"><b>HARIS</b><span>ASLAM</span><i></i></span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary>Menu <span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
 }
 function commercialBridge(path) {
   if (!commercialBridgePaths.has(path)) return "";
