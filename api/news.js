@@ -118,6 +118,9 @@ const relevance = item => {
   const body = (" " + item.title + " " + item.description + " ").toLowerCase();
 
   if (EXCLUDE_TERMS.some(term => body.includes(term))) return { score: 0, categoryHits: 0, businessHits: 0 };
+  if (/\b(names|named|appoints|appointed|promotes|promoted)\b.{0,80}\b(lead|head|chief|president|director|officer|ceo|cfo|cto|coo)\b/i.test(item.title)) {
+    return { score: 0, categoryHits: 0, businessHits: 0 };
+  }
 
   const titleGroups = Object.values(TOPIC_GROUPS).filter(terms => terms.some(term => title.includes(term))).length;
   const bodyGroups = Object.values(TOPIC_GROUPS).filter(terms => terms.some(term => body.includes(term))).length;
