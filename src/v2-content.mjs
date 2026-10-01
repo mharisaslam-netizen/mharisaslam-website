@@ -937,7 +937,136 @@ const shortInsights = [
   { slug: "agent-led-social-commerce-economics", title: "Agent-led social-commerce economics", lead: "Merchant supply, agent trust and buyer fulfilment have to work in the same transaction.", visual: ["Merchant", "Sales agent", "Buyer", "Audited payout"], paragraphs: ["Agent-led commerce adds a human distribution layer to a marketplace. That layer can expand reach, but it also adds commission, attribution and trust obligations.", "Measure active merchant-agent pairs, completed attributable orders, repeat purchase and payout accuracy. Registrations and downloads are only early funnel signals.", "Every party should be able to see why an order was attributed and how a payout was calculated."] },
   { slug: "commerce-tasks-for-ai-agents", title: "Which commerce tasks AI agents should automate", lead: "Start with reversible work over reliable data before giving software broader authority.", visual: ["Read evidence", "Draft action", "Human approval", "Audit outcome"], paragraphs: ["Catalogue cleanup, order-status summaries and exception routing are good early agent tasks because the source facts can be checked and mistakes can be reversed.", "Price changes, refunds, seller sanctions and payouts carry more consequence. They require explicit policy, permissions and human approval.", "Automation should earn wider scope through task accuracy, service quality, contribution and clean rollback evidence."] },
   { slug: "rag-versus-live-operational-apis", title: "RAG versus live operational APIs", lead: "Use retrieval for approved knowledge and APIs for facts that change with the operation.", visual: ["Policy knowledge", "Live API fact", "Decision rule", "Approved action"], paragraphs: ["RAG is useful for policies, procedures and product guidance. It is a poor substitute for live stock, current price or the status of a specific order.", "An operating agent often needs both. It retrieves the relevant rule, then queries the source system for the current fact.", "Keeping those sources distinct makes errors easier to diagnose and gives operators a clearer evidence trail."] },
-  { slug: "payment-volume-versus-net-revenue", title: "Payment volume versus net revenue", lead: "Payment volume shows activity. It does not show what the provider keeps.", visual: ["Payment volume", "Gross fees", "Partner and loss cost", "Net revenue"], paragraphs: ["A payment plan can look large when it begins with transaction value. The provider receives only a small fee pool from that value.", "Partner share, incentives, fraud, compliance, support and settlement cost reduce the pool again. Recognized net revenue and gross profit are better operating measures.", "Model each segment separately. A bank workflow, merchant service and multi-party platform rarely have the same integration or risk cost."] },
+  {
+    slug: "payment-volume-versus-net-revenue",
+    title: "Payment Volume vs Net Revenue: The Economics Behind Payment Growth",
+    seoTitle: "Payment Volume vs Net Revenue | Payments Economics",
+    metaDescription: "A practical payments economics framework connecting processed volume, fees, revenue recognition, contribution, risk cost and cash.",
+    lead: "Payment volume measures money moving through a system. It does not measure the revenue, contribution or cash the provider ultimately keeps.",
+    category: "Payments economics",
+    readMinutes: 9,
+    visual: ["Payment volume", "Gross fees", "Net revenue", "Contribution", "Cash"],
+    sections: [
+      {
+        heading: "Payment volume is throughput, not economics",
+        paragraphs: [
+          "Payment businesses are often described first by the value moving through them. That is useful because processed volume shows scale, customer activity and the operational load on the platform. But volume is the starting point of the economic model, not the end of it.",
+          "Adyen illustrates the distinction clearly. For full-year 2025 it reported processed volume of EUR 1,394.3 billion and net revenue of EUR 2,364.2 million. Those figures are not a universal take-rate benchmark because product mix, pass-through items, pricing, geography and customer mix differ by provider. They do show why a board should never treat payment volume as if it were revenue.",
+          "The operating question is therefore not simply how much value the platform processed. It is how that activity converted into recognized revenue, gross profit, contribution and cash after the obligations required to serve merchants and customers."
+        ]
+      },
+      {
+        heading: "Build the bridge from volume to contribution",
+        paragraphs: [
+          "A useful payments P&L starts with processed value and then makes every economic layer visible. The exact labels vary by model, but the bridge should prevent pass-through economics and service costs from disappearing inside a headline growth number.",
+          "The first layer is gross monetization: merchant fees, platform fees, FX, value-added services or other consideration linked to the transaction. The next layer removes amounts that do not belong economically to the provider, including partner shares, scheme or network economics, processing costs and other contractual pass-through items where relevant.",
+          "After recognized net revenue, management still needs the operating cost required to support that revenue: fraud and loss cost, disputes, risk operations, compliance, customer or merchant support, settlement operations, incentives and any other variable service cost. What remains is a much better basis for judging whether payment growth creates value."
+        ],
+        bullets: [
+          "Processed payment volume or gross payment value",
+          "Gross fees and monetization by product",
+          "Partner, scheme, processing and contractual pass-through economics",
+          "Recognized net revenue",
+          "Fraud, loss, dispute, compliance and support cost",
+          "Contribution before fixed platform and corporate cost",
+          "Cash after settlement, reserves and working-capital effects"
+        ]
+      },
+      {
+        heading: "Revenue recognition can change the size of the top line",
+        paragraphs: [
+          "Payments and platform businesses also need accounting discipline. Under IFRS 15, whether revenue is presented gross or net depends on whether the entity controls the specified good or service before it is transferred to the customer. A principal generally recognizes revenue gross. An agent generally recognizes the fee or commission it retains.",
+          "That assessment is not a cosmetic accounting choice. It can materially change reported revenue while leaving the underlying customer activity unchanged. For multi-party commerce, marketplaces, payment orchestration and reseller-style models, management should therefore separate transaction value, customer billing, recognized revenue and retained economics.",
+          "The operational model and the accounting model should agree on who owns the customer promise, who is responsible for fulfilment, who controls pricing, who bears risk and which party is entitled to the economic consideration."
+        ]
+      },
+      {
+        heading: "One blended take rate can hide the real business",
+        paragraphs: [
+          "A blended ratio of revenue to volume can be directionally useful, but it is often too blunt for operating decisions. A large enterprise merchant, an SME acquiring product, a cross-border transaction and a value-added service can carry very different pricing, risk, integration and support economics.",
+          "Management should segment the bridge by the dimensions that actually change economics. These may include product, merchant segment, geography, payment method, channel, transaction type or service tier. The right segmentation is the one that explains why contribution differs.",
+          "This prevents a common failure mode: low-value volume growth masking stronger economics elsewhere, or profitable products being diluted by high-service segments that look attractive only because their processed value is large."
+        ]
+      },
+      {
+        heading: "Growth quality matters more than volume growth alone",
+        paragraphs: [
+          "Healthy payment growth should improve more than throughput. It should show evidence of durable customer usage, sensible pricing, manageable risk cost and an operating model that scales without service effort rising faster than revenue.",
+          "The commercial team therefore needs to distinguish existing-customer volume growth from new-customer growth, and contractual pricing from temporary incentives. Risk teams need to show fraud, chargeback and loss behaviour in the same view. Operations should track support intensity and exception rates. Finance should connect all of this to contribution.",
+          "A volume target without these controls can encourage the business to buy activity through discounts, accept weak-risk cohorts or onboard complex customers whose support burden is not visible in the commercial case."
+        ]
+      },
+      {
+        heading: "Cash can diverge from reported revenue",
+        paragraphs: [
+          "Payments businesses move money on behalf of customers, merchants and partners. That makes cash interpretation especially important. Settlement timing, reserves, receivables, prefunding, chargebacks and partner payment terms can all create a cash profile that looks very different from the income statement.",
+          "A strong management view therefore separates corporate cash from customer or merchant funds and shows which balances are economically available to the business. It also explains how quickly recognized revenue converts into free cash after operating requirements.",
+          "This discipline matters when a fast-growing platform appears cash-rich simply because large settlement balances pass through its accounts. Money held for another party is not the same as operating cash generated by the business."
+        ]
+      },
+      {
+        heading: "A practical executive scorecard",
+        paragraphs: [
+          "The board or executive team does not need dozens of payment metrics. It needs a small bridge that connects scale, monetization, risk, service and cash. That bridge should be stable enough to compare periods and detailed enough to explain why economics changed.",
+          "A 90-day diagnostic can start by reconciling processed volume to recognized revenue, segmenting the major customer and product pools, assigning variable service and risk cost, and then testing which growth cohorts actually improve contribution. The output should identify where volume is valuable, where pricing or cost needs correction, and where additional growth would destroy value.",
+          "The objective is not to reduce ambition. It is to ensure that every major volume initiative has a visible path to revenue, contribution and cash."
+        ],
+        bullets: [
+          "Processed volume and completed transaction count",
+          "Net revenue and effective monetization by segment",
+          "Gross profit or transaction contribution",
+          "Fraud, loss, chargeback and dispute cost",
+          "Merchant or customer support intensity",
+          "Retention and expansion of profitable cohorts",
+          "Settlement, reserve and working-capital exposure",
+          "Free cash conversion after operating obligations"
+        ]
+      }
+    ],
+    takeaways: [
+      "Treat processed volume as an activity metric, not as revenue.",
+      "Reconcile every major payment flow through fees, pass-through economics, recognized revenue, contribution and cash.",
+      "Apply principal-versus-agent accounting consistently because gross versus net presentation can materially change reported revenue.",
+      "Segment payment economics by the dimensions that actually change price, risk and service cost.",
+      "Judge growth quality on contribution, risk, service intensity and cash, not volume alone.",
+      "Keep customer and merchant settlement balances separate from economically available corporate cash."
+    ],
+    faq: [
+      {
+        question: "Is payment volume the same as revenue?",
+        answer: "No. Payment volume measures the value processed through the system. Revenue is the consideration the provider recognizes for its own services after applying the relevant commercial and accounting treatment."
+      },
+      {
+        question: "Is revenue divided by payment volume a take rate?",
+        answer: "It can be a useful directional ratio, but it should not automatically be treated as a contractual take rate. Product mix, pass-through items, geography, pricing and accounting presentation can all change the relationship."
+      },
+      {
+        question: "Why does principal-versus-agent treatment matter?",
+        answer: "Under IFRS 15, a principal generally recognizes revenue gross while an agent generally recognizes its fee or commission net. The assessment depends on whether the entity controls the specified good or service before transfer to the customer."
+      },
+      {
+        question: "What should executives track beyond payment volume?",
+        answer: "Net revenue, monetization by segment, contribution, fraud and loss cost, support intensity, profitable retention, settlement exposure and cash conversion give a more complete view of payment growth quality."
+      }
+    ],
+    sources: [
+      {
+        title: "Adyen publishes H2 2025 financial results",
+        publisher: "Adyen",
+        url: "https://www.adyen.com/press-and-media/adyen-publishes-h2-2025-financial-results-3pgu2"
+      },
+      {
+        title: "Annual Report 2025",
+        publisher: "Adyen",
+        url: "https://investors.adyen.com/financials/2025"
+      },
+      {
+        title: "IFRS 15 principal versus agent considerations",
+        publisher: "IFRS Foundation",
+        url: "https://www.ifrs.org/news-and-events/updates/ifric/2021/ifric-update-november-2021/"
+      }
+    ]
+  },
   { slug: "warehouse-capacity-as-a-3pl-business", title: "When warehouse capacity can become a 3PL business", lead: "Spare space becomes a business only after anchor demand covers the full service cost.", visual: ["Spare capacity", "Anchor demand", "Service cost", "Client contribution"], paragraphs: ["A retailer may see unused racks and assume it can sell fulfilment cheaply. The existing rent is only one part of the cost.", "Picking, packing, delivery, failed attempts, claims, receivables and service management must be included in the client P&L.", "Start with one anchor client and a limited service scope. Expand only when contracted volume, service quality and contribution hold together."] }
 ];
 
