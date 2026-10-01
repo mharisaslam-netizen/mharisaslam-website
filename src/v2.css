@@ -25,8 +25,12 @@ p{margin:0 0 1rem}
 
 .site-header{position:sticky;top:0;z-index:20;background:rgba(251,252,250,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
 .nav-wrap{width:min(calc(100% - 48px),var(--max));height:68px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:2rem}
-.brand{display:flex;align-items:center;gap:.7rem;white-space:nowrap;font-weight:700;font-size:.88rem}
-.brand-mark{width:32px;height:32px;display:grid;place-items:center;background:var(--ink);color:white;font-size:.72rem;letter-spacing:.08em}
+.brand{display:flex;align-items:center;gap:.72rem;white-space:nowrap;color:var(--ink)}
+.brand-logo{width:34px;height:34px;display:block;color:var(--ink)}
+.brand-logo svg{display:block;width:100%;height:100%}
+.brand-wordmark{display:grid;grid-template-columns:auto auto;align-items:baseline;gap:.32rem;line-height:1}
+.brand-wordmark b{font-size:.88rem;font-weight:800;letter-spacing:.16em}
+.brand-wordmark span{font-size:.88rem;font-weight:450;letter-spacing:.16em}
 .desktop-nav{display:flex;align-items:center;gap:1.6rem;font-size:.84rem;font-weight:600;color:#36474d}
 .desktop-nav a{padding:1.5rem 0 1.28rem;border-bottom:2px solid transparent}
 .desktop-nav a:hover,.desktop-nav a[aria-current="page"]{color:var(--accent);border-color:var(--accent)}
