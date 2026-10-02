@@ -144,12 +144,6 @@ const home = await readFile(join(root, "index.html"), "utf8");
 for (const removedNewsMarker of ["Live market feed", "home-live-news", "data-live-news-grid", "/assets/news-feed.js"]) {
   if (home.includes(removedNewsMarker)) errors.push(`home still contains removed live-market-feed marker ${removedNewsMarker}`);
 }
-const newsFeed = await readFile(join(root, "assets", "news-feed.js"), "utf8");
-for (const asset of ["news-ai-agentic.webp", "news-commerce-retail.webp", "news-payments-fintech.webp"]) {
-  try { await stat(join(root, "assets", asset)); } catch { errors.push(`home news feed missing editorial fallback ${asset}`); }
-  if (!newsFeed.includes(`/assets/${asset}`)) errors.push(`home news feed does not reference ${asset}`);
-}
-if (!newsFeed.includes("Editorial visual")) errors.push("home news feed must label original fallback artwork");
 for (const sentence of [
   "Commerce, growth and transformation. From business model to daily execution.",
   "An operator's perspective on the economics, systems and decisions behind digital commerce, retail, marketplaces and applied AI in the GCC."
