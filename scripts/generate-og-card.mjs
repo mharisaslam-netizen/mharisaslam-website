@@ -2,6 +2,8 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 
+// Run with `node scripts/generate-og-card.mjs` after intentional card design changes.
+
 const require = createRequire(import.meta.url);
 const sharp = require("sharp");
 const root = fileURLToPath(new URL("..", import.meta.url));
