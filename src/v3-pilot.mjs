@@ -81,7 +81,7 @@ const featuredCase = (href, kicker, title, text, visual, large = false) => {
   const media = large && visual === "bank"
     ? '<figure class="v3-case-photo"><img src="/assets/bank-commerce-concept.png" alt="Concept visualization of a bank commerce ecosystem" width="1680" height="945" loading="lazy"></figure>'
     : `<figure>${homeVisual(visual)}</figure>`;
-  return `<a class="v3-case-tile ${large ? "is-large" : ""}" href="${href}"><div><span>${esc(kicker)}</span><h3>${esc(title)}</h3><p>${esc(text)}</p><b>Open case <i aria-hidden="true">↗</i></b></div>${media}</a>`;
+  return `<a class="v3-case-tile ${large ? "is-large" : ""}" href="${href}"><div><span>${esc(kicker)}</span><h3>${esc(title)}</h3><p>${esc(text)}</p><b>Open case <i aria-hidden="true">→</i></b></div>${media}</a>`;
 };
 
 const productCommandUi = () => `<div class="v3-product-ui v3-ai-ui-command" aria-label="AI Commerce Command Center interface concept"><header><span>Commerce Command</span><small>Supervised mode</small></header><div class="v3-command-body"><aside><b>Overview</b><span>Orders</span><span>Inventory</span><span>Sellers</span><span>Care</span><span>Finance</span></aside><main><div class="v3-command-stats"><span><small>Exceptions</small><b>12</b></span><span><small>Pending decisions</small><b>4</b></span><span><small>Control</small><b>Human</b></span></div><div class="v3-command-chart"><span>Operating health</span><div>${[38,52,47,70,62,78,74,86].map(h => `<i style="--h:${h}%"></i>`).join("")}</div></div><div class="v3-command-decision"><div><small>Priority exception</small><strong>Seller payout conflicts with fulfilment evidence</strong></div><button>Review evidence</button></div></main></div></div>`;
