@@ -6,33 +6,31 @@
   let stories = [];
   let activeFilter = "Latest";
 
-  const sourcePalette = {
-    "Wamda": "wm",
-    "The National": "tn",
-    "Arabian Business": "ab",
-    "Gulf Business": "gb",
-    "ZAWYA": "zw",
-    "Arab News": "an",
-    "Economy Middle East": "em",
-    "PR Newswire": "pr",
-    "TechCrunch": "tc",
-    "PYMNTS": "py"
+  const editorialVisuals = {
+    "AI & Agentic": "/assets/news-ai-agentic.webp",
+    "Commerce & Retail": "/assets/news-commerce-retail.webp",
+    "Payments & Fintech": "/assets/news-payments-fintech.webp",
+    "Logistics & Operations": "/assets/news-commerce-retail.webp",
+    "Enterprise Technology": "/assets/news-ai-agentic.webp"
   };
 
-  const initials = name => name.split(/\s+/).map(part => part[0]).join("").slice(0, 3).toUpperCase();
   const dateText = value => {
     const d = new Date(value);
     return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
   };
 
   const createFallback = item => {
-    const box = document.createElement("div");
-    box.className = "live-news-fallback " + (sourcePalette[item.source] || "");
-    const mark = document.createElement("strong");
-    mark.textContent = initials(item.source);
-    const line = document.createElement("span");
-    line.textContent = item.source;
-    box.append(mark, line);
+    const box = document.createElement("figure");
+    box.className = "live-news-fallback";
+    box.setAttribute("aria-hidden", "true");
+    const visual = document.createElement("img");
+    visual.src = editorialVisuals[item.topic] || editorialVisuals["AI & Agentic"];
+    visual.alt = "";
+    visual.width = 1280;
+    visual.height = 800;
+    const label = document.createElement("figcaption");
+    label.textContent = "Editorial visual";
+    box.append(visual, label);
     return box;
   };
 
