@@ -307,3 +307,6 @@
 .v3-business-performance:not(.bp-enhanced) #main .bp-question-tabs{display:none}
 @media(max-width:1010px){.v3-business-performance #main .bp-hero-layout{gap:30px}.v3-business-performance #main .bp-priority-strip{gap:11px}.v3-business-performance #main .bp-priority-strip strong{font-size:.85rem}}
 @media(max-width:760px){.v3-business-performance #main .bp-hero-layout{grid-template-columns:1fr;gap:30px}.v3-business-performance #main .bp-hero h1{font-size:clamp(2.65rem,8.9vw,3.6rem)!important;line-height:1.04!important}.v3-business-performance #main .bp-operating-image{border-radius:16px}.v3-business-performance #main .bp-priority-strip{padding-top:19px}.v3-business-performance #main .bp-priority-strip strong{font-size:.84rem}.v3-business-performance #main .bp-section-heading h2,.v3-business-performance #main .bp-evidence-intro h2{font-size:2.05rem!important}.v3-business-performance #main .bp-question-tab{min-height:132px}.v3-business-performance #main .bp-question-panel h3{font-size:1.9rem!important}.v3-business-performance #main .bp-hero-intro{font-size:1rem;line-height:1.6}.v3-business-performance #main .bp-evidence-card h3{font-size:1.6rem!important}}
+
+/* Keep operating evidence immediately readable while scrolling. */
+.v3-business-performance .ui-reveal{opacity:1;transform:none;transition:none}
