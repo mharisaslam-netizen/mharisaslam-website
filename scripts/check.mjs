@@ -141,6 +141,9 @@ if (insightPageCount < 12) errors.push(`release must have at least 12 insight pa
 if (pages.length < 95) errors.push(`release must have at least 95 indexable routes, found ${pages.length}`);
 
 const home = await readFile(join(root, "index.html"), "utf8");
+for (const removedNewsMarker of ["Live market feed", "home-live-news", "data-live-news-grid", "/assets/news-feed.js"]) {
+  if (home.includes(removedNewsMarker)) errors.push(`home still contains removed live-market-feed marker ${removedNewsMarker}`);
+}
 const newsFeed = await readFile(join(root, "assets", "news-feed.js"), "utf8");
 for (const asset of ["news-ai-agentic.webp", "news-commerce-retail.webp", "news-payments-fintech.webp"]) {
   try { await stat(join(root, "assets", asset)); } catch { errors.push(`home news feed missing editorial fallback ${asset}`); }
