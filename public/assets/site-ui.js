@@ -4,6 +4,61 @@
   const body = document.body;
   const header = document.querySelector(".site-header");
 
+  // Navigation and contact measurement must also work with reduced motion.
+  const mobileNav = document.querySelector(".mobile-nav");
+  if (mobileNav) {
+    const trigger = mobileNav.querySelector("summary");
+    const panel = mobileNav.querySelector(".mobile-panel");
+    const syncNavigation = () => {
+      trigger.setAttribute("aria-expanded", String(mobileNav.open));
+      trigger.setAttribute("aria-label", mobileNav.open ? "Close navigation" : "Open navigation");
+    };
+    const closeNavigation = (returnFocus = false) => {
+      mobileNav.open = false;
+      syncNavigation();
+      if (returnFocus) trigger.focus();
+    };
+    syncNavigation();
+    mobileNav.addEventListener("toggle", syncNavigation);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && mobileNav.open) {
+        event.preventDefault();
+        closeNavigation(true);
+      }
+    });
+    document.addEventListener("click", event => {
+      if (!mobileNav.open) return;
+      if (panel.contains(event.target)) {
+        if (event.target.closest?.("a[href]")) closeNavigation();
+      } else if (!trigger.contains(event.target)) {
+        closeNavigation();
+      }
+    });
+  }
+
+  // These are interest signals, never proof of a sent or qualified enquiry.
+  document.addEventListener("click", event => {
+    const link = event.target.closest?.("a[href]");
+    if (!link || typeof window.gtag !== "function") return;
+    const href = link.getAttribute("href");
+    let contactMethod;
+    if (/^mailto:/i.test(href)) contactMethod = "email";
+    else {
+      try {
+        const url = new URL(href, window.location.origin);
+        if (url.hostname === "www.linkedin.com" && url.pathname.replace(/\/$/, "") === "/in/harisaslam") {
+          contactMethod = "linkedin";
+        }
+      } catch { return; }
+    }
+    if (!contactMethod) return;
+    window.gtag("event", `contact_${contactMethod}_click`, {
+      contact_method: contactMethod,
+      page_path: window.location.pathname,
+      link_context: link.closest("footer") ? "footer" : link.closest("main") ? "main" : "other"
+    });
+  });
+
   if (header) {
     const onScroll = () => body.classList.toggle("has-scrolled", window.scrollY > 12);
     onScroll();
