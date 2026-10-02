@@ -294,7 +294,7 @@
 .v3-featured-cases{grid-template-columns:1.25fr 1fr 1fr!important}
 .v3-case-tile{border-radius:26px!important;border:1px solid #ebe8f4!important}
 .v3-case-tile:nth-child(odd){background:linear-gradient(145deg,#fff,#f8f5ff)!important}
-.v3-case-tile.is-large{background:linear-gradient(155deg,#141938,#23275f 60%,#16475d)!important}
+.v3-case-tile.is-large{position:relative;background:linear-gradient(155deg,#141938,#23275f 60%,#16475d)!important}
 .v3-case-tile.is-large:before{content:"";position:absolute;inset:auto -80px -80px auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#22d3ee55,transparent 67%)}
 .v3-case-tile h3{font-size:1.35rem!important}
 .v3-case-photo{box-shadow:0 18px 45px rgba(0,0,0,.22)}
