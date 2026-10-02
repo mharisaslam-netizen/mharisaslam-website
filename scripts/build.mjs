@@ -79,7 +79,37 @@ for (const page of allPages) {
 }
 
 await writeFile(join(out, "404.html"), versionUiAssets(render404()), "utf8");
-await writeFile(join(out, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /api/linkedin/\n\nSitemap: ${site.origin}/sitemap.xml\n`, "utf8");
+await writeFile(join(out, "robots.txt"), `User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /tmp/
+Disallow: /*.log$
+Sitemap: ${site.origin}/sitemap.xml
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+`, "utf8");
 await writeFile(join(out, "sitemap.xml"), sitemap(), "utf8");
 await writeFile(join(out, "sitemap-priority.xml"), prioritySitemap(), "utf8");
 await writeFile(join(out, "llms.txt"), llmsTxt(), "utf8");
