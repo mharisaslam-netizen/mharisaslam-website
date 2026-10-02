@@ -103,6 +103,7 @@ function render(page) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="msvalidate.01" content="D6BE1FF59A3DD423EC29CD8DDA9C2619">
+  <meta name="google-site-verification" content="SXNOIO8hsgfrlYkSNNtLguF_Ow5LgrZFI1n4E6aOyhs" />
   <title>${escapeHtml(page.title)}</title>
   <meta name="description" content="${escapeHtml(page.description)}">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
