@@ -217,11 +217,10 @@ async function googleFallbackItems(source) {
   return rankedRelevant(items.slice(0, 30)).slice(0, 3).map(item => ({ ...item, source: source.name, domain: source.domain, market: source.market, via: "google" }));
 }
 
-const escapeRegExp = value => String(value || "").replace(/[.*+?^()|[\]{}\\-]/g, "\\async function enrich(item) {
-  if (!item) return null;
-  let image = item.image || "";
-  let summary = item.description || "";
-  let url = item.link;");
+const escapeRegExp = value => String(value || "")
+  .split("")
+  .map(char => "\\^$.*+?()[]{}|".includes(char) ? "\\" + char : char)
+  .join("");
 
 const cleanTitle = (title, source, domain) => {
   const sourcePattern = [source, domain, domain?.replace(/^www\./, "")]
