@@ -583,7 +583,7 @@
 .v3-home .v3-hero-lens .v3-link:hover span,
 .v3-home .v3-hero-lens .v3-link:focus-visible,
 .v3-home .v3-hero-lens .v3-link:focus-visible span{color:#a5f3fc!important;text-decoration:underline;text-underline-offset:.22em}
-.v3-home .v4-home-rent figure{grid-template-columns:repeat(5,minmax(0,1fr) 12px) minmax(0,1.25fr)}
+.v3-home .v4-home-rent figure{grid-template-columns:repeat(4,minmax(0,1fr) 8px) minmax(4.35rem,1.1fr) 8px minmax(6rem,1.5fr);gap:.3rem}
 .v3-home .v4-home-rent figure span,
 .v3-home .v4-home-rent figure strong{min-height:58px;display:grid;place-items:center;font-size:.78rem;line-height:1.35}
 .v3-home .v4-home-rent figure i{width:100%}
