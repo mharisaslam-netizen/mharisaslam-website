@@ -105,7 +105,7 @@
 .v3-business-performance #main .bp-evidence-featured{background:linear-gradient(160deg,#efebff,#fcfbff);border-color:#d2c6fa}
 .v3-business-performance #main .bp-evidence-top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;margin-bottom:26px}
 .v3-business-performance #main .bp-evidence-top .bp-eyebrow{font-size:.75rem;max-width:185px;line-height:1.6}
-.v3-business-performance #main .bp-evidence-index{font-size:.85rem;color:#8c79b8}
+.v3-business-performance #main .bp-evidence-index{font-size:.85rem;color:#5c487d}
 .v3-business-performance #main .bp-evidence-card h3{font-size:1.65rem;line-height:1.13;margin-bottom:13px;min-height:60px}
 .v3-business-performance #main .bp-evidence-card .bp-role{font-size:.79rem;color:#746190;font-weight:700;line-height:1.5;margin:0 0 18px;min-height:36px}
 .v3-business-performance #main .bp-evidence-card>p:not(.bp-role){color:var(--muted);font-size:.97rem;line-height:1.6;margin:0}
