@@ -121,10 +121,11 @@ function render(page) {
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
   <meta name="twitter:image" content="${socialImage}">
   <meta name="theme-color" content="${page.v3 ? "#f4f0e7" : page.pilot ? "#071821" : "#ffffff"}">
+  ${page.kind === "business-performance" ? '<link rel="preload" as="image" href="/assets/business-performance-hero.webp" type="image/webp" fetchpriority="high">' : ""}
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="stylesheet" href="/assets/v3-pilot.css">
   <link rel="stylesheet" href="/assets/v4-expansion.css">
-  <link rel="stylesheet" href="/assets/pilot.css">
+  ${page.kind === "business-performance" ? "" : '<link rel="stylesheet" href="/assets/pilot.css">'}
   ${page.kind === "business-performance" ? '<link rel="stylesheet" href="/assets/business-performance.css">' : ""}
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <script type="application/ld+json">${safeJson(schema)}</script>

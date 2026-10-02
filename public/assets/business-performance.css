@@ -56,7 +56,7 @@
 .v3-business-performance #main .bp-question-tab{display:flex;align-items:center;gap:18px;text-align:left;width:100%;padding:25px 24px;background:#fff;border:1px solid var(--line);border-radius:15px;color:var(--ink);transition:background .16s,border-color .16s,box-shadow .16s}
 .v3-business-performance #main .bp-question-tab:hover{border-color:#bcb1f2}
 .v3-business-performance #main .bp-question-tab[aria-selected=true]{background:#efebff;border-color:#b8aaf8;box-shadow:0 8px 25px #3e258310}
-.v3-business-performance #main .bp-tab-index{font-size:.82rem;color:#766b9b;align-self:flex-start;padding-top:2px}
+.v3-business-performance #main .bp-tab-index{font-size:.82rem;color:#5c487d;align-self:flex-start;padding-top:2px}
 .v3-business-performance #main .bp-tab-label{display:block;font-size:.75rem;font-weight:800;letter-spacing:.13em;color:#6a558f;margin-bottom:9px}
 .v3-business-performance #main .bp-question-tab strong{font-size:1.1rem;line-height:1.35;display:block;letter-spacing:-.02em}
 .v3-business-performance #main .bp-tab-plus{margin-left:auto;color:var(--violet);font-weight:300;font-size:1.7rem;flex-shrink:0}
