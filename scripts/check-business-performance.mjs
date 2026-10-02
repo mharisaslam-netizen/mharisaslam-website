@@ -25,4 +25,11 @@ const graph=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/
 assert(graph.some(x=>x['@type']==='WebPage'&&x.url==='https://www.mharisaslam.com/business-performance'),'WebPage schema');
 assert(graph.some(x=>x['@type']==='Person'&&x['@id']==='https://www.mharisaslam.com/#person'),'shared Person');
 assert(!graph.some(x=>['Service','LocalBusiness'].includes(x['@type'])),'no service solicitation schema');
+assert.equal((html.match(/<div class="bp-question-panel"[^>]+role="tabpanel"/g)||[]).length,4,'compatible div tab panels');
+assert(!/<article[^>]+role="tabpanel"/.test(html),'no incompatible article roles');
+const recordLabels=[...html.matchAll(/aria-label="Read the operating record for ([^"]+)"/g)].map(x=>x[1]);
+assert.equal(recordLabels.length,3,'three descriptive operating-record links');
+assert.equal(new Set(recordLabels).size,3,'unique operating-record link names');
+const css=await readFile(join(root,'dist/assets/business-performance.css'),'utf8');
+assert(css.includes('color:#5c487d'),'high-contrast record numbers');
 console.log('Business Performance: content, assets, tabs, navigation, canonical, schema and indexability checks passed.');

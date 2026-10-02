@@ -47,30 +47,30 @@ export const businessPerformancePage = {
         <button class="bp-question-tab" id="tab-execution" role="tab" aria-controls="panel-execution" aria-selected="false" tabindex="-1"><span class="bp-tab-index">04</span><span><span class="bp-tab-label">EXECUTION</span><strong>The plan is clear.<br> Too much still comes back to you.</strong></span><span class="bp-tab-plus" aria-hidden="true">+</span></button>
       </div>
       <div class="bp-question-panels">
-        <article class="bp-question-panel" id="panel-margin" role="tabpanel" aria-labelledby="tab-margin" tabindex="0">
+        <div class="bp-question-panel" id="panel-margin" role="tabpanel" aria-labelledby="tab-margin" tabindex="0">
           <p class="bp-panel-kicker">READ THE ECONOMICS</p><h3>What does each sale<br>really contribute?</h3><p>Revenue can hide discounting, weak product mix and expensive service. Read performance by product, customer and channel, including the cost of fulfilment, returns and support.</p>
           <div class="bp-decision-block"><span>THE DECISION</span><p>Where should pricing, assortment, customer terms or channel effort change before more volume is added?</p></div>
           <h4>Put the evidence on one page</h4><ul><li>Sales and gross margin by category or channel</li><li>Discounts, returns and cost to serve</li><li>Contribution after the costs that move with the sale</li></ul>
           <p class="bp-panel-bottom">A useful result: a clear view of what to grow, reprice, simplify or stop.</p>
-        </article>
-        <article class="bp-question-panel" id="panel-cash" role="tabpanel" aria-labelledby="tab-cash" tabindex="0">
+        </div>
+        <div class="bp-question-panel" id="panel-cash" role="tabpanel" aria-labelledby="tab-cash" tabindex="0">
           <p class="bp-panel-kicker">FOLLOW THE CASH</p><h3>Where is cash waiting<br>to become useful again?</h3><p>Stock on the shelf, slow collections and supplier commitments compete for the same cash. Purchasing and sales decisions need to be read together, with finance and operations using the same facts.</p>
           <div class="bp-decision-block"><span>THE DECISION</span><p>Which purchases should slow down, which stock needs a commercial action and which collection issues need an accountable owner?</p></div>
           <h4>Put the evidence on one page</h4><ul><li>Stock age, sell-through and open purchase commitments</li><li>Receivables ageing, disputes and collection ownership</li><li>Supplier terms alongside expected customer receipts</li></ul>
           <p class="bp-panel-bottom">A useful result: specific cash-release actions with their margin and service trade-offs visible.</p>
-        </article>
-        <article class="bp-question-panel" id="panel-growth" role="tabpanel" aria-labelledby="tab-growth" tabindex="0">
+        </div>
+        <div class="bp-question-panel" id="panel-growth" role="tabpanel" aria-labelledby="tab-growth" tabindex="0">
           <p class="bp-panel-kicker">PROVE THE NEXT STEP</p><h3>What must be true<br>before committing more?</h3><p>A new market, brand, store or digital channel creates another operating obligation. The case needs customer demand, commercial rights, landed cost and local delivery capacity to work together.</p>
           <div class="bp-decision-block"><span>THE DECISION</span><p>What is the smallest credible test, what capital does it put at risk and what evidence would justify the next commitment?</p></div>
           <h4>Put the evidence on one page</h4><ul><li>Customer demand and route-to-market assumptions</li><li>Landed contribution and working-capital requirement</li><li>Local capabilities, decision gates and stop conditions</li></ul>
           <p class="bp-panel-bottom">A useful result: a staged growth decision, with explicit conditions for expanding or pausing.</p>
-        </article>
-        <article class="bp-question-panel" id="panel-execution" role="tabpanel" aria-labelledby="tab-execution" tabindex="0">
+        </div>
+        <div class="bp-question-panel" id="panel-execution" role="tabpanel" aria-labelledby="tab-execution" tabindex="0">
           <p class="bp-panel-kicker">MAKE THE PLAN OPERABLE</p><h3>Can the team act<br>without another escalation?</h3><p>A business can outgrow its informal ways of working. Repeated exceptions, unclear authority and fragmented systems make routine decisions slow, even when the strategy is understood.</p>
           <div class="bp-decision-block"><span>THE DECISION</span><p>Which decisions belong with the team, what information do they need and which exceptions should come back to leadership?</p></div>
           <h4>Put the evidence on one page</h4><ul><li>Critical workflows and recurring points of delay</li><li>A named decision owner and clear escalation limits</li><li>A short operating review tied to margin, cash and service</li></ul>
           <p class="bp-panel-bottom">A useful result: clearer accountability, fewer avoidable hand-offs and a way to check execution.</p>
-        </article>
+        </div>
       </div>
     </div>
   </div>
@@ -91,9 +91,9 @@ export const businessPerformancePage = {
   <div class="bp-shell">
     <div class="bp-evidence-intro"><div><p class="bp-eyebrow">OPERATING EXPERIENCE</p><h2>A perspective built<br>inside the operation.</h2><p>My experience spans retail performance, country launches and building commerce businesses. The common thread is connecting the commercial proposition to the people, systems and daily decisions that deliver it.</p></div><div class="bp-profile"><img src="/assets/haris-aslam.webp" alt="Muhammad Haris Aslam" width="717" height="960" loading="lazy"><div><strong>Muhammad Haris Aslam</strong><span>Operator, founder<br>and business builder</span><a href="/about">Read the background</a></div></div></div>
     <div class="bp-evidence-grid">
-      <article class="bp-evidence-card bp-evidence-featured"><div class="bp-evidence-top"><span class="bp-eyebrow">OMAN &amp; GCC · 2023-25</span><span class="bp-evidence-index">01</span></div><h3>Salman Corporation /<br>Miraq Lifestyle</h3><p class="bp-role">Operating and investment leadership</p><p>Connected retail and category performance with inventory, procurement, cash and portfolio decisions.</p><div class="bp-evidence-relevance"><span>RELEVANT OPERATING QUESTION</span><p>How do store, category and stock decisions change the health of the wider business?</p></div><a class="bp-text-link" href="/track-record/salman-miraq">Read the operating record</a></article>
-      <article class="bp-evidence-card"><div class="bp-evidence-top"><span class="bp-eyebrow">OMAN · COUNTRY OPERATIONS</span><span class="bp-evidence-index">02</span></div><h3>Floward Oman</h3><p class="bp-role">Country launch and operating leadership</p><p>Built the local commercial and fulfilment setup, connecting assortment, suppliers, trading campaigns and delivery execution.</p><div class="bp-evidence-relevance"><span>RELEVANT OPERATING QUESTION</span><p>Can the local operation deliver the customer promise as demand grows?</p></div><a class="bp-text-link" href="/track-record/floward-oman">Read the operating record</a></article>
-      <article class="bp-evidence-card"><div class="bp-evidence-top"><span class="bp-eyebrow">OMAN · 2014-18</span><span class="bp-evidence-index">03</span></div><h3>Roumaan</h3><p class="bp-role">Founder and operator</p><p>Built and operated a multi-category online retailer, spanning the proposition, catalogue, merchandising, order flow and fulfilment.</p><div class="bp-evidence-relevance"><span>RELEVANT OPERATING QUESTION</span><p>Does the proposition hold together from the customer’s first visit to the delivered order?</p></div><a class="bp-text-link" href="/track-record/roumaan">Read the operating record</a></article>
+      <article class="bp-evidence-card bp-evidence-featured"><div class="bp-evidence-top"><span class="bp-eyebrow">OMAN &amp; GCC · 2023-25</span><span class="bp-evidence-index">01</span></div><h3>Salman Corporation /<br>Miraq Lifestyle</h3><p class="bp-role">Operating and investment leadership</p><p>Connected retail and category performance with inventory, procurement, cash and portfolio decisions.</p><div class="bp-evidence-relevance"><span>RELEVANT OPERATING QUESTION</span><p>How do store, category and stock decisions change the health of the wider business?</p></div><a class="bp-text-link" aria-label="Read the operating record for Salman Corporation and Miraq Lifestyle" href="/track-record/salman-miraq">Read the operating record</a></article>
+      <article class="bp-evidence-card"><div class="bp-evidence-top"><span class="bp-eyebrow">OMAN · COUNTRY OPERATIONS</span><span class="bp-evidence-index">02</span></div><h3>Floward Oman</h3><p class="bp-role">Country launch and operating leadership</p><p>Built the local commercial and fulfilment setup, connecting assortment, suppliers, trading campaigns and delivery execution.</p><div class="bp-evidence-relevance"><span>RELEVANT OPERATING QUESTION</span><p>Can the local operation deliver the customer promise as demand grows?</p></div><a class="bp-text-link" aria-label="Read the operating record for Floward Oman" href="/track-record/floward-oman">Read the operating record</a></article>
+      <article class="bp-evidence-card"><div class="bp-evidence-top"><span class="bp-eyebrow">OMAN · 2014-18</span><span class="bp-evidence-index">03</span></div><h3>Roumaan</h3><p class="bp-role">Founder and operator</p><p>Built and operated a multi-category online retailer, spanning the proposition, catalogue, merchandising, order flow and fulfilment.</p><div class="bp-evidence-relevance"><span>RELEVANT OPERATING QUESTION</span><p>Does the proposition hold together from the customer’s first visit to the delivered order?</p></div><a class="bp-text-link" aria-label="Read the operating record for Roumaan" href="/track-record/roumaan">Read the operating record</a></article>
     </div>
     <div class="bp-current-focus"><span class="bp-eyebrow">CURRENT OPERATING FOCUS</span><p>Strategic digital commerce, marketplace and operating-model transformation within a major telecom operator in Qatar.</p></div>
     <p class="bp-evidence-boundary">The linked records describe role and scope. They do not claim an unpublished group-wide financial uplift.</p>
