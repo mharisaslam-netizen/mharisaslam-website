@@ -134,3 +134,11 @@
   .p-current-mandate>.p-shell{grid-template-columns:1fr;gap:.45rem}.p-current-mandate p{grid-column:auto}
 }
 @media(prefers-reduced-motion:reduce){.v3-page .v3-library-entry{transition:none}}
+
+
+/* Final mobile readability fix for current operating focus */
+@media(max-width:760px){
+  .v4-home-bio aside p{color:#f4f6ff!important;opacity:1!important}
+  .v4-home-bio aside>strong{color:#ffffff!important;font-weight:700!important}
+  .v4-home-bio aside>span{color:#9ef4f7!important}
+}
