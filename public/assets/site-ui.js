@@ -43,11 +43,14 @@
     const href = link.getAttribute("href");
     let contactMethod;
     if (/^mailto:/i.test(href)) contactMethod = "email";
+    else if (/^tel:/i.test(href)) contactMethod = "phone";
     else {
       try {
         const url = new URL(href, window.location.origin);
         if (url.hostname === "www.linkedin.com" && url.pathname.replace(/\/$/, "") === "/in/harisaslam") {
           contactMethod = "linkedin";
+        } else if (url.hostname === "wa.me") {
+          contactMethod = "whatsapp";
         }
       } catch { return; }
     }

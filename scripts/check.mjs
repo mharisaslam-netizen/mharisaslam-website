@@ -73,6 +73,7 @@ for (const file of htmlFiles) {
     count(html, /<html lang="en">/gi, 1, route, "language");
     count(html, /<meta name="viewport"/gi, 1, route, "viewport");
     count(html, /<main id="main">/gi, 1, route, "main");
+    count(html, /<main\b/gi, 1, route, "main landmark");
     count(html, /class="skip-link"/gi, 1, route, "skip link");
     count(html, /<h1\b/gi, 1, route, "H1");
     count(html, /rel="canonical"/gi, 1, route, "canonical");
@@ -306,6 +307,19 @@ const aboutPage = await pageHtml("/about");
 count(aboutPage, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/about", "permitted current-role sentence");
 count(home, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/", "permitted current-role sentence");
 count(trackIndex, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/track-record", "permitted current-role sentence");
+
+const contactPage = await pageHtml("/contact");
+for (const marker of [
+  `href="tel:${site.phone}"`,
+  `href="${site.whatsapp}"`,
+  site.phoneDisplay,
+  "Message Haris on WhatsApp",
+  "contact-interest signals"
+]) if (!contactPage.includes(marker)) errors.push(`/contact: missing ${marker}`);
+for (const html of [home, contactPage]) {
+  if (!html.includes(`href="tel:${site.phone}"`)) errors.push(`footer: missing phone link`);
+  if (!html.includes(`href="${site.whatsapp}"`)) errors.push(`footer: missing WhatsApp link`);
+}
 
 const insightsIndex = await pageHtml("/insights");
 count(insightsIndex, /class="v4-insight-card"/g, insightPageCount, "/insights", "editorial insight cards");
