@@ -157,6 +157,12 @@ for (const heading of ["Does growth earn its cost?", "Where is cash getting trap
 for (const marker of ["v3-home-hero", "v3-capability-system", "v3-sector-ribbon", "v3-case-editorial", "v3-value-band", "v3-evidence-band", "v3-ai-products", "v3-insight-ledger"]) {
   if (!home.includes(marker)) errors.push(`home missing visual module ${marker}`);
 }
+for (const marker of ["v4-home-bio", "v4-home-rent", "gcc-growth-bridge"]) {
+  if (!home.includes(marker)) errors.push(`home missing repaired layout marker ${marker}`);
+}
+for (const href of [`tel:${site.phone}`, site.whatsapp, `mailto:${site.email}`, site.linkedin]) {
+  if (!home.includes(`href="${href}"`)) errors.push(`home footer missing preserved contact route ${href}`);
+}
 for (const credential of ["Commerce economics", "Operating models", "GCC growth", "Applied AI"]) {
   if (!home.includes(credential)) errors.push(`home missing credential ${credential}`);
 }
