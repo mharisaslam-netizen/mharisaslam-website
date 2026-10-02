@@ -77,7 +77,7 @@
     p.textContent = item.summary || "";
 
     const cta = document.createElement("b");
-    cta.textContent = "Read at source ↗";
+    cta.textContent = "Read at source";
 
     body.append(source, h3, p, cta);
     a.append(media, body);

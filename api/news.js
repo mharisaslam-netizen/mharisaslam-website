@@ -39,6 +39,8 @@ const decode = value => String(value || "")
   .replace(/&#39;|&apos;/g, "'")
   .replace(/&lt;/g, "<")
   .replace(/&gt;/g, ">")
+  .replace(/&nbsp;/gi, " ")
+  .replace(/&#160;/g, " ")
   .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
   .trim();
 
@@ -215,6 +217,33 @@ async function googleFallbackItems(source) {
   return rankedRelevant(items.slice(0, 30)).slice(0, 3).map(item => ({ ...item, source: source.name, domain: source.domain, market: source.market, via: "google" }));
 }
 
+const escapeRegExp = value => String(value || "")
+  .split("")
+  .map(char => "\\^$.*+?()[]{}|".includes(char) ? "\\" + char : char)
+  .join("");
+
+const cleanTitle = (title, source, domain) => {
+  const sourcePattern = [source, domain, domain?.replace(/^www\./, "")]
+    .filter(Boolean)
+    .map(escapeRegExp)
+    .join("|");
+  return stripHtml(title)
+    .replace(sourcePattern ? new RegExp("\\s*[-–—]\\s*(?:" + sourcePattern + ")\\s*$", "i") : /$^/, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+};
+
+const cleanSummary = (summary, source, domain) => {
+  const sourcePattern = [source, domain, domain?.replace(/^www\./, "")]
+    .filter(Boolean)
+    .map(escapeRegExp)
+    .join("|");
+  return stripHtml(summary)
+    .replace(sourcePattern ? new RegExp("\\s*(?:" + sourcePattern + ")\\s*$", "i") : /$^/, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+};
+
 async function enrich(item) {
   if (!item) return null;
   let image = item.image || "";
@@ -233,10 +262,10 @@ async function enrich(item) {
     source: item.source,
     market: item.market,
     domain: item.domain,
-    title: item.title,
+    title: cleanTitle(item.title, item.source, item.domain),
     url,
     image,
-    summary: stripHtml(summary).slice(0, 220),
+    summary: cleanSummary(summary, item.source, item.domain).slice(0, 220),
     publishedAt: item.publishedAt,
     via: item.via
   };

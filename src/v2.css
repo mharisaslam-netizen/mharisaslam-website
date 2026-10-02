@@ -621,3 +621,40 @@ body:not(.v3-page):not(.pilot-page) .footer-meta{color:#aeb7ca!important}
 body:not(.v3-page):not(.pilot-page) a:focus-visible,
 body:not(.v3-page):not(.pilot-page) button:focus-visible,
 body:not(.v3-page):not(.pilot-page) summary:focus-visible{outline:3px solid #ffcc45!important;outline-offset:4px!important}
+
+
+/* Mobile layout and identity fixes from production screenshot audit */
+@media(max-width:760px){
+  body:not(.v3-page):not(.pilot-page) .nav-wrap{height:70px;width:min(calc(100% - 28px),var(--max))}
+  body:not(.v3-page):not(.pilot-page) .brand{gap:.65rem}
+  body:not(.v3-page):not(.pilot-page) .brand-logo{width:44px!important;height:44px!important;padding:0!important;border-radius:12px!important;background:transparent!important;color:#11152f!important;box-shadow:0 10px 24px rgba(29,34,73,.12)!important}
+  body:not(.v3-page):not(.pilot-page) .brand-wordmark{grid-template-columns:1fr!important;gap:.06rem!important}
+  body:not(.v3-page):not(.pilot-page) .brand-wordmark b{font-size:.82rem!important;letter-spacing:.12em!important}
+  body:not(.v3-page):not(.pilot-page) .brand-wordmark span{font-size:.58rem!important;letter-spacing:.20em!important;color:#626a80!important}
+  body:not(.v3-page):not(.pilot-page) .brand-wordmark i{display:none!important}
+
+  .mobile-nav[open]::before{content:"";position:fixed;inset:70px 0 0;background:rgba(15,18,42,.34);backdrop-filter:blur(3px);z-index:18}
+  .mobile-panel{position:fixed!important;z-index:20!important;top:82px!important;left:14px!important;right:14px!important;max-height:calc(100vh - 104px);overflow:auto;border:1px solid #e7e4ef!important;border-radius:20px!important;padding:.5rem 16px 1rem!important;background:#fffaf7!important;box-shadow:0 24px 70px rgba(24,27,60,.22)!important}
+  .mobile-panel a{padding:.82rem 0!important;font-size:.95rem!important;border-color:#e5e2ea!important}
+
+  body:not(.v3-page):not(.pilot-page) .hero{padding:2.6rem 1.25rem 2.2rem!important;margin-top:.75rem!important;border-radius:20px!important}
+  body:not(.v3-page):not(.pilot-page) .hero h1{font-size:clamp(2.2rem,11vw,3rem)!important;line-height:1.02!important}
+  body:not(.v3-page):not(.pilot-page) .hero-intro{font-size:1rem!important;line-height:1.55!important}
+
+  .section{padding:2.6rem 0!important}
+  .section-heading{display:block!important;margin-bottom:1.1rem!important}
+  .section-heading .eyebrow{display:block!important;margin:0 0 .6rem!important}
+  .section-heading h2{width:100%!important;font-size:1.8rem!important;line-height:1.08!important}
+  .section-intro{margin-top:0!important}
+  .report-prose{font-size:.94rem!important;line-height:1.65!important}
+
+  .card-grid,.continue-grid,.record-feature-grid,.record-index-grid{gap:.8rem!important}
+  .work-card,.record-card,.visual-card,.insight-card,.product-preview,.expertise-detail{border-radius:18px!important}
+
+  .site-footer .footer-inner{padding:2rem 0 1rem!important}
+  .footer-top{grid-template-columns:1fr 1fr!important;gap:1.2rem 1rem!important}
+  .footer-title{grid-column:1/-1!important;font-size:.9rem!important}
+  .footer-links{gap:.3rem!important;font-size:.72rem!important}
+  .footer-links p{font-size:.62rem!important}
+  .footer-meta{margin-top:1.3rem!important;font-size:.62rem!important}
+}
