@@ -468,7 +468,7 @@
 .v3-page .v3-link span{color:#5547d6}
 .v3-page .desktop-nav a{color:#353b57!important}
 .v3-page .desktop-nav a:hover,.v3-page .desktop-nav a[aria-current=page]{color:#5547d6!important}
-.v3-page .v4-home-bio aside p{color:#fff!important;opacity:1}
+.v3-page .v4-home-bio aside p{color:#fff!important;font-size:.82rem;line-height:1.55;opacity:1}
 
 .v3-capability-system article:nth-child(1){background:linear-gradient(145deg,#4338ca,#5b4ce6)!important}
 .v3-capability-system article:nth-child(2){background:linear-gradient(145deg,#a63b4d,#c2415d)!important}
