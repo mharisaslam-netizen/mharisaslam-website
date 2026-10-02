@@ -144,6 +144,15 @@ const home = await readFile(join(root, "index.html"), "utf8");
 for (const removedNewsMarker of ["Live market feed", "home-live-news", "data-live-news-grid", "/assets/news-feed.js"]) {
   if (home.includes(removedNewsMarker)) errors.push(`home still contains removed live-market-feed marker ${removedNewsMarker}`);
 }
+for (const socialMarker of [
+  'property="og:image" content="https://www.mharisaslam.com/assets/og-card-v2.png"',
+  'name="twitter:image" content="https://www.mharisaslam.com/assets/og-card-v2.png"',
+  "Muhammad Haris Aslam is a GCC operator and business builder sharing practical perspectives on business performance, commerce, growth, transformation and applied AI."
+]) if (!home.includes(socialMarker)) errors.push(`home missing social-sharing marker ${socialMarker}`);
+try {
+  const socialImage = await stat(join(root, "assets", "og-card-v2.png"));
+  if (!socialImage.isFile() || socialImage.size < 10_000) errors.push("home social-sharing image is missing or unexpectedly small");
+} catch { errors.push("home social-sharing image is missing"); }
 for (const sentence of [
   "Commerce, growth and transformation. From business model to daily execution.",
   "An operator's perspective on the economics, systems and decisions behind digital commerce, retail, marketplaces and applied AI in the GCC."
@@ -348,7 +357,38 @@ const robots = await readFile(join(root, "robots.txt"), "utf8");
 const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 const llms = await readFile(join(root, "llms.txt"), "utf8");
 const vercel = JSON.parse(await readFile(join(root, "..", "vercel.json"), "utf8"));
-if (!robots.includes(`Sitemap: ${site.origin}/sitemap.xml`)) errors.push("robots: sitemap missing");
+const expectedRobots = `User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /tmp/
+Disallow: /*.log$
+Sitemap: ${site.origin}/sitemap.xml
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+`;
+if (robots !== expectedRobots) errors.push("robots: generated content does not exactly match the approved directives");
 if (!llms.startsWith(`# ${site.name}`)) errors.push("llms.txt missing");
 for (const route of routes) {
   if (route !== "/404" && !sitemap.includes(`${site.origin}${route === "/" ? "/" : route}`)) errors.push(`sitemap missing ${route}`);
