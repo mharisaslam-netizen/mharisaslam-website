@@ -430,9 +430,7 @@
 .v3-insights .v4-insight-method p{color:#d4daee!important}
 
 /* Motion */
-.ui-reveal{opacity:0;transform:translateY(24px);transition:opacity .58s cubic-bezier(.22,.61,.36,1) var(--reveal-delay,0ms),transform .58s cubic-bezier(.22,.61,.36,1) var(--reveal-delay,0ms)}
-.ui-reveal.ui-visible{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.ui-reveal{opacity:1!important;transform:none!important;transition:none!important}.v3-hero-media{transform:none!important}}
+@media(prefers-reduced-motion:reduce){.v3-hero-media{transform:none!important}}
 @media(max-width:760px){
   .v3-page .brand-wordmark{grid-template-columns:1fr!important}.v3-page .brand-wordmark i{display:none}.v3-page .brand-wordmark span{font-size:.58rem!important}
   .v3-home-hero{min-height:auto}
@@ -759,3 +757,49 @@
     line-height:1.25!important;
   }
 }
+
+/* Responsive content safety: remove page-wide clipping and keep long content fail-open. */
+.v3-page main{overflow:visible}
+
+/* Use-case library: readable controls and a compact phone composition. */
+.v3-use-index .v3-filter-panel{padding:1.25rem}
+.v3-use-index .v3-filter-panel button{min-height:44px;padding:.55rem .72rem;font-size:.72rem;line-height:1.3}
+@media(max-width:760px){
+  .v3-use-index .v3-library-feature img{min-height:0;height:auto;aspect-ratio:16/9}
+  .v3-use-index .v3-library-feature>.v3-shell>div{padding:1.35rem}
+  .v3-use-index .v3-library-journey{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;overflow:visible;margin:1.35rem 0}
+  .v3-use-index .v3-library-journey i{display:none}
+  .v3-use-index .v3-library-journey span{min-width:0;font-size:.72rem;line-height:1.3;text-align:center;overflow-wrap:anywhere}
+  .v3-use-index .v3-library-feature .v3-button{width:100%;min-height:48px;justify-content:center;text-align:center}
+  .v3-use-index .v3-library-browser{padding:3rem 0 4rem}
+  .v3-use-index .v3-library-tools{display:grid;grid-template-columns:1fr;gap:1rem;align-items:start}
+  .v3-use-index .v3-library-count{align-items:center}
+  .v3-use-index .v3-filter-panel{padding:1rem;gap:1rem}
+  .v3-use-index .v3-filter-panel fieldset>div{gap:.5rem}
+  .v3-use-index .v3-filter-panel legend{font-size:.75rem;line-height:1.4}
+  .v3-use-index .v3-filter-panel button{min-height:44px;padding:.62rem .75rem;font-size:.78rem;line-height:1.25}
+  .v3-use-index .v3-library-entry{gap:.75rem;padding:1rem}
+  .v3-use-index .v3-library-entry>span,
+  .v3-use-index .v3-library-entry small,
+  .v3-use-index .v3-library-entry dt{font-size:.72rem;line-height:1.4}
+  .v3-use-index .v3-library-entry dd{font-size:.78rem;line-height:1.4}
+  .v3-use-index .v3-library-entry p{font-size:.82rem;line-height:1.5}
+  .v3-use-index .v3-entry-arrow{min-width:44px;min-height:44px;display:grid;place-items:center}
+
+  .v3-ai .v3-ai-architecture>.v3-shell{overflow:visible}
+  .v3-ai .v3-agent-stack{min-width:0}
+  .v3-ai .v3-agent-stack>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;padding:.9rem}
+  .v3-ai .v3-agent-stack>div>span{grid-column:1/-1;font-size:.72rem;line-height:1.4}
+  .v3-ai .v3-agent-stack>div>b{font-size:.76rem;line-height:1.4}
+}
+
+@media(max-width:480px){
+  .v3-ai .v3-agent-stack>div{grid-template-columns:1fr}
+  .v3-ai .v3-agent-stack>div>span{grid-column:auto}
+}
+
+/* Desktop exhibit pairs must allow their component content to shrink inside the grid. */
+@media(min-width:1051px){
+  .v3-exhibit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.v3-exhibit-pair>.v3-exhibit{min-width:0}
