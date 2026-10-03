@@ -566,9 +566,6 @@ body:not(.v3-page):not(.pilot-page) .impact-conclusion{background:linear-gradien
 body:not(.v3-page):not(.pilot-page) .takeaway-grid{background:#e7e3f0!important;border-color:#e7e3f0!important}
 body:not(.v3-page):not(.pilot-page) .site-footer{background:linear-gradient(135deg,#11152f,#181e43)!important}
 
-.ui-reveal{opacity:0;transform:translateY(24px);transition:opacity .58s cubic-bezier(.22,.61,.36,1) var(--reveal-delay,0ms),transform .58s cubic-bezier(.22,.61,.36,1) var(--reveal-delay,0ms)}
-.ui-reveal.ui-visible{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.ui-reveal{opacity:1!important;transform:none!important;transition:none!important}}
 @media(max-width:760px){body:not(.v3-page):not(.pilot-page) .brand-wordmark{grid-template-columns:1fr!important}body:not(.v3-page):not(.pilot-page) .brand-wordmark i{display:none}}
 
 

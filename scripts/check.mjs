@@ -321,6 +321,36 @@ for (const tag of [...useCasesIndex.matchAll(/<a class="v3-library-entry"([^>]*)
 }
 if (/\bHOLD\b|private case/i.test(useCasesIndex)) errors.push(`/use-cases: HOLD or private case rendered publicly`);
 
+const projectRoot = join(root, "..");
+const siteUiSource = await readFile(join(projectRoot, "public", "assets", "site-ui.js"), "utf8");
+const v2CssSource = await readFile(join(projectRoot, "src", "v2.css"), "utf8");
+const v3CssSource = await readFile(join(projectRoot, "src", "v3-pilot.css"), "utf8");
+const v4CssSource = await readFile(join(projectRoot, "src", "v4-expansion.css"), "utf8");
+if (siteUiSource.includes("IntersectionObserver") || siteUiSource.includes('classList.add("ui-reveal")')) {
+  errors.push("site UI must not hide long content behind section-level reveal observation");
+}
+for (const [name, css] of [["v2", v2CssSource], ["v3", v3CssSource]]) {
+  if (css.includes(".ui-reveal{opacity:0")) errors.push(`${name} CSS still contains content-hiding reveal opacity`);
+}
+if (!siteUiSource.includes('trigger.setAttribute("aria-controls", panel.id)') || !siteUiSource.includes('event.key === "Tab"')) {
+  errors.push("mobile navigation focus containment and control relationship are missing");
+}
+if (v3CssSource.lastIndexOf(".v3-page main{overflow:visible}") < v3CssSource.lastIndexOf(".v3-page main{overflow:hidden}")) {
+  errors.push("V3 page-wide overflow clipping still wins the cascade");
+}
+for (const marker of [
+  ".v3-use-index .v3-filter-panel button{min-height:44px",
+  ".v3-use-index .v3-library-journey{display:grid",
+  ".v3-ai .v3-agent-stack{min-width:0}"
+]) if (!v3CssSource.includes(marker)) errors.push(`responsive V3 repair missing ${marker}`);
+for (const rejected of [".v4-problem-map{min-width:800px}", ".v4-market-funnel{min-width:760px}", ".v4-ai-controls{min-width:720px}"]) {
+  if (v4CssSource.includes(rejected)) errors.push(`responsive V4 overflow risk remains ${rejected}`);
+}
+for (const marker of [
+  ".v4-problem-map{grid-template-columns:1fr;min-width:0",
+  ".v4-ai-controls{grid-template-columns:1fr;min-width:0}"
+]) if (!v4CssSource.includes(marker)) errors.push(`responsive V4 repair missing ${marker}`);
+
 const aboutPage = await pageHtml("/about");
 count(aboutPage, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/about", "permitted current-role sentence");
 count(home, new RegExp(permittedRoleSentence.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), 1, "/", "permitted current-role sentence");

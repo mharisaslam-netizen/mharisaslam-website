@@ -119,7 +119,7 @@
   .v4-home-rent>a,.v4-note-hero>.v3-shell,.v4-ai-case-hero>.v3-shell,.v4-rent-hero>.v3-shell{grid-template-columns:1fr}
   .v4-ai-family-grid{grid-template-columns:repeat(2,1fr)}
   .v4-insight-card{grid-template-columns:1fr}.v4-insight-card figure{min-height:190px}
-  .v4-problem-map,.v4-market-funnel{overflow:auto}.v4-problem-map{min-width:800px}.v4-market-funnel{min-width:760px}
+  .v4-problem-map{grid-template-columns:1fr;min-width:0;overflow:visible}.v4-problem-map>i{padding:.35rem 0}.v4-market-funnel{grid-template-columns:1fr 1fr;min-width:0;overflow:visible}.v4-market-funnel>i{display:none}
   .v4-journey,.v4-operating{grid-template-columns:repeat(4,1fr)}
   .v4-expansion{grid-template-columns:repeat(2,1fr)}
   .p-current-mandate>.p-shell{grid-template-columns:120px 1fr}.p-current-mandate p{grid-column:2}
@@ -131,11 +131,25 @@
   .v4-model-panels,.v4-ai-family-grid,.v4-insights-grid>.v3-shell,.v4-impact-grid,.v4-exception-grid{grid-template-columns:1fr}
   .v4-note-roadmap,.v4-ai-flow,.v4-kpi-grid{grid-template-columns:1fr 1fr}.v4-ai-human,.v4-source-strip{grid-template-columns:1fr 1fr}.v4-ai-stack{grid-template-columns:1fr 1fr}
   .v4-impact-note{grid-template-columns:1fr}.v4-insight-card{min-height:0}.v4-insight-method>.v3-shell{grid-template-columns:1fr}
-  .v4-rent-exhibit{overflow:auto}.v4-ecosystem{min-width:650px}.v4-journey{min-width:820px}.v4-value-exchange{min-width:720px}.v4-commercial-model{min-width:700px}.v4-architecture{min-width:720px}.v4-operating{min-width:760px}.v4-risk-table{min-width:760px}.v4-waterfall{min-width:650px}.v4-expansion{min-width:720px}.v4-ai-controls{min-width:720px}
+  .v4-rent-exhibit{overflow:auto}.v4-ecosystem{min-width:650px}.v4-journey{min-width:820px}.v4-value-exchange{min-width:720px}.v4-commercial-model{min-width:700px}.v4-architecture{min-width:720px}.v4-operating{min-width:760px}.v4-risk-table{min-width:760px}.v4-waterfall{min-width:650px}.v4-expansion{min-width:720px}.v4-ai-controls{grid-template-columns:1fr;min-width:0}
   .v4-impact-grid,.v4-exception-grid{min-width:0}.v4-exception-grid article,.v4-impact-grid article{min-height:0}
   .p-current-mandate>.p-shell{grid-template-columns:1fr;gap:.45rem}.p-current-mandate p{grid-column:auto}
 }
 @media(prefers-reduced-motion:reduce){.v3-page .v3-library-entry{transition:none}}
+
+/* Meaningful mobile diagram labels remain readable inside their owning component. */
+@media(max-width:760px){
+  .v4-problem-map span,.v4-market-funnel p{font-size:.78rem;line-height:1.45}
+  .v4-problem-map>i{font-size:.7rem;line-height:1.4}
+  .v4-market-funnel span{font-size:.75rem;line-height:1.35}
+  .v4-ai-controls>div{min-height:0}
+  .v4-ai-controls span{font-size:.74rem;line-height:1.4}
+  .v4-ai-controls b{font-size:.78rem;line-height:1.45}
+  .v4-commercial-model .top span,
+  .v4-architecture span,.v4-architecture b,
+  .v4-settlement span,.v4-settlement strong,.v4-settlement small,
+  .v4-risk-table>div>*,.v4-roadmap>div>*{font-size:.7rem;line-height:1.4}
+}
 
 
 /* Final mobile readability fix for current operating focus */

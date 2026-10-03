@@ -9,6 +9,10 @@
   if (mobileNav) {
     const trigger = mobileNav.querySelector("summary");
     const panel = mobileNav.querySelector(".mobile-panel");
+    if (trigger && panel) {
+      if (!panel.id) panel.id = "mobile-navigation-panel";
+      trigger.setAttribute("aria-controls", panel.id);
+    }
     const syncNavigation = () => {
       trigger.setAttribute("aria-expanded", String(mobileNav.open));
       trigger.setAttribute("aria-label", mobileNav.open ? "Close navigation" : "Open navigation");
@@ -24,6 +28,21 @@
       if (event.key === "Escape" && mobileNav.open) {
         event.preventDefault();
         closeNavigation(true);
+        return;
+      }
+      if (event.key === "Tab" && mobileNav.open) {
+        const focusable = [trigger, ...panel.querySelectorAll("a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])")]
+          .filter(element => !element.hidden && element.getClientRects().length);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     });
     document.addEventListener("click", event => {
@@ -69,28 +88,6 @@
   }
 
   if (reduced) return;
-
-  const targets = [
-    ...document.querySelectorAll(
-      ".v3-page main > section, body:not(.v3-page) main > section, body:not(.v3-page) .hero, .report-section, .article-photo, .article-visual-stage"
-    )
-  ];
-
-  targets.forEach((el, index) => {
-    el.classList.add("ui-reveal");
-    el.style.setProperty("--reveal-delay", Math.min(index % 4, 3) * 45 + "ms");
-  });
-
-  const observer = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("ui-visible");
-        observer.unobserve(entry.target);
-      }
-    }
-  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
-
-  targets.forEach(el => observer.observe(el));
 
   const hero = document.querySelector(".v3-hero-media");
   if (hero && window.matchMedia("(pointer:fine)").matches) {
