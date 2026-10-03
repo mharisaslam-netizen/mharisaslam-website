@@ -348,6 +348,13 @@ const pilotCssSource = await readFile(join(projectRoot, "src", "pilot.css"), "ut
 if (!pilotCssSource.includes(".pilot-page .p-record-copy{grid-template-columns:minmax(96px,.7fr) minmax(0,1.3fr)")) {
   errors.push("track-record card content still lacks shrink-safe columns");
 }
+for (const rejected of ["transform:scale(.48)", "width:200%;margin-bottom:-320px"]) {
+  if (pilotCssSource.includes(rejected)) errors.push(`mobile product mock-up still uses fragile scaled layout ${rejected}`);
+}
+for (const marker of [
+  ".p-product-chapter .p-ai-ui{min-width:0;width:100%;min-height:0;transform:none",
+  ".p-commerce-ui-grid,.p-runway-grid,.p-aeo-grid{height:auto;grid-template-columns:1fr}"
+]) if (!pilotCssSource.includes(marker)) errors.push(`responsive product mock-up repair missing ${marker}`);
 for (const rejected of [".v4-problem-map{min-width:800px}", ".v4-market-funnel{min-width:760px}", ".v4-ai-controls{min-width:720px}"]) {
   if (v4CssSource.includes(rejected)) errors.push(`responsive V4 overflow risk remains ${rejected}`);
 }
