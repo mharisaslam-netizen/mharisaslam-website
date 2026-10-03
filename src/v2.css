@@ -246,8 +246,10 @@ p{margin:0 0 1rem}
 .article-lens span{color:var(--accent);font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 
 .article-lens p{margin:.65rem 0 0;color:var(--text);font-size:.9rem;line-height:1.65}
-.deep-article-layout{grid-template-columns:minmax(0,1fr) 300px;gap:3.5rem}
+.deep-article-layout{grid-template-columns:minmax(0,1fr) 300px;gap:3.5rem;min-width:0}
+.deep-article-copy,.deep-insight-section{min-width:0}
 .deep-article-copy{font-size:1.03rem;line-height:1.82}
+.deep-insight-section p,.deep-insight-section li{overflow-wrap:anywhere}
 .deep-insight-section{padding:0 0 1.35rem;margin:0 0 1.9rem;border-bottom:1px solid var(--line)}
 .deep-insight-section:last-child{border-bottom:0}
 .deep-insight-section h2{margin:0 0 1rem;color:var(--navy);font-size:1.55rem;line-height:1.25;letter-spacing:-.02em}

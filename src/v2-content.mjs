@@ -23,6 +23,7 @@ export const navigation = [
 ];
 
 const esc = value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+const inlineLinks = value => esc(value).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" rel="noopener noreferrer">$1</a>');
 const link = (href, label, className = "text-link") => `<a class="${className}" href="${href}">${esc(label)} <span aria-hidden="true">→</span></a>`;
 const section = (title, content, className = "") => `<section class="section ${className}"><div class="section-heading"><h2>${esc(title)}</h2></div>${content}</section>`;
 const grid = items => `<div class="card-grid">${items.join("")}</div>`;
@@ -1079,7 +1080,7 @@ const articleCard = item => `<a class="insight-card" href="/insights/${item.slug
 
 const deepArticleContent = item => {
   const sections = item.sections.map((sectionItem, index) => {
-    const section = `<section class="deep-insight-section"><h2>${esc(sectionItem.heading)}</h2>${sectionItem.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("")}${sectionItem.bullets?.length ? `<ul>${sectionItem.bullets.map(point => `<li>${esc(point)}</li>`).join("")}</ul>` : ""}</section>`;
+    const section = `<section class="deep-insight-section"><h2>${esc(sectionItem.heading)}</h2>${sectionItem.paragraphs.map(paragraph => `<p>${inlineLinks(paragraph)}</p>`).join("")}${sectionItem.bullets?.length ? `<ul>${sectionItem.bullets.map(point => `<li>${inlineLinks(point)}</li>`).join("")}</ul>` : ""}</section>`;
     const images = (item.inlineImages || []).filter(image => image.afterSection === index + 1).map(image => `<figure class="article-photo article-inline-photo"><img src="${esc(image.src)}" alt="${esc(image.alt)}" width="800" height="450" loading="lazy"><figcaption>${esc(image.caption || "")}</figcaption></figure>`).join("");
     return section + images;
   }).join("");

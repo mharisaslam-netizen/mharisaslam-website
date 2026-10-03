@@ -124,6 +124,9 @@
   .v4-expansion{grid-template-columns:repeat(2,1fr)}
   .p-current-mandate>.p-shell{grid-template-columns:120px 1fr}.p-current-mandate p{grid-column:2}
 }
+@media(max-width:900px){
+  .v4-rent-exhibit{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-gutter:stable}
+}
 @media(max-width:760px){
   .v4-home-bio>.v3-shell{grid-template-columns:1fr}.v4-home-bio aside{grid-column:auto}.v4-home-rent>a{gap:1.35rem}.v4-home-rent figure{display:flex;flex-direction:column;padding:1rem;min-width:0;overflow:visible}.v4-home-rent figure span,.v4-home-rent figure strong{width:100%;min-height:48px;display:grid;place-items:center;padding:.65rem .45rem;font-size:.72rem;line-height:1.25}.v4-home-rent figure i{width:1px;height:12px;flex:0 0 12px}.v4-home-rent{overflow:visible}
   .v3-mini-bank{min-width:620px}.v3-case-tile.is-large figure{overflow:auto}
