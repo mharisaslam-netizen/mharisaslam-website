@@ -18,7 +18,7 @@ await mkdir(new URL("../artifacts", import.meta.url), { recursive: true });
 const slug = value => value.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "home";
 
 async function inspect(page) {
-  await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
+  await page.waitForLoadState("load", { timeout: 3000 }).catch(() => {});
   return page.evaluate(() => {
     const root = document.documentElement;
     const main = document.querySelector("main");
