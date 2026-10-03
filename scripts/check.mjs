@@ -285,6 +285,13 @@ for (const page of pages.filter(page => page.kind === "article")) {
     if (!html.includes(marker)) errors.push(`${page.path}: missing article visual module ${marker}`);
   }
 }
+const paymentsInfrastructure = await pageHtml("/insights/payments-financial-infrastructure-gcc-localization");
+for (const marker of [
+  '<a href="https://www.sama.gov.sa/en-US/payment/Pages/Sarie.aspx" rel="noopener noreferrer">payment-system page</a>',
+  '<a href="https://www.qcb.gov.qa/en/Pages/Retail-payment-systems.aspx" rel="noopener noreferrer">retail payment systems overview</a>',
+  '<a href="https://www.bis.org/publications/promoting-harmonisation-application-programming-interfaces-enhance-cross-border-payments-recommendations-and-toolkit" rel="noopener noreferrer">harmonising APIs for cross-border payments</a>'
+]) if (!paymentsInfrastructure.includes(marker)) errors.push(`/insights/payments-financial-infrastructure-gcc-localization: missing rendered source link ${marker}`);
+if (/\[[^\]]+\]\(https?:\/\//.test(paymentsInfrastructure)) errors.push("/insights/payments-financial-infrastructure-gcc-localization: raw Markdown source link remains in rendered article");
 
 for (const [route, markers] of [
   ["/track-record/floward-oman", ["Floward Oman: operating chain", "Local setup", "Assortment", "Fulfilment", "Occasion trading", "Operating rhythm", "Technology and operating architecture"]],
@@ -342,7 +349,8 @@ for (const marker of [
   ".v3-use-index .v3-filter-panel button{min-height:44px",
   ".v3-use-index .v3-library-journey{display:grid",
   ".v3-ai .v3-agent-stack{min-width:0}",
-  ".v3-exhibit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}"
+  ".v3-exhibit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}",
+  "@media(max-width:900px){.v3-exhibit:has(.v3-roadmap){max-width:100%;overflow-x:auto"
 ]) if (!v3CssSource.includes(marker)) errors.push(`responsive V3 repair missing ${marker}`);
 const pilotCssSource = await readFile(join(projectRoot, "src", "pilot.css"), "utf8");
 if (!pilotCssSource.includes(".pilot-page .p-record-copy{grid-template-columns:minmax(96px,.7fr) minmax(0,1.3fr)")) {
@@ -360,7 +368,8 @@ for (const rejected of [".v4-problem-map{min-width:800px}", ".v4-market-funnel{m
 }
 for (const marker of [
   ".v4-problem-map{grid-template-columns:1fr;min-width:0",
-  ".v4-ai-controls{grid-template-columns:1fr;min-width:0}"
+  ".v4-ai-controls{grid-template-columns:1fr;min-width:0}",
+  "@media(max-width:900px){\n  .v4-rent-exhibit{max-width:100%;overflow-x:auto"
 ]) if (!v4CssSource.includes(marker)) errors.push(`responsive V4 repair missing ${marker}`);
 
 const aboutPage = await pageHtml("/about");
