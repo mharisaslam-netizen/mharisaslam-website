@@ -797,3 +797,9 @@
   .v3-ai .v3-agent-stack>div{grid-template-columns:1fr}
   .v3-ai .v3-agent-stack>div>span{grid-column:auto}
 }
+
+/* Desktop exhibit pairs must allow their component content to shrink inside the grid. */
+@media(min-width:1051px){
+  .v3-exhibit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.v3-exhibit-pair>.v3-exhibit{min-width:0}

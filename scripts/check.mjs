@@ -341,8 +341,13 @@ if (v3CssSource.lastIndexOf(".v3-page main{overflow:visible}") < v3CssSource.las
 for (const marker of [
   ".v3-use-index .v3-filter-panel button{min-height:44px",
   ".v3-use-index .v3-library-journey{display:grid",
-  ".v3-ai .v3-agent-stack{min-width:0}"
+  ".v3-ai .v3-agent-stack{min-width:0}",
+  ".v3-exhibit-pair{grid-template-columns:repeat(2,minmax(0,1fr))}"
 ]) if (!v3CssSource.includes(marker)) errors.push(`responsive V3 repair missing ${marker}`);
+const pilotCssSource = await readFile(join(projectRoot, "src", "pilot.css"), "utf8");
+if (!pilotCssSource.includes(".pilot-page .p-record-copy{grid-template-columns:minmax(96px,.7fr) minmax(0,1.3fr)")) {
+  errors.push("track-record card content still lacks shrink-safe columns");
+}
 for (const rejected of [".v4-problem-map{min-width:800px}", ".v4-market-funnel{min-width:760px}", ".v4-ai-controls{min-width:720px}"]) {
   if (v4CssSource.includes(rejected)) errors.push(`responsive V4 overflow risk remains ${rejected}`);
 }

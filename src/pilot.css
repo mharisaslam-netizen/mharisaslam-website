@@ -284,6 +284,8 @@
 .p-record-rail>a:nth-child(3){background:linear-gradient(145deg,#fff,#fff3ee)!important}
 .p-record-rail>a:nth-child(4){background:linear-gradient(145deg,#fff,#f8f0ff)!important}
 .p-record-no{color:#6d5df5!important}
+.pilot-page .p-record-copy{grid-template-columns:minmax(96px,.7fr) minmax(0,1.3fr);gap:.35rem 1rem}
+.pilot-page .p-record-copy em{grid-column:1/-1;min-width:0;overflow-wrap:anywhere}
 
 .p-value-band,.p-transformation-band,.p-contact-band,.p-ai-delivery{
   background:
