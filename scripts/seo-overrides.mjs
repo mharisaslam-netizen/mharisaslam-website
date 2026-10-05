@@ -14,7 +14,7 @@ const overrides = [
       ],
       [
         "Muhammad Haris Aslam is a GCC operator and business builder with experience across digital commerce, retail, marketplaces, enterprise technology and applied AI.",
-        "Muhammad Haris Aslam is a GCC operator and business builder across digital commerce, retail, marketplaces, enterprise technology, fintech, logistics and applied AI."
+        "Muhammad Haris Aslam is a GCC operator and business builder across growth, retail, digital commerce, marketplaces, enterprise technology and applied AI."
       ]
     ]
   }
