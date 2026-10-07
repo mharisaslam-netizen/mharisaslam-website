@@ -93,6 +93,7 @@ function normalize(item, overrides = {}) {
 function buildArticles() {
   const marketplace = deepInsights.find(x => x.slug === "marketplace-economics-gmv-revenue-contribution-gcc");
   const saudiMarketEntry = authorityArticles.find(x => x.slug === "saudi-market-entry-retail-commerce-economics");
+  const etisalatStrategy = authorityArticles.find(x => x.slug === "etisalat-eand-strategy-reset-2026");
   const articles = [
     normalize(agenticCommerceArticle, {
       sourceUrl: "https://www.mharisaslam.com/insights/fintech-agentic-commerce-ai-agents-moving-money"
@@ -105,6 +106,10 @@ function buildArticles() {
 
   if (saudiMarketEntry) {
     articles.unshift(normalize(saudiMarketEntry));
+  }
+
+  if (etisalatStrategy) {
+    articles.unshift(normalize(etisalatStrategy));
   }
 
   return articles;
