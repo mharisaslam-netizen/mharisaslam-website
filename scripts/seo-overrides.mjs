@@ -55,7 +55,7 @@ async function listHtmlFiles(dir) {
 }
 
 const gaLoader = '<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW1VSXTK3G"></script>';
-const gaGuard = "<script>window['ga-disable-G-QW1VSXTK3G'] = navigator.webdriver === true || window.location.hostname.endsWith('.vercel.app');</script>\n  " + gaLoader;
+const gaGuard = "<script>window['ga-disable-G-QW1VSXTK3G'] = navigator.webdriver === true || !['www.mharisaslam.com', 'mharisaslam.com'].includes(window.location.hostname);</script>\n  " + gaLoader;
 
 for (const file of await listHtmlFiles(join(root, "dist"))) {
   let html = await readFile(file, "utf8");
