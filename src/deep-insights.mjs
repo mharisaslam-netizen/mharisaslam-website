@@ -204,7 +204,7 @@ export const deepInsights = [
   {
     "slug": "gcc-omnichannel-retail-operating-model",
     "title": "GCC Omnichannel Retail: The Operating Model Behind Profitable Growth",
-    "metaDescription": "A practical GCC omnichannel retail framework covering inventory, pricing, fulfilment, stores, customer data, unit economics and scale.",
+    "metaDescription": "How GCC retailers should design omnichannel commerce platforms across inventory, POS, ERP, orders, fulfilment and profitable growth.",
     "lead": "In Gulf retail, adding channels is easy; integrating stock, pricing, fulfilment, customer identity and store economics is the hard part.",
     "category": "GCC retail & commerce",
     "readMinutes": 14,
@@ -239,6 +239,22 @@ export const deepInsights = [
           "Fulfilment: node selection, cut-off times, delivery promise and exception handling",
           "Service: returns, cancellations, complaints and recovery ownership",
           "Economics: gross margin, fulfilment cost, payment cost, returns and contribution"
+        ]
+      },
+      {
+        "heading": "Choosing a GCC omnichannel commerce platform: architecture before vendors",
+        "paragraphs": [
+          "For a GCC retailer, the commerce-platform question should begin with the operating model rather than with a vendor demonstration. A storefront, point-of-sale system, enterprise resource planning platform and order-management layer solve different problems. Choosing one product because it has an appealing customer interface does not establish that the group can promise accurate stock, allocate orders or reconcile completed-order contribution.",
+          "Map the technology to the six operating layers. The customer-facing layer supports discovery and transactions; product information and inventory services maintain what is offered and available; an order management system determines whether and where an order can be fulfilled; POS and ERP remain important for store execution and financial control; and customer, payments and service systems close the loop. These capabilities may be integrated from several vendors or combined in a smaller stack. The architecture should reflect business complexity, not a fashionable platform category.",
+          "The vendor decision should be tested with real business journeys: a customer buys online for store pickup, exchanges in another location, uses a promotion, and receives a refund while inventory and finance reconcile correctly. Compare total implementation and integration effort, ongoing cost, operational resilience, data ownership and exception handling. In Saudi Arabia, the UAE, Qatar and Oman, local payments, tax and consumer obligations must also be verified market by market rather than assumed from a regional template.",
+          "An operator should not estimate the GCC omnichannel retail commerce-platform market from online-sales growth alone. Technology spend, software licences, implementation services and merchandise value are different measures. The more decision-useful investment case is the retailer's own value pool: recoverable lost sales, avoided cancellations, lower inventory distortion, fulfilment productivity and contribution improvement."
+        ],
+        "bullets": [
+          "Define the target customer journeys and accountable operating owners before selecting technology.",
+          "Test inventory availability, reservations, order orchestration, returns and finance reconciliation end to end.",
+          "Separate software licence cost from implementation, integration, support and change-management cost.",
+          "Evaluate buy-versus-integrate choices against complexity, reliability and data ownership rather than vendor breadth.",
+          "Release rollout investment against measured service quality and contribution, not only digital GMV."
         ]
       },
       {
@@ -307,6 +323,10 @@ export const deepInsights = [
     ],
     "faq": [
       {
+        "question": "Which technology systems does a GCC omnichannel retailer need?",
+        "answer": "The necessary capabilities typically span a customer storefront, product and inventory data, order orchestration, store POS, ERP and finance reconciliation, payments, customer service and analytics. They do not all have to come from one vendor. The test is whether customer journeys, stock promises and completed-order economics work across the combined stack."
+      },
+      {
         "question": "What is the most important KPI for GCC omnichannel retail?",
         "answer": "There is no single KPI, but completed-order contribution is the strongest economic anchor because it combines demand with gross margin, fulfilment cost, payment cost, returns and service execution. It should be read alongside availability accuracy and on-time completion."
       },
@@ -346,7 +366,7 @@ export const deepInsights = [
         "url": "https://u.ae/en/information-and-services/business/ecommerce/"
       }
     ],
-    "seoTitle": "GCC Omnichannel Retail Operating Model | Haris Aslam"
+    "seoTitle": "GCC Omnichannel Retail: Platforms & Operating Model"
   },
   {
     "slug": "marketplace-economics-gmv-revenue-contribution-gcc",
