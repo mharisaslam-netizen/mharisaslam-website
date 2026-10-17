@@ -91,9 +91,9 @@ export const qatarCommerceInsight = {
     {
       "heading": "A practical 90-day operating agenda for Qatar merchants",
       "paragraphs": [
-        "Days 1–30 should establish facts before adding volume. Confirm the relevant licensing path and any additional permits. Map every step from product discovery to money received and return closed. Baseline available inventory accuracy, payment success, paid-to-completed order rate, fulfilment cost, returns incidence and contribution per completed order. Fix critical customer-policy and complaints gaps.",
-        "Days 31–60 should test one category or customer cohort at limited scale. Ensure each order carries a reconciled payment state, an achievable delivery promise, a seller or inventory owner and a clear cost bridge. Test whether faster checkout increases completed orders rather than simply authorized orders. If a regional card option becomes available through the selected acquiring route, validate a real transaction and refund before announcing broader acceptance.",
-        "Days 61–90 should decide whether the model deserves expansion. Compare actual completed-order contribution against the assumptions, including refunds, promotions, support and acquisition. Measure whether repeat buyers improve the economics. Only then add categories, partners or channels. If the unit economics remain weak, improve margin or cost-to-serve rather than substituting top-line GMV for profitability.",
+        "Days 1 - 30 should establish facts before adding volume. Confirm the relevant licensing path and any additional permits. Map every step from product discovery to money received and return closed. Baseline available inventory accuracy, payment success, paid-to-completed order rate, fulfilment cost, returns incidence and contribution per completed order. Fix critical customer-policy and complaints gaps.",
+        "Days 31 - 60 should test one category or customer cohort at limited scale. Ensure each order carries a reconciled payment state, an achievable delivery promise, a seller or inventory owner and a clear cost bridge. Test whether faster checkout increases completed orders rather than simply authorized orders. If a regional card option becomes available through the selected acquiring route, validate a real transaction and refund before announcing broader acceptance.",
+        "Days 61 - 90 should decide whether the model deserves expansion. Compare actual completed-order contribution against the assumptions, including refunds, promotions, support and acquisition. Measure whether repeat buyers improve the economics. Only then add categories, partners or channels. If the unit economics remain weak, improve margin or cost-to-serve rather than substituting top-line GMV for profitability.",
         "This sequencing is intentionally small. The goal is to create an auditable operating base that can grow, not a large launch programme whose underlying cash costs remain invisible."
       ]
     },
@@ -109,7 +109,7 @@ export const qatarCommerceInsight = {
   "takeaways": [
     "Qatar's QAR 500 annual e-commerce licensing service applies to approved activities; existing commercial-registration and relevant approval requirements still matter.",
     "MoCI's October mobile-wallet change concerns government-service payments; merchant payment acceptance requires its own verification.",
-    "The mada–Himyan rollout is phased regional card interoperability, not proof of universal cross-border e-commerce acceptance.",
+    "The mada - Himyan rollout is phased regional card interoperability, not proof of universal cross-border e-commerce acceptance.",
     "Assess payment, delivery, returns, acquisition and working capital together before scaling digital demand.",
     "The most decision-useful metrics are completed-order contribution, repeat economics and collected cash."
   ],
@@ -147,7 +147,7 @@ export const qatarCommerceInsight = {
       "url": "https://investor.sw.gov.qa/wps/portal/investors/services/service-details/ecp/"
     },
     {
-      "title": "Ministerial Decision No. 25 of 2026 (original Arabic, Articles 1–7)",
+      "title": "Ministerial Decision No. 25 of 2026 (original Arabic, Articles 1 - 7)",
       "publisher": "Al Meezan, Qatar Legal Portal",
       "url": "https://www.almeezan.qa/LawArticles.aspx?LawID=10329&LawTreeSectionID=22408&language=ar"
     },
@@ -157,7 +157,7 @@ export const qatarCommerceInsight = {
       "url": "https://thepeninsulaqatar.com/article/12/10/2026/moci-introduces-faster-easier-payment-options-through-apple-pay-google-pay"
     },
     {
-      "title": "SAMA and Qatar Central Bank announce phased mada–Himyan acceptance (15 September 2026)",
+      "title": "SAMA and Qatar Central Bank announce phased mada - Himyan acceptance (15 September 2026)",
       "publisher": "Saudi Central Bank",
       "url": "https://sama.gov.sa/en-US/MediaCenter/News/pages/news-1168.aspx"
     },
