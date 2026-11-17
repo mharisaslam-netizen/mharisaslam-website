@@ -1,4 +1,13 @@
 /* Density and contrast refinements */
+.operating-topics{background:#f7f8fc;color:#172b35}
+.operating-topic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem}
+.operating-topic-grid article{padding:1.4rem;background:#fff;border:1px solid #dce2e8;border-radius:12px;min-width:0}
+.operating-topic-grid h3{font-size:1.05rem;line-height:1.4;margin:0 0 .8rem}
+.operating-topic-grid p,.operating-topic-grid li{font-size:.9rem;line-height:1.65}
+.operating-topic-grid ul{margin:1rem 0 0;padding-left:1.15rem}
+.operating-topic-grid li+li{margin-top:.6rem}
+.operating-topic-grid a{color:#3e42a8;text-decoration:underline;text-underline-offset:.15em}
+@media(max-width:850px){.operating-topic-grid{grid-template-columns:1fr}}
 .v3-page .v3-case-section{padding:4.25rem 0}
 .v3-page .v3-exhibit{box-shadow:0 10px 28px rgba(10,30,40,.08)}
 .v3-page .v3-exhibit.dark .v3-operating-matrix>div{background:#f7f6f0;color:#10242c}
