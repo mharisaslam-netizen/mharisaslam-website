@@ -3,7 +3,7 @@ export const uaeMarketPage = {
   type: "WebPage",
   kind: "market",
   title: "UAE Growth & Digital Transformation | Haris Aslam",
-  description: "Operator-led perspective on UAE retail growth, digital commerce, AI, marketplaces, fintech and enterprise transformation, grounded in commercial economics and operating models.",
+  description: "An operator's view of UAE retail growth, digital commerce, marketplaces, fintech and AI, grounded in commercial economics and operating models.",
   eyebrow: "United Arab Emirates · growth · retail · digital transformation",
   h1: "UAE growth and transformation built around commercial economics.",
   intro: "An operator-led perspective on how UAE growth, retail, digital commerce, AI and enterprise transformation connect to commercial economics, operating ownership and execution.",

@@ -65,7 +65,7 @@ export const executiveProfilePage = {
   type: "ProfilePage",
   kind: "operating-profile",
   title: "Commerce, Growth & AI Expertise | Haris Aslam",
-  description: "Explore Haris Aslam's operating perspective on commerce economics, retail cash, GCC growth and applied AI, with specific experience, cases and practical insights.",
+  description: "Explore Haris Aslam's experience in commerce economics, retail cash, GCC growth and applied AI through operating cases and practical insights.",
   eyebrow: "Expertise & operating perspective",
   h1: "The questions behind better business decisions.",
   intro: "Four connected areas of work, explained through the questions I ask, the method I use and the experience or analysis behind it.",

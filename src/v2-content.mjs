@@ -5,6 +5,7 @@ import { deepInsights } from "./deep-insights.mjs";
 import { qatarCommerceInsight } from "./qatar-digital-commerce-2026.mjs";
 import { agenticCommerceArticle } from "../lib/linkedin-articles.js";
 import { authorityArticles } from "../lib/authority-articles.js";
+import { shortInsightSections, searchUpdateDate } from "./search-context.mjs";
 
 export const site = {
   name: "Muhammad Haris Aslam",
@@ -390,7 +391,7 @@ const useCases = [
   },
   {
     slug: "saudi-market-entry-distribution", title: "Saudi market entry and distribution", sector: "Consumer distribution", geography: "Oman to Saudi Arabia", type: "Strategy blueprint",
-    summary: "A Saudi Arabia market-entry model for CEOs, family businesses and investors covering distribution, landed cost, e-commerce, local capacity, partner economics and scale gates.",
+    summary: "A Saudi market-entry model covering distribution, landed cost, e-commerce, local capacity, partner economics and investment gates.",
     overview: "An anonymized regional growth case. Planning and partner work are evidenced; Saudi sales and profitability are not.",
     problem: "Regional demand did not justify a local setup without product rights, landed cost and a credible route to customers.",
     solution: "Secure representation and supplier rights, validate one channel and delay inventory or fixed commitments until the contribution case holds.",
@@ -927,7 +928,7 @@ const trackPage = item => {
 
 const useCasePage = item => ({
   path: usePath(item), type: "WebPage", kind: "case", title: `${item.title} | Use Case | Haris Aslam`,
-  description: item.summary.length >= 80 ? item.summary : `${item.summary} A business use case covering solution, technology, commercial model, operations and impact.`,
+  description: item.summary.length >= 80 ? item.summary : `${item.title}: ${item.summary}`,
   eyebrow: `${item.type} · ${item.geography}`, h1: item.title, intro: item.summary,
   v3: item.slug === "leading-saudi-bank-commerce-ecosystem",
   v3Body: item.slug === "leading-saudi-bank-commerce-ecosystem" ? v3Saudi({ item }) : "",
@@ -1075,7 +1076,10 @@ const shortInsights = [
   { slug: "warehouse-capacity-as-a-3pl-business", title: "When warehouse capacity can become a 3PL business", lead: "Spare space becomes a business only after anchor demand covers the full service cost.", visual: ["Spare capacity", "Anchor demand", "Service cost", "Client contribution"], paragraphs: ["A retailer may see unused racks and assume it can sell fulfilment cheaply. The existing rent is only one part of the cost.", "Picking, packing, delivery, failed attempts, claims, receivables and service management must be included in the client P&L.", "Start with one anchor client and a limited service scope. Expand only when contracted volume, service quality and contribution hold together."] }
 ];
 
-const insights = [qatarCommerceInsight, agenticCommerceArticle, ...authorityArticles, ...deepInsights, ...shortInsights];
+// The fuller, sourced economics guide now owns the GMV/revenue/contribution topic.
+// vercel.json preserves the retired short note's URL with a permanent redirect.
+const insights = [qatarCommerceInsight, agenticCommerceArticle, ...authorityArticles, ...deepInsights, ...shortInsights]
+  .filter(item => item.slug !== "marketplace-gmv-revenue-contribution");
 
 const articleCard = item => `<a class="insight-card" href="/insights/${item.slug}"><div><span class="card-label">${esc(item.category || "Insight")}</span><h3>${esc(item.title)}</h3><p>${esc(item.lead)}</p></div>${articleVisual(item, true)}<span class="card-link">Read insight <span aria-hidden="true">→</span></span></a>`;
 
@@ -1093,14 +1097,16 @@ const deepArticleContent = item => {
 
 const articlePage = item => {
   const isDeep = Array.isArray(item.sections) && item.sections.length > 0;
-  const articleCopy = isDeep ? deepArticleContent(item) : item.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("");
+  const articleCopy = isDeep ? deepArticleContent(item) : item.paragraphs.map(paragraph => `<p>${esc(paragraph)}</p>`).join("") +
+    (shortInsightSections[item.slug] || []).map(([heading, paragraph]) => `<section class="deep-insight-section"><h2>${esc(heading)}</h2><p>${esc(paragraph)}</p></section>`).join("");
   return {
     path: `/insights/${item.slug}`,
     type: "Article",
     kind: "article",
     datePublished: item.datePublished || "2026-09-16",
+    dateModified: shortInsightSections[item.slug] ? searchUpdateDate : undefined,
     title: item.seoTitle || `${item.title} | Haris Aslam`,
-    description: item.metaDescription || `${item.lead} A practical note on GCC business economics and operating decisions.`,
+    description: item.metaDescription || item.lead,
     eyebrow: item.category ? `${item.category} · ${item.readMinutes || 8} min read` : "Insight",
     h1: item.title,
     intro: item.lead,
@@ -1112,7 +1118,7 @@ const articlePage = item => {
 };
 
 const home = {
-  path: "/", type: "WebPage", kind: "home", title: "Muhammad Haris Aslam | GCC Operator and Business Builder", description: "Muhammad Haris Aslam is a GCC operator and business builder sharing practical perspectives on business performance, commerce, growth, transformation and applied AI.", ogImage: `${site.origin}/assets/og-card-v2.png`, ogImageAlt: "Muhammad Haris Aslam, GCC operator and business builder across commerce, growth, transformation and applied AI", eyebrow: "Muhammad Haris Aslam", h1: "Commerce, growth and transformation. From business model to daily execution.", intro: "An operator's perspective on the economics, systems and decisions behind digital commerce, retail, marketplaces and applied AI in the GCC.",
+  path: "/", type: "WebPage", kind: "home", title: "Muhammad Haris Aslam | GCC Commerce & Retail Turnaround", description: "Muhammad Haris Aslam shares operating experience in GCC digital commerce, retail turnaround, marketplaces, working capital, market entry and applied AI.", ogImage: `${site.origin}/assets/og-card-v2.png`, ogImageAlt: "Muhammad Haris Aslam, GCC operator and business builder across commerce, growth, transformation and applied AI", eyebrow: "Muhammad Haris Aslam", h1: "Digital commerce, retail turnaround and growth in the GCC.", intro: "An operator's perspective on the economics, systems and decisions behind digital commerce, retail, marketplaces and applied AI in the GCC.",
   v3: true,
   v3Body: v3Home({ trackRecords, insights }),
   body: `<div class="hero-actions">${link("/track-record", "View track record", "button")}${link("/use-cases", "Explore use cases", "button button-secondary")}</div>${section("Selected operating record", `<div class="record-feature-grid">${trackRecords.slice(0, 4).map(trackCard).join("")}</div>${link("/track-record", "View full track record")}`, "record-section")}${section("Areas of work", `<div class="builder-system"><div class="builder-path"><span>Business problem</span><span>Commercial economics</span><span>Operating model</span><span>Technology and AI</span><span>Measurable impact</span></div><div class="builder-disciplines"><span>Business building</span><span>Commerce and marketplaces</span><span>Retail economics</span><span>Enterprise technology</span><span>GCC growth</span><span>Applied AI</span></div></div>`, "builder-section")}${section("Selected use cases", `<div class="visual-card-grid">${[useCases[0], useCases[2], useCases[5], useCases[7], aiProjects[0], useCases[10]].map(useCard).join("")}</div>${link("/use-cases", "Browse all use cases")}`)}${section("AI & Transformation", `<p class="section-intro">AI works when it is attached to an operating decision, reliable data and a person who owns the result.</p><div class="product-preview-grid">${[...aiProjects, useCases.find(item => item.slug === "aeofind")].map(productPreview).join("")}</div>${link("/ai-transformation", "Explore AI & Transformation")}`, "ai-preview-section")}${section("Insights", `<div class="insight-grid">${insights.slice(0, 4).map(articleCard).join("")}</div>${link("/insights", "Read all insights")}`)}${section("About", `<div class="narrow-copy"><p>Haris works across the decisions that turn an idea into an operating business: proposition, economics, technology and execution.</p>${link("/about", "More about Haris")}</div>`)}${section("Contact", `<div class="narrow-copy"><p>Professional contact details and public channels.</p>${link("/contact", "Contact", "button")}</div>`, "contact-section")}`

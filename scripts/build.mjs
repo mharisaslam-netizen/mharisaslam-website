@@ -7,6 +7,8 @@ import { executiveProfilePage } from "../src/executive-profile-page.mjs";
 import { uaeMarketPage } from "../src/uae-market-page.mjs";
 import { saudiMarketPage } from "../src/saudi-market-page.mjs";
 import { businessPerformancePage } from "../src/business-performance-page.mjs";
+import { relatedReadingFor, searchUpdateDate } from "../src/search-context.mjs";
+import { priorityContentFor } from "../src/priority-case-content.mjs";
 
 const basePages = [businessPerformancePage, advisoryPage, executiveProfilePage, uaeMarketPage, saudiMarketPage, ...pages];
 const priorityIndexPaths = new Set([
@@ -34,6 +36,8 @@ const priorityIndexPaths = new Set([
   "/ai-commerce",
   "/insights",
   "/insights/payment-volume-versus-net-revenue",
+  "/insights/marketplace-economics-gmv-revenue-contribution-gcc",
+  "/use-cases/telco-led-national-marketplace",
   "/insights/openai-dots-ecommerce-staff-assistant"
 ]);
 const expertiseIndexPage = {
@@ -59,6 +63,7 @@ const versionUiAssets = html => html
   .replaceAll('/assets/v4-expansion.css"', `/assets/v4-expansion.css?v=${assetVersion}"`)
   .replaceAll('/assets/pilot.css"', `/assets/pilot.css?v=${assetVersion}"`)
   .replaceAll('/assets/site-ui.js"', `/assets/site-ui.js?v=${assetVersion}"`)
+  .replaceAll('/assets/order-contribution.js"', `/assets/order-contribution.js?v=${assetVersion}"`)
   .replaceAll('/assets/news-feed.js"', `/assets/news-feed.js?v=${assetVersion}"`)
   .replaceAll('/assets/business-performance.css"', `/assets/business-performance.css?v=${assetVersion}"`)
   .replaceAll('/assets/business-performance.js"', `/assets/business-performance.js?v=${assetVersion}"`);
@@ -171,6 +176,8 @@ function render(page) {
       ${page.heroAside ? `<aside class="hero-aside">${page.heroAside}</aside>` : ""}
     </header>
     ${page.body}`}
+    ${priorityContentFor(page.path)}
+    ${relatedReading(page.path)}
   </main>
   ${commercialBridge(page.path)}
   ${advisoryConversion(page)}
@@ -184,6 +191,11 @@ function render(page) {
 function header(path) {
   const links = primaryNavigation.map(([label, href]) => `<a href="${href}"${current(path, href) ? ` aria-current="page"` : ""}>${label}</a>`).join("");
   return `<header class="site-header"><div class="nav-wrap"><a class="brand" href="/" aria-label="Haris Aslam home" translate="no"><span class="brand-logo" aria-hidden="true"><svg viewBox="0 0 64 64" role="img"><rect x="1" y="1" width="62" height="62" rx="10" fill="currentColor"/><path d="M14 17v30M14 32h14M28 17v30" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="square"/><path d="M35 47L46 17l11 30M39 35h14" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/><path d="M47 17l-5.5 15" fill="none" stroke="#3566ff" stroke-width="5" stroke-linecap="square"/></svg></span><span class="brand-wordmark"><b>HARIS</b><span>ASLAM</span><i></i></span></a><nav class="desktop-nav" aria-label="Primary">${links}</nav><details class="mobile-nav"><summary aria-label="Open navigation"><span aria-hidden="true">☰</span></summary><nav class="mobile-panel" aria-label="Mobile">${links}</nav></details></div></header>`;
+}
+function relatedReading(path) {
+  const items = relatedReadingFor(path);
+  if (!items.length) return "";
+  return `<section class="section" aria-labelledby="related-reading"><div class="section-heading"><h2 id="related-reading">Related reading</h2></div><div class="report-prose"><ul>${items.map(([href, label]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul></div></section>`;
 }
 function commercialBridge(path) {
   if (!commercialBridgePaths.has(path)) return "";
@@ -231,7 +243,7 @@ function schemaGraph(page, url, crumbs) {
     graph.push(software);
   }
   if (page.type === "Article") {
-    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, description:page.description, image:{"@type":"ImageObject",url:page.ogImage || `${site.origin}/assets/og-card.png`,width:1200,height:675}, author:{"@id":person["@id"]}, publisher:{"@id":person["@id"]}, mainEntityOfPage:{"@id":webpage["@id"]} };
+    const article = { "@type":"Article", "@id":`${url}#article`, headline:page.h1, datePublished:page.datePublished, ...(modifiedDate(page) ? { dateModified: modifiedDate(page) } : {}), description:page.description, image:{"@type":"ImageObject",url:page.ogImage || `${site.origin}/assets/og-card.png`,width:1200,height:675}, author:{"@id":person["@id"]}, publisher:{"@id":person["@id"]}, mainEntityOfPage:{"@id":webpage["@id"]} };
     graph.push(article);
   }
   if (page.kind === "case" && !page.project) {
@@ -268,11 +280,18 @@ function expertiseIndexBody(sourcePages) {
 }
 
 function sitemap() {
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${allPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc></url>`).join("\n")}\n</urlset>\n`;
+  return sitemapXml(allPages);
 }
 function prioritySitemap() {
   const priorityPages = allPages.filter(page => priorityIndexPaths.has(page.path));
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${priorityPages.map(p => `  <url><loc>${site.origin}${p.path === "/" ? "/" : p.path}</loc></url>`).join("\n")}\n</urlset>\n`;
+  return sitemapXml(priorityPages);
+}
+function modifiedDate(page) {
+  // Never stamp every URL with the build date. Only record a known content edit.
+  return page.dateModified || (relatedReadingFor(page.path).length ? searchUpdateDate : undefined);
+}
+function sitemapXml(sourcePages) {
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sourcePages.map(page => `  <url><loc>${site.origin}${page.path === "/" ? "/" : page.path}</loc>${modifiedDate(page) ? `<lastmod>${modifiedDate(page)}</lastmod>` : ""}</url>`).join("\n")}\n</urlset>\n`;
 }
 function llmsTxt() {
   const links = allPages.map(p => `- [${pageLabel(p)}](${site.origin}${p.path === "/" ? "/" : p.path}): ${p.description}`).join("\n");
