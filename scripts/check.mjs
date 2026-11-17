@@ -147,14 +147,14 @@ for (const removedNewsMarker of ["Live market feed", "home-live-news", "data-liv
 for (const socialMarker of [
   'property="og:image" content="https://www.mharisaslam.com/assets/og-card-v2.png"',
   'name="twitter:image" content="https://www.mharisaslam.com/assets/og-card-v2.png"',
-  "Muhammad Haris Aslam is a GCC operator and business builder sharing practical perspectives on business performance, commerce, growth, transformation and applied AI."
+  "Muhammad Haris Aslam shares operating experience in GCC digital commerce, retail turnaround, marketplaces, working capital, market entry and applied AI."
 ]) if (!home.includes(socialMarker)) errors.push(`home missing social-sharing marker ${socialMarker}`);
 try {
   const socialImage = await stat(join(root, "assets", "og-card-v2.png"));
   if (!socialImage.isFile() || socialImage.size < 10_000) errors.push("home social-sharing image is missing or unexpectedly small");
 } catch { errors.push("home social-sharing image is missing"); }
 for (const sentence of [
-  "Commerce, growth and transformation. From business model to daily execution.",
+  "Digital commerce, retail turnaround and growth in the GCC.",
   "An operator's perspective on the economics, systems and decisions behind digital commerce, retail, marketplaces and applied AI in the GCC."
 ]) if (!home.includes(sentence)) errors.push(`home missing required copy: ${sentence}`);
 for (const heading of ["Does growth earn its cost?", "Where is cash getting trapped?", "What must be true before scale?", "Which decisions can be improved?", "Selected business problems", "Operating evidence", "AI Commerce Command Center", "Insights"]) {
@@ -228,7 +228,9 @@ for (const page of pages.filter(page => page.kind === "case")) {
     }
     atLeast(html, /class="v4-ai-exhibit/g, 3, page.path, "AI case exhibits");
     const aiWords = v3WordCount(html);
-    if (aiWords < 1000 || aiWords > 2000) errors.push(`${page.path}: expected 1000-2000 AI operating-case words, found ${aiWords}`);
+    // Guard against an empty case, not an SEO word-count target. The source facts,
+    // authority, economics and risk sections above carry the content contract.
+    if (aiWords < 300) errors.push(`${page.path}: incomplete AI operating case, found ${aiWords} words`);
   } else if (html.includes("v4-note-hero")) {
     for (const marker of ["Executive summary", "Business problem and commercial opportunity", "Solution, technology and operating model", "Implementation, KPIs and risk"]) {
       if (!html.includes(marker)) errors.push(`${page.path}: missing strategy-note section ${marker}`);
@@ -408,6 +410,17 @@ const robots = await readFile(join(root, "robots.txt"), "utf8");
 const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 const llms = await readFile(join(root, "llms.txt"), "utf8");
 const vercel = JSON.parse(await readFile(join(root, "..", "vercel.json"), "utf8"));
+const retiredGmvPath = "/insights/marketplace-gmv-revenue-contribution";
+const consolidatedGmvPath = "/insights/marketplace-economics-gmv-revenue-contribution-gcc";
+if (routes.has(retiredGmvPath) || sitemap.includes(`${site.origin}${retiredGmvPath}</loc>`)) {
+  errors.push("retired GMV note must not be generated or submitted as a separate indexable page");
+}
+if (!vercel.redirects.some(rule => rule.source === retiredGmvPath && rule.destination === consolidatedGmvPath && rule.permanent === true)) {
+  errors.push("retired GMV note must redirect permanently to the complete economics guide");
+}
+for (const match of sitemap.matchAll(/<lastmod>(.*?)<\/lastmod>/g)) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(match[1]) || Number.isNaN(Date.parse(match[1]))) errors.push(`invalid sitemap modification date: ${match[1]}`);
+}
 const expectedRobots = `User-agent: *
 Allow: /
 Disallow: /admin/

@@ -5,6 +5,11 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/insights/marketplace-gmv-revenue-contribution",
+      "destination": "/insights/marketplace-economics-gmv-revenue-contribution-gcc",
+      "permanent": true
+    },
+    {
       "source": "/index.dc.html",
       "destination": "/",
       "permanent": true
@@ -81,7 +86,7 @@
     },
     {
       "source": "/insight-digital-commerce-strategy.dc.html",
-      "destination": "/insights/marketplace-gmv-revenue-contribution",
+      "destination": "/insights/marketplace-economics-gmv-revenue-contribution-gcc",
       "permanent": true
     },
     {
@@ -256,7 +261,7 @@
     },
     {
       "source": "/insights/the-moment-an-online-retailer-becomes-a-marketplace",
-      "destination": "/insights/marketplace-gmv-revenue-contribution",
+      "destination": "/insights/marketplace-economics-gmv-revenue-contribution-gcc",
       "permanent": true
     },
     {
@@ -271,7 +276,7 @@
     },
     {
       "source": "/insights/marketplace-gmv-net-revenue-and-contribution-are-different-numbers",
-      "destination": "/insights/marketplace-gmv-revenue-contribution",
+      "destination": "/insights/marketplace-economics-gmv-revenue-contribution-gcc",
       "permanent": true
     },
     {

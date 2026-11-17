@@ -3,7 +3,7 @@ export const businessPerformancePage = {
   type: "WebPage",
   kind: "business-performance",
   v3: true,
-  title: "Business Performance in the GCC | Haris Aslam",
+  title: "GCC Retail Turnaround & Working Capital | Haris Aslam",
   description: "An operator's perspective on stronger margins, healthier cash and disciplined growth for established businesses in Qatar, Oman, Saudi Arabia and Bahrain.",
   eyebrow: "Business Performance",
   h1: "Stronger margins. Healthier cash flow. Growth you can execute.",

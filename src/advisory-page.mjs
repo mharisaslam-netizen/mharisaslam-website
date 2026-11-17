@@ -2,7 +2,7 @@ export const advisoryPage = {
   path: "/gcc-growth-transformation",
   type: "WebPage",
   kind: "gcc-growth",
-  title: "GCC Growth & Transformation | Saudi & UAE | Haris Aslam",
+  title: "GCC Growth Strategy & Market Entry | Haris Aslam",
   description: "Operator-led perspective on GCC growth and transformation, connecting market entry, turnaround, digital commerce, AI, fintech, marketplaces and execution.",
   eyebrow: "Saudi Arabia · UAE · GCC growth & transformation",
   h1: "GCC growth and transformation for Saudi Arabia, the UAE and the wider Gulf.",
