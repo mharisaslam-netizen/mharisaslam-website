@@ -9,8 +9,9 @@ import { saudiMarketPage } from "../src/saudi-market-page.mjs";
 import { businessPerformancePage } from "../src/business-performance-page.mjs";
 import { relatedReadingFor, searchUpdateDate } from "../src/search-context.mjs";
 import { priorityContentFor } from "../src/priority-case-content.mjs";
+import { applySearchPublishing } from "../src/search-publishing.mjs";
 
-const basePages = [businessPerformancePage, advisoryPage, executiveProfilePage, uaeMarketPage, saudiMarketPage, ...pages];
+const basePages = [businessPerformancePage, advisoryPage, executiveProfilePage, uaeMarketPage, saudiMarketPage, ...pages].map(applySearchPublishing);
 const priorityIndexPaths = new Set([
   "/",
   "/about",
