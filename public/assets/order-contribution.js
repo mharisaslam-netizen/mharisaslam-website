@@ -53,6 +53,10 @@ if (typeof document !== "undefined") {
       link.href = url;
       link.download = "marketplace-contribution-scenario.csv";
       link.click();
+      if (typeof window.gtag === "function") window.gtag("event", "tool_scenario_download", {
+        tool_name: "marketplace_contribution",
+        page_path: window.location.pathname
+      });
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
     update();
