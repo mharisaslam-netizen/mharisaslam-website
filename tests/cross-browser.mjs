@@ -42,6 +42,16 @@ async function inspect(page) {
 
 async function runInteractions(page, viewport, engineName) {
   const issues = [];
+  await page.goto(`${baseUrl}/insights/marketplace-economics-gmv-revenue-contribution-gcc`, { waitUntil: "load", timeout: 30000 });
+  await page.getByLabel("Platform-funded incentive", { exact: true }).fill("16");
+  if (await page.locator('[data-model-output="contribution"]').innerText() !== "0.00") issues.push("calculator did not update the zero-contribution scenario");
+  if (!(await page.locator('[data-model-output="breakEvenOrders"]').innerText()).includes("No finite break-even")) issues.push("calculator reported break-even without positive contribution");
+  await page.getByLabel("Completed orders per month", { exact: true }).fill("1.5");
+  if (!await page.locator("[data-model-error]").isVisible() || await page.locator("[data-model-download]").isEnabled()) issues.push("calculator allowed invalid order counts");
+  await page.getByLabel("Platform-funded incentive", { exact: true }).fill("6");
+  await page.getByLabel("Completed orders per month", { exact: true }).fill("1000");
+  if (await page.locator('[data-model-output="monthlyResult"]').innerText() !== "-10,000.00" || !await page.locator("[data-model-download]").isEnabled()) issues.push("calculator did not recover after input correction");
+
   await page.goto(`${baseUrl}/use-cases`, { waitUntil: "domcontentloaded", timeout: 30000 });
   const initialCount = Number(await page.locator("#case-count").innerText());
   const firstFilter = page.locator('#case-filters button[data-filter-value]:not([data-filter-value="All"])').first();
